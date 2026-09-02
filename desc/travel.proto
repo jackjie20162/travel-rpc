@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package travel;
+option go_package = "gitee.com/meinongyihe/travel-rpc/travel";
+
+message Empty {}
+
+message Product {
+  int64 id = 1;
+  int64 tenant_id = 2;
+  int64 merchant_id = 3;
+  string code = 4;
+  string title = 5;
+  string slug = 6;
+  string destination = 7;
+  string description = 8;
+  string currency = 9;
+  int64 min_price = 10;
+  string status = 11;
+}
+
+message ProductIdRequest { int64 id = 1; }
+message ProductListRequest { string keyword = 1; string destination = 2; int32 page = 3; int32 page_size = 4; int64 tenant_id = 5; }
+message ProductListResponse { repeated Product items = 1; int64 total = 2; }
+
+message InventoryRequest {
+  int64 package_id = 1;
+  string date = 2;
+  string time_slot = 3;
+  int32 quantity = 4;
+}
+message InventoryResponse {
+  bool available = 1;
+  int32 remaining = 2;
+  int64 unit_price = 3;
+  string currency = 4;
+}
+
+message CreateOrderRequest {
+  int64 tenant_id = 1;
+  int64 merchant_id = 2;
+  int64 product_id = 3;
+  int64 package_id = 4;
+  string date = 5;
+  string time_slot = 6;
+  int32 quantity = 7;
+  string currency = 8;
+  int64 total_amount = 9;
+  string customer_email = 10;
+}
+message Order { int64 id = 1; string order_no = 2; string status = 3; int64 total_amount = 4; string currency = 5; }
+
+service CatalogService {
+  rpc GetProduct(ProductIdRequest) returns (Product);
+  rpc ListProducts(ProductListRequest) returns (ProductListResponse);
+}
+service InventoryService {
+  rpc Check(InventoryRequest) returns (InventoryResponse);
+}
+service OrderService {
+  rpc Create(CreateOrderRequest) returns (Order);
+}
