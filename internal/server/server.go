@@ -16,8 +16,10 @@ func Register(grpcServer *grpc.Server, client *ent.Client) {
     inventory := repository.NewInventoryRepository(client)
     orders := repository.NewOrderRepository(client)
     booking := repository.NewBookingRepository(client)
+    payments := repository.NewPaymentRepository(client)
 
     travel.RegisterCatalogServiceServer(grpcServer, service.NewCatalogService(products))
     travel.RegisterInventoryServiceServer(grpcServer, service.NewInventoryService(inventory))
     travel.RegisterOrderServiceServer(grpcServer, service.NewOrderService(orders, inventory, booking))
+    travel.RegisterPaymentServiceServer(grpcServer, service.NewPaymentService(payments))
 }
