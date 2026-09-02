@@ -1,12 +1,22 @@
 # Development Log
 
-## 2026-09-02 — Repository correction and M0
+## 2026-09-02 — M1 foundation hardening
 
-- Corrected repository ownership: tourism RPC belongs to `jackjie20162/travel-rpc`, not `travel-app`.
-- Migrated the initial RPC module, protobuf contract, Ent schemas, server bootstrap, config, Makefile and documentation into `travel-rpc`.
-- `travel-app` is not the target repository for RPC implementation.
-- Generated protobuf/Ent code has not yet been generated in the repository.
-- Local compile/test verification has not yet been executed through this workflow.
+### Implemented
+- Added product/package/inventory/order/voucher indexes for tenant-safe lookup and uniqueness.
+- Changed protobuf `go_package` to match the repository's go-zero generation convention.
+- Replaced client-authoritative order tenant/merchant/currency/total fields with a narrower order request.
+- Added explicit inventory reservation RPC contract with `reservation_key` for retry-safe design.
+- Added data-model and security-boundary documentation.
+- Added GitHub Actions CI to generate protobuf + Ent code, run tests and build.
+- Aligned the Makefile RPC generation target with the generation style used by the existing merchant-rpc repository.
+
+### Not yet verified
+- Generated protobuf/Ent files have not been committed by this workflow.
+- CI first green run has not yet been observed/verified.
+- Runtime RPC services and database repositories are not implemented yet.
+- Inventory reservation transaction has not yet been implemented.
+- travel-api generated handlers and RPC client wiring are not yet complete.
 
 ### Next
-M1: generated code + Ent data layer + repositories + catalog/inventory/order services + transaction-safe inventory reservation + API wiring + CI verification.
+M1 implementation: generate code, configure database/Ent client, implement repositories, implement Catalog/Inventory/Order services, add transactional/idempotent reservation, register services, then finish travel-api wiring and tests.
