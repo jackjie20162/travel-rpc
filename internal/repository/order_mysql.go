@@ -14,7 +14,7 @@ type mysqlOrderRepository struct { client *ent.Client }
 func NewOrderRepository(client *ent.Client) OrderRepository { return &mysqlOrderRepository{client:client} }
 
 func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInput) (*ent.Order, error) {
-	if input.Quantity <= 0 || input.UnitPrice < 0 || input.Currency == "" || input.ProductID <= 0 || input.PackageID <= 0 { return nil, &ErrInvalidOrder{} }
+	if input.TenantID <= 0 || input.MerchantID <= 0 || input.Quantity <= 0 || input.UnitPrice < 0 || input.Currency == "" || input.ProductID <= 0 || input.PackageID <= 0 || input.ServiceDate == "" { return nil, &ErrInvalidOrder{} }
 	tx, err := r.client.Tx(ctx)
 	if err != nil { return nil, err }
 	total := input.UnitPrice * int64(input.Quantity)
@@ -34,8 +34,12 @@ func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInpu
 	return item, nil
 }
 
-func (r *mysqlOrderRepository) GetByOrderNo(ctx context.Context, tenantID int64, orderNo string) (*ent.Order, error) {
-	return r.client.Order.Query().Where(order.TenantIDEQ(tenantID), order.OrderNoEQ(orderNo)).Only(ctx)
+func (r *mysqlOrderRepository) GetByOrderNo(ctx context.Context, tenantID, merchantID int64, orderNo string) (*ent.Order, error) {
+	return r.client.Order.Query().Where(
+		order.TenantIDEQ(tenantID),
+		order.MerchantIDEQ(merchantID),
+		order.OrderNoEQ(orderNo),
+	).Only(ctx)
 }
 
 func newOrderNo() string { return fmt.Sprintf("TRV%s", time.Now().UTC().Format("20060102150405.000000000")) }
