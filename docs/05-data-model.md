@@ -10,6 +10,8 @@ All business records carry `tenant_id` where applicable. Tenant and merchant sco
 
 ## Uniqueness
 
+- Tenant: `code`
+- Merchant: `(tenant_id, code)`
 - Product: `(tenant_id, code)`
 - Package: `(tenant_id, product_id, code)`
 - Inventory: `(package_id, service_date, time_slot)`
@@ -29,3 +31,7 @@ Amounts are integer minor units. Currency is stored explicitly. Client-supplied 
 ## Time
 
 `service_date` is an ISO date and `time_slot` is a normalized business slot string. A later migration may replace these strings with stronger temporal types after timezone policy is finalized.
+
+## Current implementation status
+
+The Ent schema layer is being hardened before repositories/services are added. Schema source is authoritative; generated Ent code is produced by the CI toolchain and must not be hand-written.
