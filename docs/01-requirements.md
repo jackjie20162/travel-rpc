@@ -1,6 +1,6 @@
 # Travel RPC — Current Requirements
 
-**Version:** 0.1.0
+**Version:** 0.1.1
 
 ## Goal
 
@@ -17,11 +17,14 @@ Product → Package/SKU → Date → Time Slot → Inventory/Pricing → Travele
 - Date/time-slot inventory
 - Real-time availability and pricing
 - Transaction-safe inventory reservation; no overselling
+- Idempotent reservation retries
 - Booking/order lifecycle
 - Traveler information
 - Voucher generation and redemption
 - Payment abstraction; PayPal is the first provider
 - REST API gateway consumes RPC; domain rules stay in RPC
+- Client-provided tenant/merchant identity and total amount are not authoritative
+- Order totals are calculated from RPC-owned product/package/inventory pricing
 - AI Planner may recommend only products/prices/availability returned by travel-rpc
 
 ## Development sequence
