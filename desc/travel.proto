@@ -18,8 +18,9 @@ message Order { int64 id=1; string order_no=2; string status=3; int64 total_amou
 message CreatePaymentRequest { string order_no=1; string provider=2; string idempotency_key=3; }
 message Payment { int64 id=1; string payment_no=2; string order_no=3; string provider=4; string provider_payment_id=5; int64 amount=6; string currency=7; string status=8; }
 message PaymentNoRequest { string payment_no=1; }
+message SetPaymentProviderIDRequest { string payment_no=1; string provider_payment_id=2; }
 message MarkPaymentPaidRequest { string payment_no=1; string provider_payment_id=2; }
 service CatalogService { rpc GetProduct(ProductIdRequest) returns (Product); rpc ListProducts(ProductListRequest) returns (ProductListResponse); }
 service InventoryService { rpc Check(InventoryRequest) returns (InventoryResponse); rpc Reserve(ReserveInventoryRequest) returns (ReserveInventoryResponse); }
 service OrderService { rpc Create(CreateOrderRequest) returns (Order); rpc Get(OrderNoRequest) returns (Order); }
-service PaymentService { rpc Create(CreatePaymentRequest) returns (Payment); rpc Get(PaymentNoRequest) returns (Payment); rpc MarkPaid(MarkPaymentPaidRequest) returns (Payment); }
+service PaymentService { rpc Create(CreatePaymentRequest) returns (Payment); rpc Get(PaymentNoRequest) returns (Payment); rpc SetProviderID(SetPaymentProviderIDRequest) returns (Payment); rpc MarkPaid(MarkPaymentPaidRequest) returns (Payment); }
