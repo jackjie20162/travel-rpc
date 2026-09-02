@@ -13,18 +13,19 @@ type CreatePaymentInput struct {
 type PaymentRepository interface {
     Create(ctx context.Context, input CreatePaymentInput) (*PaymentRecord, error)
     Get(ctx context.Context, tenantID, merchantID int64, paymentNo string) (*PaymentRecord, error)
+    SetProviderID(ctx context.Context, tenantID, merchantID int64, paymentNo, providerPaymentID string) (*PaymentRecord, error)
     MarkPaid(ctx context.Context, tenantID, merchantID int64, paymentNo, providerPaymentID string) (*PaymentRecord, error)
 }
 
 type PaymentRecord struct {
-    ID                 int64
-    PaymentNo          string
-    OrderNo            string
-    Provider           string
-    ProviderPaymentID  string
-    Amount             int64
-    Currency           string
-    Status             string
+    ID                int64
+    PaymentNo         string
+    OrderNo           string
+    Provider          string
+    ProviderPaymentID string
+    Amount            int64
+    Currency          string
+    Status            string
 }
 
 type ErrPaymentNotFound struct{}
