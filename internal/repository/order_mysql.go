@@ -25,7 +25,7 @@ func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInpu
 	if input.CustomerEmail != "" { builder.SetCustomerEmail(input.CustomerEmail) }
 	item, err := builder.Save(ctx)
 	if err != nil { _ = tx.Rollback(); return nil, err }
-	if _, err = tx.OrderItem.Create().SetOrderID(item.ID).SetProductID(input.ProductID).SetPackageID(input.PackageID).
+	if _, err = tx.OrderItem.Create().SetOrderID(item.ID).SetProductID(int(input.ProductID)).SetPackageID(int(input.PackageID)).
 		SetQuantity(input.Quantity).SetUnitPrice(input.UnitPrice).SetTotalAmount(total).
 		SetServiceDate(input.ServiceDate).SetTimeSlot(input.TimeSlot).Save(ctx); err != nil {
 		_ = tx.Rollback(); return nil, err
