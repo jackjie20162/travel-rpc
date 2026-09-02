@@ -35,7 +35,7 @@ func (r *mysqlInventoryRepository) Reserve(ctx context.Context, tenantID, mercha
 		inventoryreservation.TenantIDEQ(tenantID), inventoryreservation.ReservationKeyEQ(reservationKey),
 	).Only(ctx)
 	if err == nil {
-		inv, getErr := tx.Inventory.Get(ctx, existing.InventoryID)
+		inv, getErr := tx.Inventory.Get(ctx, int(existing.InventoryID))
 		if getErr != nil { _ = tx.Rollback(); return nil, getErr }
 		result = &ReservationResult{Reservation: existing, Remaining: inv.Capacity-inv.Reserved, UnitPrice: inv.UnitPrice, Currency: inv.Currency}
 		if err = tx.Commit(); err != nil { return nil, err }
@@ -64,17 +64,17 @@ func (r *mysqlInventoryRepository) Reserve(ctx context.Context, tenantID, mercha
 }
 
 func (r *mysqlInventoryRepository) ConfirmReservation(ctx context.Context, tenantID, reservationID, orderID int64) error {
-	_, err := r.client.InventoryReservation.UpdateOneID(reservationID).
-		Where(inventoryreservation.TenantIDEQ(tenantID), inventoryreservation.StatusEQ("RESERVED")) .
+	_, err := r.client.InventoryReservation.UpdateOneID(int(reservationID)).
+		Where(inventoryreservation.TenantIDEQ(tenantID), inventoryreservation.StatusEQ("RESERVED")).
 		SetStatus("CONFIRMED").SetOrderID(orderID).Save(ctx)
 	return err
 }
 
 func (r *mysqlInventoryRepository) ReleaseReservation(ctx context.Context, tenantID, reservationID int64) error {
 	tx, err := r.client.Tx(ctx); if err != nil { return err }
-	hold, err := tx.InventoryReservation.Query().Where(inventoryreservation.IDEQ(reservationID), inventoryreservation.TenantIDEQ(tenantID), inventoryreservation.StatusEQ("RESERVED")).Only(ctx)
+	hold, err := tx.InventoryReservation.Query().Where(inventoryreservation.IDEQ(int(reservationID)), inventoryreservation.TenantIDEQ(tenantID), inventoryreservation.StatusEQ("RESERVED")).Only(ctx)
 	if err != nil { _ = tx.Rollback(); return err }
-	item, err := tx.Inventory.Get(ctx, hold.InventoryID); if err != nil { _ = tx.Rollback(); return err }
+	item, err := tx.Inventory.Get(ctx, int(hold.InventoryID)); if err != nil { _ = tx.Rollback(); return err }
 	if item.Reserved < hold.Quantity { _ = tx.Rollback(); return nil }
 	if _, err = tx.Inventory.UpdateOneID(item.ID).SetReserved(item.Reserved-hold.Quantity).Save(ctx); err != nil { _ = tx.Rollback(); return err }
 	if _, err = tx.InventoryReservation.UpdateOneID(hold.ID).SetStatus("RELEASED").Save(ctx); err != nil { _ = tx.Rollback(); return err }
