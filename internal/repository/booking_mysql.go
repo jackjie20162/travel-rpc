@@ -5,22 +5,18 @@ import (
     "time"
 
     "gitee.com/meinongyihe/travel-rpc/ent"
-    "gitee.com/meinongyihe/travel-rpc/ent/inventory"
     "gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
     "gitee.com/meinongyihe/travel-rpc/ent/product"
 )
 
 type mysqlBookingRepository struct { client *ent.Client }
 
-func NewBookingRepository(client *ent.Client) BookingRepository {
-    return &mysqlBookingRepository{client: client}
-}
+func NewBookingRepository(client *ent.Client) BookingRepository { return &mysqlBookingRepository{client: client} }
 
 func (r *mysqlBookingRepository) CreateFromReservation(ctx context.Context, reservationID int64, input CreateOrderInput) (*ent.Order, error) {
     if reservationID <= 0 || input.TenantID <= 0 || input.MerchantID <= 0 || input.ProductID <= 0 || input.PackageID <= 0 || input.Quantity <= 0 || input.ServiceDate == "" {
         return nil, &ErrInvalidOrder{}
     }
-
     tx, err := r.client.Tx(ctx)
     if err != nil { return nil, err }
     committed := false
@@ -33,9 +29,6 @@ func (r *mysqlBookingRepository) CreateFromReservation(ctx context.Context, rese
     ).Only(ctx)
     if err != nil { return nil, err }
 
-    // A confirmed reservation is the idempotent success path. A retry after a
-    // client timeout therefore returns the already-created order instead of
-    // creating another order or consuming inventory again.
     if hold.Status == "CONFIRMED" {
         if hold.OrderID <= 0 { return nil, &ErrReservationNotActive{} }
         order, err := tx.Order.Get(ctx, int(hold.OrderID))
@@ -76,21 +69,18 @@ func (r *mysqlBookingRepository) CreateFromReservation(ctx context.Context, rese
         return nil, err
     }
 
-    // Conditional update is the concurrency gate. If another request won the
-    // same reservation, this update affects zero rows and the whole transaction
-    // rolls back, so the losing request cannot commit a duplicate order.
-    updated, err := tx.InventoryReservation.UpdateOneID(hold.ID).Where(
+    // Conditional update is the concurrency gate. A competing request that
+    // already won this reservation cannot commit another order.
+    if _, err = tx.InventoryReservation.UpdateOneID(hold.ID).Where(
         inventoryreservation.StatusEQ("RESERVED"),
         inventoryreservation.ExpiresAtGT(time.Now()),
-    ).SetStatus("CONFIRMED").SetOrderID(order.ID).Save(ctx)
-    if err != nil { return nil, err }
-    if updated.ID != hold.ID { return nil, &ErrReservationNotActive{} }
+    ).SetStatus("CONFIRMED").SetOrderID(order.ID).Save(ctx); err != nil {
+        return nil, err
+    }
 
     if err = tx.Commit(); err != nil { return nil, err }
     committed = true
     return order, nil
 }
 
-// Keep the inventory package imported by generated Ent predicate builds in the
-// same module; this also documents that inventory is part of this transaction.
-var _ = inventory.StatusEQ
+var _ = product.StatusEQ
