@@ -22,4 +22,5 @@ func Register(grpcServer *grpc.Server, client *ent.Client) {
     travel.RegisterInventoryServiceServer(grpcServer, service.NewInventoryService(inventory))
     travel.RegisterOrderServiceServer(grpcServer, service.NewOrderService(orders, inventory, booking))
     travel.RegisterPaymentServiceServer(grpcServer, service.NewPaymentService(payments))
+    travel.RegisterTravelManagementServiceServer(grpcServer, service.NewManagementService(client))
 }
