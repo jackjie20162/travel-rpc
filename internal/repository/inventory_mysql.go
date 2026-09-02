@@ -10,7 +10,6 @@ import (
 )
 
 type mysqlInventoryRepository struct { client *ent.Client }
-
 func NewInventoryRepository(client *ent.Client) InventoryRepository { return &mysqlInventoryRepository{client: client} }
 
 func (r *mysqlInventoryRepository) Check(ctx context.Context, tenantID, packageID int64, serviceDate, timeSlot string, quantity int) (*InventoryAvailability, error) {
