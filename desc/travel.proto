@@ -4,51 +4,17 @@ package travel;
 option go_package = "gitee.com/meinongyihe/travel-rpc/travel";
 
 message Empty {}
-
-message Product {
-  int64 id = 1;
-  int64 tenant_id = 2;
-  int64 merchant_id = 3;
-  string code = 4;
-  string title = 5;
-  string slug = 6;
-  string destination = 7;
-  string description = 8;
-  string currency = 9;
-  int64 min_price = 10;
-  string status = 11;
-}
-message ProductIdRequest { int64 id = 1; }
-message ProductListRequest { string keyword = 1; string destination = 2; int32 page = 3; int32 page_size = 4; }
-message ProductListResponse { repeated Product items = 1; int64 total = 2; }
-
-message InventoryRequest {
-  int64 package_id = 1;
-  string date = 2;
-  string time_slot = 3;
-  int32 quantity = 4;
-}
-message InventoryResponse { bool available = 1; int32 remaining = 2; int64 unit_price = 3; string currency = 4; }
-message ReserveInventoryRequest {
-  int64 package_id = 1;
-  string date = 2;
-  string time_slot = 3;
-  int32 quantity = 4;
-  string reservation_key = 5;
-}
-message ReserveInventoryResponse { bool reserved = 1; int32 remaining = 2; int64 unit_price = 3; string currency = 4; }
-
-message CreateOrderRequest {
-  int64 product_id = 1;
-  int64 package_id = 2;
-  string date = 3;
-  string time_slot = 4;
-  int32 quantity = 5;
-  string customer_email = 6;
-  string reservation_key = 7;
-}
-message Order { int64 id = 1; string order_no = 2; string status = 3; int64 total_amount = 4; string currency = 5; }
-
+message Product { int64 id=1; int64 tenant_id=2; int64 merchant_id=3; string code=4; string title=5; string slug=6; string destination=7; string description=8; string currency=9; int64 min_price=10; string status=11; }
+message ProductIdRequest { int64 id=1; }
+message ProductListRequest { string keyword=1; string destination=2; int32 page=3; int32 page_size=4; }
+message ProductListResponse { repeated Product items=1; int64 total=2; }
+message InventoryRequest { int64 package_id=1; string date=2; string time_slot=3; int32 quantity=4; }
+message InventoryResponse { bool available=1; int32 remaining=2; int64 unit_price=3; string currency=4; }
+message ReserveInventoryRequest { int64 package_id=1; string date=2; string time_slot=3; int32 quantity=4; string reservation_key=5; }
+message ReserveInventoryResponse { bool reserved=1; int32 remaining=2; int64 unit_price=3; string currency=4; }
+message CreateOrderRequest { int64 product_id=1; int64 package_id=2; string date=3; string time_slot=4; int32 quantity=5; string customer_email=6; string reservation_key=7; int64 customer_id=8; }
+message OrderNoRequest { string order_no=1; }
+message Order { int64 id=1; string order_no=2; string status=3; int64 total_amount=4; string currency=5; }
 service CatalogService { rpc GetProduct(ProductIdRequest) returns (Product); rpc ListProducts(ProductListRequest) returns (ProductListResponse); }
 service InventoryService { rpc Check(InventoryRequest) returns (InventoryResponse); rpc Reserve(ReserveInventoryRequest) returns (ReserveInventoryResponse); }
-service OrderService { rpc Create(CreateOrderRequest) returns (Order); }
+service OrderService { rpc Create(CreateOrderRequest) returns (Order); rpc Get(OrderNoRequest) returns (Order); }
