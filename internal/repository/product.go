@@ -22,7 +22,7 @@ func NewProductRepository(client *ent.Client) ProductRepository {
 }
 
 func (r *productRepository) GetByID(ctx context.Context, id int64) (*ent.Product, error) {
-	return r.client.Product.Get(ctx, id)
+	return r.client.Product.Get(ctx, int(id))
 }
 
 func (r *productRepository) List(ctx context.Context, tenantID int64, keyword, destination string, offset, limit int) ([]*ent.Product, int, error) {
