@@ -48,7 +48,7 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 - [ ] cancellation/refund
 
 ## Traveler / Voucher
-- [x] Traveler schema
+- [x] Traveler schema + tenant/order index
 - [x] Voucher schema + indexes
 - [ ] repositories
 - [ ] voucher generation
@@ -67,4 +67,8 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 
 **M1 — executable RPC data layer: in progress.**
 
-Latest M1 work: corrected protobuf generation path, completed tenant/merchant schema constraints, and synchronized requirements/data-model/checklist documentation.
+Latest M1 work: tenant/merchant isolation indexes, traveler query index, authoritative order pricing boundary, transaction-safe reservation contract, data-model/security documentation, and CI generation/build/test workflow.
+
+## Verification status
+
+The latest CI run after the protobuf-path correction is still not green; runtime generation and build must be verified before marking generated code or M1 execution complete.
