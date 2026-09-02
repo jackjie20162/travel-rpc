@@ -24,24 +24,27 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 - [x] Product schema + indexes
 - [x] Package/SKU schema + indexes
 - [x] product RPC contract
-- [ ] repositories
+- [x] product repository foundation
 - [ ] catalog service implementation
 
 ## Inventory
 - [x] Inventory schema + indexes
+- [x] InventoryReservation schema + idempotency index
 - [x] availability RPC contract
 - [x] reservation RPC contract
-- [ ] repository
+- [x] inventory repository contract
+- [ ] repository implementation
 - [ ] availability implementation
 - [ ] atomic reservation
-- [ ] idempotent reservation key storage
-- [ ] release/confirm
+- [ ] idempotent reservation key storage implementation
+- [ ] release/confirm implementation
 
 ## Order
 - [x] Order schema + indexes
 - [x] OrderItem schema
 - [x] CreateOrder RPC contract
-- [ ] repository
+- [x] order repository contract
+- [ ] repository implementation
 - [ ] create/query implementation
 - [ ] authoritative price calculation
 - [ ] order state machine
@@ -67,8 +70,8 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 
 **M1 — executable RPC data layer: in progress.**
 
-Latest M1 work: tenant/merchant isolation indexes, traveler query index, authoritative order pricing boundary, transaction-safe reservation contract, data-model/security documentation, and CI generation/build/test workflow.
+Latest M1 work: database configuration, MySQL driver dependency, Ent client bootstrap, product repository implementation foundation, inventory reservation repository contract, and order repository contract.
 
 ## Verification status
 
-The latest CI run after the protobuf-path correction is still not green; runtime generation and build must be verified before marking generated code or M1 execution complete.
+CI generation/test/build still needs a new green run. Repository code that imports generated Ent packages is intentionally dependent on the real Ent generation step; no hand-written generated code is accepted.
