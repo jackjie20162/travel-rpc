@@ -1,6 +1,6 @@
 # Travel RPC — Feature Checklist
 
-Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contract/schema checkbox does not mean runtime verification is complete.
+Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. Implementation does not mean CI/runtime verification is complete.
 
 ## Foundation
 - [x] Go module
@@ -16,38 +16,39 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 ## Tenant / Merchant
 - [x] Tenant schema + unique code index
 - [x] Merchant schema + tenant-scoped unique code index
-- [ ] repositories
-- [ ] tenant authorization enforcement
-- [ ] merchant scope enforcement
+- [ ] tenant/merchant repositories
+- [x] RPC tenant scope extraction
+- [x] tenant scope enforcement in Catalog/Inventory/Order service entry points
+- [ ] full merchant authorization policy
 
 ## Catalog
 - [x] Product schema + indexes
 - [x] Package/SKU schema + indexes
 - [x] product RPC contract
-- [x] product repository foundation
-- [ ] catalog service implementation
+- [x] product repository implementation foundation
+- [x] CatalogService implementation
 
 ## Inventory
 - [x] Inventory schema + indexes
 - [x] InventoryReservation schema + idempotency index
 - [x] availability RPC contract
 - [x] reservation RPC contract
-- [x] inventory repository contract
-- [ ] repository implementation
-- [ ] availability implementation
-- [ ] atomic reservation
-- [ ] idempotent reservation key storage implementation
-- [ ] release/confirm implementation
+- [x] inventory repository implementation
+- [x] availability implementation
+- [x] atomic reservation update with optimistic reserved-count predicate
+- [x] idempotent reservation key storage
+- [x] release/confirm/expire implementation
+- [ ] database-level concurrency integration tests
 
 ## Order
 - [x] Order schema + indexes
 - [x] OrderItem schema
 - [x] CreateOrder RPC contract
-- [x] order repository contract
-- [ ] repository implementation
-- [ ] create/query implementation
-- [ ] authoritative price calculation
-- [ ] order state machine
+- [x] order repository implementation foundation
+- [x] create/query implementation
+- [x] server-authoritative price/currency calculation from inventory result
+- [~] reservation-to-order confirmation workflow
+- [ ] durable order state machine
 - [ ] cancellation/refund
 
 ## Traveler / Voucher
@@ -64,14 +65,25 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 - [ ] request validation
 - [ ] authentication/tenant context propagation
 
+## Merchant Backend Plugin
+- [x] Travel plugin directory
+- [x] merchant menu SQL skeleton
+- [x] product/inventory/order page skeletons
+- [ ] merchant-api2 Travel gateway endpoints
+- [ ] real product CRUD
+- [ ] package/SKU management
+- [ ] inventory calendar/time-slot management
+- [ ] order operations
+- [ ] permissions/role mapping
+
 ## Current milestone
 
 **M0 — foundation/contracts: completed.**
 
 **M1 — executable RPC data layer: in progress.**
 
-Latest M1 work: database configuration, MySQL driver dependency, Ent client bootstrap, product repository implementation foundation, inventory reservation repository contract, and order repository contract.
+Current M1 implementation includes authenticated tenant/merchant metadata extraction, CatalogService, InventoryService, OrderService, MySQL inventory reservation persistence, and order persistence. These changes require real protobuf/Ent generation before compilation.
 
 ## Verification status
 
-CI generation/test/build still needs a new green run. Repository code that imports generated Ent packages is intentionally dependent on the real Ent generation step; no hand-written generated code is accepted.
+The latest completed CI run verified protobuf and Ent generation but failed at `go test` because module metadata needed tidying. A new CI run has been triggered after the module-tidy fix. The newly added runtime services/repositories are not marked verified until that run completes successfully.
