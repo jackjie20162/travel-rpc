@@ -15,6 +15,11 @@ message ReserveInventoryResponse { bool reserved=1; int32 remaining=2; int64 uni
 message CreateOrderRequest { int64 product_id=1; int64 package_id=2; string date=3; string time_slot=4; int32 quantity=5; string customer_email=6; string reservation_key=7; int64 customer_id=8; }
 message OrderNoRequest { string order_no=1; }
 message Order { int64 id=1; string order_no=2; string status=3; int64 total_amount=4; string currency=5; }
+message CreatePaymentRequest { string order_no=1; string provider=2; string idempotency_key=3; }
+message Payment { int64 id=1; string payment_no=2; string order_no=3; string provider=4; string provider_payment_id=5; int64 amount=6; string currency=7; string status=8; }
+message PaymentNoRequest { string payment_no=1; }
+message MarkPaymentPaidRequest { string payment_no=1; string provider_payment_id=2; }
 service CatalogService { rpc GetProduct(ProductIdRequest) returns (Product); rpc ListProducts(ProductListRequest) returns (ProductListResponse); }
 service InventoryService { rpc Check(InventoryRequest) returns (InventoryResponse); rpc Reserve(ReserveInventoryRequest) returns (ReserveInventoryResponse); }
 service OrderService { rpc Create(CreateOrderRequest) returns (Order); rpc Get(OrderNoRequest) returns (Order); }
+service PaymentService { rpc Create(CreatePaymentRequest) returns (Payment); rpc Get(PaymentNoRequest) returns (Payment); rpc MarkPaid(MarkPaymentPaidRequest) returns (Payment); }
