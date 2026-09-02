@@ -40,6 +40,18 @@
 - Order creation and reservation confirmation currently span separate repository transactions. The next hardening step is to make the reservation-to-order transition durable/idempotent so a process failure cannot leave an order and inventory hold inconsistent.
 - Runtime code depends on actual protobuf/Ent generation and therefore remains unverified until CI passes.
 
+## 2026-09-02 — Ent ID type compatibility fix
+
+### Implemented
+- Fixed the `int64` RPC/domain ID to `int` Ent primary-key boundary in product, inventory-reservation and order-item repository operations.
+- Kept the public repository/service interfaces on `int64`; conversions are isolated to generated Ent calls.
+- Preserved tenant-scoped predicates and server-side pricing/inventory rules.
+
+### Verification status
+- The previous CI failure was caused by generated Ent primary keys using Go `int` while repository inputs used `int64`.
+- The fixes are committed to `main`; a new CI run is expected from the push-triggered workflow.
+- CI must still pass both `go test ./...` and `go build ./...` before this milestone is marked green.
+
 ## 2026-09-02 — Merchant Travel plugin foundation
 
 ### Implemented
@@ -54,7 +66,7 @@
 - The current plugin API files remain contract/skeleton code until the merchant API gateway and travel RPC client are wired and verified.
 
 ### Next
-1. Verify the latest travel-rpc CI run.
+1. Verify the new travel-rpc CI run.
 2. Harden reservation/order consistency and add database concurrency tests.
 3. Finish travel-api REST gateway and authentication/context propagation.
 4. Add merchant-api2 Travel gateway endpoints backed by travel-rpc.
