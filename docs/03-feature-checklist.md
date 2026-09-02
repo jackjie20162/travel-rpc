@@ -1,16 +1,17 @@
 # Travel RPC — Feature Checklist
 
-Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending.
+Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contract/schema checkbox does not mean runtime verification is complete.
 
 ## Foundation
 - [x] Go module
 - [x] RPC server bootstrap
 - [x] protobuf contract
 - [x] Ent generation entrypoint
-- [ ] generated protobuf Go/grpc code
-- [ ] generated Ent code
-- [ ] compile verification
-- [ ] automated tests / CI
+- [x] code-generation Makefile targets
+- [x] CI generation/test/build workflow
+- [ ] generated protobuf Go/grpc code committed
+- [ ] generated Ent code committed
+- [ ] CI first green run verified
 
 ## Tenant / Merchant
 - [~] Tenant schema placeholder
@@ -20,40 +21,50 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending.
 - [ ] merchant scope enforcement
 
 ## Catalog
-- [x] Product schema
-- [x] Package/SKU schema
+- [x] Product schema + indexes
+- [x] Package/SKU schema + indexes
 - [x] product RPC contract
 - [ ] repositories
 - [ ] catalog service implementation
 
 ## Inventory
-- [x] Inventory schema
+- [x] Inventory schema + indexes
 - [x] availability RPC contract
+- [x] reservation RPC contract
 - [ ] repository
 - [ ] availability implementation
 - [ ] atomic reservation
+- [ ] idempotent reservation key storage
 - [ ] release/confirm
 
 ## Order
-- [x] Order schema
+- [x] Order schema + indexes
 - [x] OrderItem schema
 - [x] CreateOrder RPC contract
 - [ ] repository
 - [ ] create/query implementation
+- [ ] authoritative price calculation
 - [ ] order state machine
 - [ ] cancellation/refund
 
 ## Traveler / Voucher
 - [x] Traveler schema
-- [x] Voucher schema
+- [x] Voucher schema + indexes
 - [ ] repositories
 - [ ] voucher generation
 - [ ] redemption
+
+## API Gateway
+- [x] REST contract
+- [ ] generated API handlers/service context
+- [ ] RPC client wiring
+- [ ] request validation
+- [ ] authentication/tenant context propagation
 
 ## Current milestone
 
 **M0 — foundation/contracts: completed.**
 
-**M1 — executable RPC data layer: next.**
+**M1 — executable RPC data layer: in progress.**
 
-M1 target: finalize Ent indexes/edges, generate code, implement repositories/services, implement transaction-safe inventory reservation, then connect travel-api and add CI verification.
+Latest M1 work: uniqueness/query indexes, authoritative order pricing boundary, transaction-safe reservation contract, data-model/security documentation, and CI generation/build/test workflow.
