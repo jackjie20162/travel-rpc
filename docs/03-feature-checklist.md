@@ -14,8 +14,8 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 - [ ] CI first green run verified
 
 ## Tenant / Merchant
-- [~] Tenant schema placeholder
-- [x] Merchant schema
+- [x] Tenant schema + unique code index
+- [x] Merchant schema + tenant-scoped unique code index
 - [ ] repositories
 - [ ] tenant authorization enforcement
 - [ ] merchant scope enforcement
@@ -67,4 +67,4 @@ Legend: `[x]` implemented, `[~]` contract/schema started, `[ ]` pending. A contr
 
 **M1 — executable RPC data layer: in progress.**
 
-Latest M1 work: uniqueness/query indexes, authoritative order pricing boundary, transaction-safe reservation contract, data-model/security documentation, and CI generation/build/test workflow.
+Latest M1 work: corrected protobuf generation path, completed tenant/merchant schema constraints, and synchronized requirements/data-model/checklist documentation.
