@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitee.com/meinongyihe/travel-rpc/ent"
+	"gitee.com/meinongyihe/travel-rpc/ent/product"
 )
 
 // ProductRepository owns tenant-scoped product catalog persistence.
@@ -25,20 +26,18 @@ func (r *productRepository) GetByID(ctx context.Context, id int64) (*ent.Product
 }
 
 func (r *productRepository) List(ctx context.Context, tenantID int64, keyword, destination string, offset, limit int) ([]*ent.Product, int, error) {
-	q := r.client.Product.Query().Where(
-		productTenantIDEQ(tenantID),
-	)
+	q := r.client.Product.Query().Where(product.TenantIDEQ(tenantID))
 	if keyword != "" {
-		q = q.Where(productTitleContains(keyword))
+		q = q.Where(product.TitleContains(keyword))
 	}
 	if destination != "" {
-		q = q.Where(productDestinationEQ(destination))
+		q = q.Where(product.DestinationEQ(destination))
 	}
-	items, err := q.Offset(offset).Limit(limit).All(ctx)
+	count, err := q.Clone().Count(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
-	count, err := q.Clone().Offset(0).Limit(0).Count(ctx)
+	items, err := q.Offset(offset).Limit(limit).All(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
