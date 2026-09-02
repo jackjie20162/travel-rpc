@@ -11,7 +11,7 @@ import (
 // package and inventory pricing; callers must not be treated as authoritative.
 type OrderRepository interface {
 	Create(ctx context.Context, input CreateOrderInput) (*ent.Order, error)
-	GetByOrderNo(ctx context.Context, tenantID int64, orderNo string) (*ent.Order, error)
+	GetByOrderNo(ctx context.Context, tenantID, merchantID int64, orderNo string) (*ent.Order, error)
 }
 
 type CreateOrderInput struct {
