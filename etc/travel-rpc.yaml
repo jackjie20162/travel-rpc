@@ -1,2 +1,14 @@
 Name: travel-rpc
 ListenOn: 0.0.0.0:9201
+
+DatabaseConf:
+  Type: mysql
+  Host: 127.0.0.1
+  Port: 13307
+  DBName: travel
+  Username: root
+  Password: '123456'
+  MaxOpenConn: 100
+  SSLMode: disable
+  CacheTime: 5
+  Debug: true
