@@ -1,6 +1,6 @@
 # Travel RPC — Current Requirements
 
-**Version:** 0.1.1
+**Version:** 0.1.2
 
 ## Goal
 
@@ -13,6 +13,7 @@ Product → Package/SKU → Date → Time Slot → Inventory/Pricing → Travele
 ## Requirements
 
 - Multi-tenant and merchant isolation
+- Tenant and merchant codes are unique within their required scope
 - Product catalog and package/SKU
 - Date/time-slot inventory
 - Real-time availability and pricing
@@ -38,3 +39,7 @@ Product → Package/SKU → Date → Time Slot → Inventory/Pricing → Travele
 ## Documentation rule
 
 Every implementation step updates the requirements/architecture/function checklist/development log as applicable.
+
+## Current milestone
+
+M1 executable RPC data layer: schema hardening is in progress. Runtime repositories and services are not yet claimed as complete until generated-code CI and build verification succeed.
