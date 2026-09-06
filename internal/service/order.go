@@ -38,6 +38,8 @@ func (s *OrderService) Create(ctx context.Context, req *travel.CreateOrderReques
         userID = id
     } else if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
         userID = &id
+    } else if cid := req.GetCustomerId(); cid > 0 {
+        userID = &cid
     }
 
     var customerID *int64
