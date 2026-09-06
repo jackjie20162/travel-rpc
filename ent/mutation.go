@@ -5738,6 +5738,9 @@ type OrderMutation struct {
 	package_name    *string
 	service_date    *string
 	time_slot       *string
+	reject_reason   *string
+	verified_at     *int64
+	addverified_at  *int64
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Order, error)
@@ -6686,6 +6689,125 @@ func (m *OrderMutation) ResetTimeSlot() {
 	delete(m.clearedFields, order.FieldTimeSlot)
 }
 
+// SetRejectReason sets the "reject_reason" field.
+func (m *OrderMutation) SetRejectReason(s string) {
+	m.reject_reason = &s
+}
+
+// RejectReason returns the value of the "reject_reason" field in the mutation.
+func (m *OrderMutation) RejectReason() (r string, exists bool) {
+	v := m.reject_reason
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRejectReason returns the old "reject_reason" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldRejectReason(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRejectReason is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRejectReason requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRejectReason: %w", err)
+	}
+	return oldValue.RejectReason, nil
+}
+
+// ClearRejectReason clears the value of the "reject_reason" field.
+func (m *OrderMutation) ClearRejectReason() {
+	m.reject_reason = nil
+	m.clearedFields[order.FieldRejectReason] = struct{}{}
+}
+
+// RejectReasonCleared returns if the "reject_reason" field was cleared in this mutation.
+func (m *OrderMutation) RejectReasonCleared() bool {
+	_, ok := m.clearedFields[order.FieldRejectReason]
+	return ok
+}
+
+// ResetRejectReason resets all changes to the "reject_reason" field.
+func (m *OrderMutation) ResetRejectReason() {
+	m.reject_reason = nil
+	delete(m.clearedFields, order.FieldRejectReason)
+}
+
+// SetVerifiedAt sets the "verified_at" field.
+func (m *OrderMutation) SetVerifiedAt(i int64) {
+	m.verified_at = &i
+	m.addverified_at = nil
+}
+
+// VerifiedAt returns the value of the "verified_at" field in the mutation.
+func (m *OrderMutation) VerifiedAt() (r int64, exists bool) {
+	v := m.verified_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldVerifiedAt returns the old "verified_at" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldVerifiedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldVerifiedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldVerifiedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldVerifiedAt: %w", err)
+	}
+	return oldValue.VerifiedAt, nil
+}
+
+// AddVerifiedAt adds i to the "verified_at" field.
+func (m *OrderMutation) AddVerifiedAt(i int64) {
+	if m.addverified_at != nil {
+		*m.addverified_at += i
+	} else {
+		m.addverified_at = &i
+	}
+}
+
+// AddedVerifiedAt returns the value that was added to the "verified_at" field in this mutation.
+func (m *OrderMutation) AddedVerifiedAt() (r int64, exists bool) {
+	v := m.addverified_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearVerifiedAt clears the value of the "verified_at" field.
+func (m *OrderMutation) ClearVerifiedAt() {
+	m.verified_at = nil
+	m.addverified_at = nil
+	m.clearedFields[order.FieldVerifiedAt] = struct{}{}
+}
+
+// VerifiedAtCleared returns if the "verified_at" field was cleared in this mutation.
+func (m *OrderMutation) VerifiedAtCleared() bool {
+	_, ok := m.clearedFields[order.FieldVerifiedAt]
+	return ok
+}
+
+// ResetVerifiedAt resets all changes to the "verified_at" field.
+func (m *OrderMutation) ResetVerifiedAt() {
+	m.verified_at = nil
+	m.addverified_at = nil
+	delete(m.clearedFields, order.FieldVerifiedAt)
+}
+
 // Where appends a list predicates to the OrderMutation builder.
 func (m *OrderMutation) Where(ps ...predicate.Order) {
 	m.predicates = append(m.predicates, ps...)
@@ -6720,7 +6842,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 17)
+	fields := make([]string, 0, 19)
 	if m.tenant_id != nil {
 		fields = append(fields, order.FieldTenantID)
 	}
@@ -6772,6 +6894,12 @@ func (m *OrderMutation) Fields() []string {
 	if m.time_slot != nil {
 		fields = append(fields, order.FieldTimeSlot)
 	}
+	if m.reject_reason != nil {
+		fields = append(fields, order.FieldRejectReason)
+	}
+	if m.verified_at != nil {
+		fields = append(fields, order.FieldVerifiedAt)
+	}
 	return fields
 }
 
@@ -6814,6 +6942,10 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.ServiceDate()
 	case order.FieldTimeSlot:
 		return m.TimeSlot()
+	case order.FieldRejectReason:
+		return m.RejectReason()
+	case order.FieldVerifiedAt:
+		return m.VerifiedAt()
 	}
 	return nil, false
 }
@@ -6857,6 +6989,10 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldServiceDate(ctx)
 	case order.FieldTimeSlot:
 		return m.OldTimeSlot(ctx)
+	case order.FieldRejectReason:
+		return m.OldRejectReason(ctx)
+	case order.FieldVerifiedAt:
+		return m.OldVerifiedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Order field %s", name)
 }
@@ -6985,6 +7121,20 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetTimeSlot(v)
 		return nil
+	case order.FieldRejectReason:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRejectReason(v)
+		return nil
+	case order.FieldVerifiedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetVerifiedAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
 }
@@ -7008,6 +7158,9 @@ func (m *OrderMutation) AddedFields() []string {
 	if m.addtotal_amount != nil {
 		fields = append(fields, order.FieldTotalAmount)
 	}
+	if m.addverified_at != nil {
+		fields = append(fields, order.FieldVerifiedAt)
+	}
 	return fields
 }
 
@@ -7026,6 +7179,8 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedCustomerID()
 	case order.FieldTotalAmount:
 		return m.AddedTotalAmount()
+	case order.FieldVerifiedAt:
+		return m.AddedVerifiedAt()
 	}
 	return nil, false
 }
@@ -7070,6 +7225,13 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddTotalAmount(v)
 		return nil
+	case order.FieldVerifiedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddVerifiedAt(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order numeric field %s", name)
 }
@@ -7107,6 +7269,12 @@ func (m *OrderMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(order.FieldTimeSlot) {
 		fields = append(fields, order.FieldTimeSlot)
+	}
+	if m.FieldCleared(order.FieldRejectReason) {
+		fields = append(fields, order.FieldRejectReason)
+	}
+	if m.FieldCleared(order.FieldVerifiedAt) {
+		fields = append(fields, order.FieldVerifiedAt)
 	}
 	return fields
 }
@@ -7151,6 +7319,12 @@ func (m *OrderMutation) ClearField(name string) error {
 		return nil
 	case order.FieldTimeSlot:
 		m.ClearTimeSlot()
+		return nil
+	case order.FieldRejectReason:
+		m.ClearRejectReason()
+		return nil
+	case order.FieldVerifiedAt:
+		m.ClearVerifiedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
@@ -7210,6 +7384,12 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldTimeSlot:
 		m.ResetTimeSlot()
+		return nil
+	case order.FieldRejectReason:
+		m.ResetRejectReason()
+		return nil
+	case order.FieldVerifiedAt:
+		m.ResetVerifiedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)

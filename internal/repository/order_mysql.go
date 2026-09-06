@@ -63,7 +63,11 @@ func (r *mysqlOrderRepository) GetByOrderNo(ctx context.Context, tenantID, merch
 func (r *mysqlOrderRepository) List(ctx context.Context, tenantID, merchantID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
 	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID)}
 	if status != "" {
-		preds = append(preds, order.StatusEQ(status))
+		if status == "PAID" {
+			preds = append(preds, order.PaymentStatusEQ(status))
+		} else {
+			preds = append(preds, order.StatusEQ(status))
+		}
 	}
 	q := r.client.Order.Query().Where(preds...)
 	total, err := q.Clone().Count(ctx)
@@ -83,7 +87,11 @@ func (r *mysqlOrderRepository) List(ctx context.Context, tenantID, merchantID in
 func (r *mysqlOrderRepository) CountByStatus(ctx context.Context, tenantID, merchantID int64, status string) (int64, error) {
 	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID)}
 	if status != "" {
-		preds = append(preds, order.StatusEQ(status))
+		if status == "PAID" {
+			preds = append(preds, order.PaymentStatusEQ(status))
+		} else {
+			preds = append(preds, order.StatusEQ(status))
+		}
 	}
 	n, err := r.client.Order.Query().Where(preds...).Count(ctx)
 	return int64(n), err
@@ -92,7 +100,11 @@ func (r *mysqlOrderRepository) CountByStatus(ctx context.Context, tenantID, merc
 func (r *mysqlOrderRepository) ListByUser(ctx context.Context, tenantID, userID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
 	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.UserIDEQ(userID)}
 	if status != "" {
-		preds = append(preds, order.StatusEQ(status))
+		if status == "PAID" {
+			preds = append(preds, order.PaymentStatusEQ(status))
+		} else {
+			preds = append(preds, order.StatusEQ(status))
+		}
 	}
 	q := r.client.Order.Query().Where(preds...)
 	total, err := q.Clone().Count(ctx)
@@ -112,7 +124,11 @@ func (r *mysqlOrderRepository) ListByUser(ctx context.Context, tenantID, userID 
 func (r *mysqlOrderRepository) ListByCustomer(ctx context.Context, tenantID, customerID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
 	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.CustomerIDEQ(customerID)}
 	if status != "" {
-		preds = append(preds, order.StatusEQ(status))
+		if status == "PAID" {
+			preds = append(preds, order.PaymentStatusEQ(status))
+		} else {
+			preds = append(preds, order.StatusEQ(status))
+		}
 	}
 	q := r.client.Order.Query().Where(preds...)
 	total, err := q.Clone().Count(ctx)
@@ -135,6 +151,23 @@ func (r *mysqlOrderRepository) ListTravelersByOrderID(ctx context.Context, order
 
 func (r *mysqlOrderRepository) ListItemsByOrderID(ctx context.Context, orderID int64) ([]*ent.OrderItem, error) {
 	return r.client.OrderItem.Query().Where(orderitem.OrderIDEQ(orderID)).Order(ent.Asc(orderitem.FieldID)).All(ctx)
+}
+
+func (r *mysqlOrderRepository) UpdateStatus(ctx context.Context, tenantID, merchantID int64, orderNo string, newStatus string, rejectReason string, verifiedAt int64) error {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID), order.OrderNoEQ(orderNo)}
+	o, err := r.client.Order.Query().Where(preds...).Only(ctx)
+	if err != nil {
+		return err
+	}
+	u := r.client.Order.UpdateOneID(o.ID).SetStatus(newStatus)
+	if rejectReason != "" {
+		u = u.SetRejectReason(rejectReason)
+	}
+	if verifiedAt > 0 {
+		u = u.SetVerifiedAt(verifiedAt)
+	}
+	_, err = u.Save(ctx)
+	return err
 }
 
 func newOrderNo() string {

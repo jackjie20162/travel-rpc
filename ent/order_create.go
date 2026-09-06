@@ -225,6 +225,34 @@ func (_c *OrderCreate) SetNillableTimeSlot(v *string) *OrderCreate {
 	return _c
 }
 
+// SetRejectReason sets the "reject_reason" field.
+func (_c *OrderCreate) SetRejectReason(v string) *OrderCreate {
+	_c.mutation.SetRejectReason(v)
+	return _c
+}
+
+// SetNillableRejectReason sets the "reject_reason" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableRejectReason(v *string) *OrderCreate {
+	if v != nil {
+		_c.SetRejectReason(*v)
+	}
+	return _c
+}
+
+// SetVerifiedAt sets the "verified_at" field.
+func (_c *OrderCreate) SetVerifiedAt(v int64) *OrderCreate {
+	_c.mutation.SetVerifiedAt(v)
+	return _c
+}
+
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableVerifiedAt(v *int64) *OrderCreate {
+	if v != nil {
+		_c.SetVerifiedAt(*v)
+	}
+	return _c
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_c *OrderCreate) Mutation() *OrderMutation {
 	return _c.mutation
@@ -395,6 +423,14 @@ func (_c *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.TimeSlot(); ok {
 		_spec.SetField(order.FieldTimeSlot, field.TypeString, value)
 		_node.TimeSlot = value
+	}
+	if value, ok := _c.mutation.RejectReason(); ok {
+		_spec.SetField(order.FieldRejectReason, field.TypeString, value)
+		_node.RejectReason = value
+	}
+	if value, ok := _c.mutation.VerifiedAt(); ok {
+		_spec.SetField(order.FieldVerifiedAt, field.TypeInt64, value)
+		_node.VerifiedAt = value
 	}
 	return _node, _spec
 }

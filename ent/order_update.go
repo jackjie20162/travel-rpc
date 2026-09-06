@@ -360,6 +360,53 @@ func (_u *OrderUpdate) ClearTimeSlot() *OrderUpdate {
 	return _u
 }
 
+// SetRejectReason sets the "reject_reason" field.
+func (_u *OrderUpdate) SetRejectReason(v string) *OrderUpdate {
+	_u.mutation.SetRejectReason(v)
+	return _u
+}
+
+// SetNillableRejectReason sets the "reject_reason" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableRejectReason(v *string) *OrderUpdate {
+	if v != nil {
+		_u.SetRejectReason(*v)
+	}
+	return _u
+}
+
+// ClearRejectReason clears the value of the "reject_reason" field.
+func (_u *OrderUpdate) ClearRejectReason() *OrderUpdate {
+	_u.mutation.ClearRejectReason()
+	return _u
+}
+
+// SetVerifiedAt sets the "verified_at" field.
+func (_u *OrderUpdate) SetVerifiedAt(v int64) *OrderUpdate {
+	_u.mutation.ResetVerifiedAt()
+	_u.mutation.SetVerifiedAt(v)
+	return _u
+}
+
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableVerifiedAt(v *int64) *OrderUpdate {
+	if v != nil {
+		_u.SetVerifiedAt(*v)
+	}
+	return _u
+}
+
+// AddVerifiedAt adds value to the "verified_at" field.
+func (_u *OrderUpdate) AddVerifiedAt(v int64) *OrderUpdate {
+	_u.mutation.AddVerifiedAt(v)
+	return _u
+}
+
+// ClearVerifiedAt clears the value of the "verified_at" field.
+func (_u *OrderUpdate) ClearVerifiedAt() *OrderUpdate {
+	_u.mutation.ClearVerifiedAt()
+	return _u
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_u *OrderUpdate) Mutation() *OrderMutation {
 	return _u.mutation
@@ -509,6 +556,21 @@ func (_u *OrderUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.TimeSlotCleared() {
 		_spec.ClearField(order.FieldTimeSlot, field.TypeString)
+	}
+	if value, ok := _u.mutation.RejectReason(); ok {
+		_spec.SetField(order.FieldRejectReason, field.TypeString, value)
+	}
+	if _u.mutation.RejectReasonCleared() {
+		_spec.ClearField(order.FieldRejectReason, field.TypeString)
+	}
+	if value, ok := _u.mutation.VerifiedAt(); ok {
+		_spec.SetField(order.FieldVerifiedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedVerifiedAt(); ok {
+		_spec.AddField(order.FieldVerifiedAt, field.TypeInt64, value)
+	}
+	if _u.mutation.VerifiedAtCleared() {
+		_spec.ClearField(order.FieldVerifiedAt, field.TypeInt64)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -863,6 +925,53 @@ func (_u *OrderUpdateOne) ClearTimeSlot() *OrderUpdateOne {
 	return _u
 }
 
+// SetRejectReason sets the "reject_reason" field.
+func (_u *OrderUpdateOne) SetRejectReason(v string) *OrderUpdateOne {
+	_u.mutation.SetRejectReason(v)
+	return _u
+}
+
+// SetNillableRejectReason sets the "reject_reason" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableRejectReason(v *string) *OrderUpdateOne {
+	if v != nil {
+		_u.SetRejectReason(*v)
+	}
+	return _u
+}
+
+// ClearRejectReason clears the value of the "reject_reason" field.
+func (_u *OrderUpdateOne) ClearRejectReason() *OrderUpdateOne {
+	_u.mutation.ClearRejectReason()
+	return _u
+}
+
+// SetVerifiedAt sets the "verified_at" field.
+func (_u *OrderUpdateOne) SetVerifiedAt(v int64) *OrderUpdateOne {
+	_u.mutation.ResetVerifiedAt()
+	_u.mutation.SetVerifiedAt(v)
+	return _u
+}
+
+// SetNillableVerifiedAt sets the "verified_at" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableVerifiedAt(v *int64) *OrderUpdateOne {
+	if v != nil {
+		_u.SetVerifiedAt(*v)
+	}
+	return _u
+}
+
+// AddVerifiedAt adds value to the "verified_at" field.
+func (_u *OrderUpdateOne) AddVerifiedAt(v int64) *OrderUpdateOne {
+	_u.mutation.AddVerifiedAt(v)
+	return _u
+}
+
+// ClearVerifiedAt clears the value of the "verified_at" field.
+func (_u *OrderUpdateOne) ClearVerifiedAt() *OrderUpdateOne {
+	_u.mutation.ClearVerifiedAt()
+	return _u
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_u *OrderUpdateOne) Mutation() *OrderMutation {
 	return _u.mutation
@@ -1042,6 +1151,21 @@ func (_u *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error)
 	}
 	if _u.mutation.TimeSlotCleared() {
 		_spec.ClearField(order.FieldTimeSlot, field.TypeString)
+	}
+	if value, ok := _u.mutation.RejectReason(); ok {
+		_spec.SetField(order.FieldRejectReason, field.TypeString, value)
+	}
+	if _u.mutation.RejectReasonCleared() {
+		_spec.ClearField(order.FieldRejectReason, field.TypeString)
+	}
+	if value, ok := _u.mutation.VerifiedAt(); ok {
+		_spec.SetField(order.FieldVerifiedAt, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedVerifiedAt(); ok {
+		_spec.AddField(order.FieldVerifiedAt, field.TypeInt64, value)
+	}
+	if _u.mutation.VerifiedAtCleared() {
+		_spec.ClearField(order.FieldVerifiedAt, field.TypeInt64)
 	}
 	_node = &Order{config: _u.config}
 	_spec.Assign = _node.assignValues

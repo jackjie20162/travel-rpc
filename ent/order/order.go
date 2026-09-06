@@ -45,6 +45,10 @@ const (
 	FieldServiceDate = "service_date"
 	// FieldTimeSlot holds the string denoting the time_slot field in the database.
 	FieldTimeSlot = "time_slot"
+	// FieldRejectReason holds the string denoting the reject_reason field in the database.
+	FieldRejectReason = "reject_reason"
+	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
+	FieldVerifiedAt = "verified_at"
 	// Table holds the table name of the order in the database.
 	Table = "orders"
 )
@@ -69,6 +73,8 @@ var Columns = []string{
 	FieldPackageName,
 	FieldServiceDate,
 	FieldTimeSlot,
+	FieldRejectReason,
+	FieldVerifiedAt,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -183,4 +189,14 @@ func ByServiceDate(opts ...sql.OrderTermOption) OrderOption {
 // ByTimeSlot orders the results by the time_slot field.
 func ByTimeSlot(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTimeSlot, opts...).ToFunc()
+}
+
+// ByRejectReason orders the results by the reject_reason field.
+func ByRejectReason(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRejectReason, opts...).ToFunc()
+}
+
+// ByVerifiedAt orders the results by the verified_at field.
+func ByVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldVerifiedAt, opts...).ToFunc()
 }

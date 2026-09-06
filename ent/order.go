@@ -49,7 +49,11 @@ type Order struct {
 	// ServiceDate holds the value of the "service_date" field.
 	ServiceDate string `json:"service_date,omitempty"`
 	// TimeSlot holds the value of the "time_slot" field.
-	TimeSlot     string `json:"time_slot,omitempty"`
+	TimeSlot string `json:"time_slot,omitempty"`
+	// 商户拒绝接单原因
+	RejectReason string `json:"reject_reason,omitempty"`
+	// 核销时间戳
+	VerifiedAt   int64 `json:"verified_at,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -58,9 +62,9 @@ func (*Order) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount:
+		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount, order.FieldVerifiedAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot:
+		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot, order.FieldRejectReason:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -185,6 +189,18 @@ func (_m *Order) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.TimeSlot = value.String
 			}
+		case order.FieldRejectReason:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field reject_reason", values[i])
+			} else if value.Valid {
+				_m.RejectReason = value.String
+			}
+		case order.FieldVerifiedAt:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field verified_at", values[i])
+			} else if value.Valid {
+				_m.VerifiedAt = value.Int64
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -271,6 +287,12 @@ func (_m *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("time_slot=")
 	builder.WriteString(_m.TimeSlot)
+	builder.WriteString(", ")
+	builder.WriteString("reject_reason=")
+	builder.WriteString(_m.RejectReason)
+	builder.WriteString(", ")
+	builder.WriteString("verified_at=")
+	builder.WriteString(fmt.Sprintf("%v", _m.VerifiedAt))
 	builder.WriteByte(')')
 	return builder.String()
 }

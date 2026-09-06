@@ -137,6 +137,16 @@ func TimeSlot(v string) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldTimeSlot, v))
 }
 
+// RejectReason applies equality check predicate on the "reject_reason" field. It's identical to RejectReasonEQ.
+func RejectReason(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldRejectReason, v))
+}
+
+// VerifiedAt applies equality check predicate on the "verified_at" field. It's identical to VerifiedAtEQ.
+func VerifiedAt(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldVerifiedAt, v))
+}
+
 // TenantIDEQ applies the EQ predicate on the "tenant_id" field.
 func TenantIDEQ(v int64) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldTenantID, v))
@@ -1215,6 +1225,131 @@ func TimeSlotEqualFold(v string) predicate.Order {
 // TimeSlotContainsFold applies the ContainsFold predicate on the "time_slot" field.
 func TimeSlotContainsFold(v string) predicate.Order {
 	return predicate.Order(sql.FieldContainsFold(FieldTimeSlot, v))
+}
+
+// RejectReasonEQ applies the EQ predicate on the "reject_reason" field.
+func RejectReasonEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldRejectReason, v))
+}
+
+// RejectReasonNEQ applies the NEQ predicate on the "reject_reason" field.
+func RejectReasonNEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldRejectReason, v))
+}
+
+// RejectReasonIn applies the In predicate on the "reject_reason" field.
+func RejectReasonIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldRejectReason, vs...))
+}
+
+// RejectReasonNotIn applies the NotIn predicate on the "reject_reason" field.
+func RejectReasonNotIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldRejectReason, vs...))
+}
+
+// RejectReasonGT applies the GT predicate on the "reject_reason" field.
+func RejectReasonGT(v string) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldRejectReason, v))
+}
+
+// RejectReasonGTE applies the GTE predicate on the "reject_reason" field.
+func RejectReasonGTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldRejectReason, v))
+}
+
+// RejectReasonLT applies the LT predicate on the "reject_reason" field.
+func RejectReasonLT(v string) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldRejectReason, v))
+}
+
+// RejectReasonLTE applies the LTE predicate on the "reject_reason" field.
+func RejectReasonLTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldRejectReason, v))
+}
+
+// RejectReasonContains applies the Contains predicate on the "reject_reason" field.
+func RejectReasonContains(v string) predicate.Order {
+	return predicate.Order(sql.FieldContains(FieldRejectReason, v))
+}
+
+// RejectReasonHasPrefix applies the HasPrefix predicate on the "reject_reason" field.
+func RejectReasonHasPrefix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasPrefix(FieldRejectReason, v))
+}
+
+// RejectReasonHasSuffix applies the HasSuffix predicate on the "reject_reason" field.
+func RejectReasonHasSuffix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasSuffix(FieldRejectReason, v))
+}
+
+// RejectReasonIsNil applies the IsNil predicate on the "reject_reason" field.
+func RejectReasonIsNil() predicate.Order {
+	return predicate.Order(sql.FieldIsNull(FieldRejectReason))
+}
+
+// RejectReasonNotNil applies the NotNil predicate on the "reject_reason" field.
+func RejectReasonNotNil() predicate.Order {
+	return predicate.Order(sql.FieldNotNull(FieldRejectReason))
+}
+
+// RejectReasonEqualFold applies the EqualFold predicate on the "reject_reason" field.
+func RejectReasonEqualFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldEqualFold(FieldRejectReason, v))
+}
+
+// RejectReasonContainsFold applies the ContainsFold predicate on the "reject_reason" field.
+func RejectReasonContainsFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldContainsFold(FieldRejectReason, v))
+}
+
+// VerifiedAtEQ applies the EQ predicate on the "verified_at" field.
+func VerifiedAtEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldVerifiedAt, v))
+}
+
+// VerifiedAtNEQ applies the NEQ predicate on the "verified_at" field.
+func VerifiedAtNEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldVerifiedAt, v))
+}
+
+// VerifiedAtIn applies the In predicate on the "verified_at" field.
+func VerifiedAtIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldVerifiedAt, vs...))
+}
+
+// VerifiedAtNotIn applies the NotIn predicate on the "verified_at" field.
+func VerifiedAtNotIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldVerifiedAt, vs...))
+}
+
+// VerifiedAtGT applies the GT predicate on the "verified_at" field.
+func VerifiedAtGT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldVerifiedAt, v))
+}
+
+// VerifiedAtGTE applies the GTE predicate on the "verified_at" field.
+func VerifiedAtGTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldVerifiedAt, v))
+}
+
+// VerifiedAtLT applies the LT predicate on the "verified_at" field.
+func VerifiedAtLT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldVerifiedAt, v))
+}
+
+// VerifiedAtLTE applies the LTE predicate on the "verified_at" field.
+func VerifiedAtLTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldVerifiedAt, v))
+}
+
+// VerifiedAtIsNil applies the IsNil predicate on the "verified_at" field.
+func VerifiedAtIsNil() predicate.Order {
+	return predicate.Order(sql.FieldIsNull(FieldVerifiedAt))
+}
+
+// VerifiedAtNotNil applies the NotNil predicate on the "verified_at" field.
+func VerifiedAtNotNil() predicate.Order {
+	return predicate.Order(sql.FieldNotNull(FieldVerifiedAt))
 }
 
 // And groups predicates with the AND operator between them.

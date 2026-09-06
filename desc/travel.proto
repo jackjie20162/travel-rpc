@@ -236,6 +236,8 @@ message Order {
   string package_name = 17;
   string service_date = 18;
   string time_slot = 19;
+  string reject_reason = 20;
+  int64 verified_at = 21;
 }
 
 message OrderItem {
@@ -448,6 +450,12 @@ message User {
   int64 createtime = 17;
 }
 
+message VerifyOrderRequest {
+  string order_no = 1;
+  string action = 2;   // CONFIRM or REJECT
+  string reason = 3;   // required when action=REJECT
+}
+
 message UserIdRequest {
   int64 id = 1;
 }
@@ -507,6 +515,7 @@ service OrderService {
   rpc Get(OrderNoRequest) returns (Order);
   rpc ListMerchantOrders(MerchantOrderListRequest) returns (MerchantOrderListResponse);
   rpc ListCustomerOrders(CustomerOrderListRequest) returns (CustomerOrderListResponse);
+  rpc VerifyOrder(VerifyOrderRequest) returns (Order);
 }
 
 service PaymentService {

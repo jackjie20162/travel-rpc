@@ -2,6 +2,7 @@ package service
 
 import (
     "context"
+    "time"
 
     "gitee.com/meinongyihe/travel-rpc/ent"
     "gitee.com/meinongyihe/travel-rpc/internal/auth"
@@ -140,6 +141,58 @@ func (s *OrderService) ListCustomerOrders(ctx context.Context, req *travel.Custo
     return resp, nil
 }
 
+func (s *OrderService) VerifyOrder(ctx context.Context, req *travel.VerifyOrderRequest) (*travel.Order, error) {
+    if req == nil || req.GetOrderNo() == "" {
+        return nil, status.Error(codes.InvalidArgument, "order number is required")
+    }
+    action := req.GetAction()
+    if action != "CONFIRM" && action != "REJECT" {
+        return nil, status.Error(codes.InvalidArgument, "action must be CONFIRM or REJECT")
+    }
+    if action == "REJECT" && req.GetReason() == "" {
+        return nil, status.Error(codes.InvalidArgument, "reason is required when rejecting an order")
+    }
+    tenantID, err := auth.TenantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+    merchantID, err := auth.MerchantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+
+    // Fetch the order first to validate current status
+    o, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.NotFound, "order not found")
+    }
+    // Only PAID orders (payment_status=PAID) can be verified/rejected
+    if o.PaymentStatus != "PAID" {
+        return nil, status.Error(codes.FailedPrecondition, "order has not been paid yet")
+    }
+    if o.Status != "PAID" && o.Status != "CONFIRMED" {
+        return nil, status.Error(codes.FailedPrecondition, "order status does not allow verification")
+    }
+
+    var newStatus string
+    var rejectReason string
+    var verifiedAt int64
+    if action == "CONFIRM" {
+        newStatus = "COMPLETED"
+        verifiedAt = time.Now().Unix()
+    } else {
+        newStatus = "REFUNDED"
+        rejectReason = req.GetReason()
+    }
+
+    if err := s.orders.UpdateStatus(ctx, tenantID, merchantID, req.GetOrderNo(), newStatus, rejectReason, verifiedAt); err != nil {
+        return nil, status.Error(codes.Internal, err.Error())
+    }
+
+    // Re-fetch the updated order
+    updated, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.Internal, "failed to fetch updated order")
+    }
+    return toOrder(updated), nil
+}
+
 func toOrder(o *ent.Order) *travel.Order {
 	return &travel.Order{
         Id: int64(o.ID), OrderNo: o.OrderNo, Status: o.Status,
@@ -149,6 +202,7 @@ func toOrder(o *ent.Order) *travel.Order {
 		CustomerPhone: o.CustomerPhone, Remark: o.Remark,
 		ProductName: o.ProductName, PackageName: o.PackageName,
 		ServiceDate: o.ServiceDate, TimeSlot: o.TimeSlot,
+		RejectReason: o.RejectReason, VerifiedAt: o.VerifiedAt,
 	}
 }
 

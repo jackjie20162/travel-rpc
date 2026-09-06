@@ -443,6 +443,7 @@ const (
 	OrderService_Get_FullMethodName                = "/travel.OrderService/Get"
 	OrderService_ListMerchantOrders_FullMethodName = "/travel.OrderService/ListMerchantOrders"
 	OrderService_ListCustomerOrders_FullMethodName = "/travel.OrderService/ListCustomerOrders"
+	OrderService_VerifyOrder_FullMethodName        = "/travel.OrderService/VerifyOrder"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -453,6 +454,7 @@ type OrderServiceClient interface {
 	Get(ctx context.Context, in *OrderNoRequest, opts ...grpc.CallOption) (*Order, error)
 	ListMerchantOrders(ctx context.Context, in *MerchantOrderListRequest, opts ...grpc.CallOption) (*MerchantOrderListResponse, error)
 	ListCustomerOrders(ctx context.Context, in *CustomerOrderListRequest, opts ...grpc.CallOption) (*CustomerOrderListResponse, error)
+	VerifyOrder(ctx context.Context, in *VerifyOrderRequest, opts ...grpc.CallOption) (*Order, error)
 }
 
 type orderServiceClient struct {
@@ -503,6 +505,16 @@ func (c *orderServiceClient) ListCustomerOrders(ctx context.Context, in *Custome
 	return out, nil
 }
 
+func (c *orderServiceClient) VerifyOrder(ctx context.Context, in *VerifyOrderRequest, opts ...grpc.CallOption) (*Order, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Order)
+	err := c.cc.Invoke(ctx, OrderService_VerifyOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility.
@@ -511,6 +523,7 @@ type OrderServiceServer interface {
 	Get(context.Context, *OrderNoRequest) (*Order, error)
 	ListMerchantOrders(context.Context, *MerchantOrderListRequest) (*MerchantOrderListResponse, error)
 	ListCustomerOrders(context.Context, *CustomerOrderListRequest) (*CustomerOrderListResponse, error)
+	VerifyOrder(context.Context, *VerifyOrderRequest) (*Order, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -532,6 +545,9 @@ func (UnimplementedOrderServiceServer) ListMerchantOrders(context.Context, *Merc
 }
 func (UnimplementedOrderServiceServer) ListCustomerOrders(context.Context, *CustomerOrderListRequest) (*CustomerOrderListResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListCustomerOrders not implemented")
+}
+func (UnimplementedOrderServiceServer) VerifyOrder(context.Context, *VerifyOrderRequest) (*Order, error) {
+	return nil, status.Error(codes.Unimplemented, "method VerifyOrder not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 func (UnimplementedOrderServiceServer) testEmbeddedByValue()                      {}
@@ -626,6 +642,24 @@ func _OrderService_ListCustomerOrders_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_VerifyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).VerifyOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_VerifyOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).VerifyOrder(ctx, req.(*VerifyOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -648,6 +682,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListCustomerOrders",
 			Handler:    _OrderService_ListCustomerOrders_Handler,
+		},
+		{
+			MethodName: "VerifyOrder",
+			Handler:    _OrderService_VerifyOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

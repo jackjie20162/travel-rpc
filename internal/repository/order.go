@@ -18,6 +18,7 @@ type OrderRepository interface {
 	ListByCustomer(ctx context.Context, tenantID, customerID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error)
 	ListTravelersByOrderID(ctx context.Context, orderID int64) ([]*ent.Traveler, error)
 	ListItemsByOrderID(ctx context.Context, orderID int64) ([]*ent.OrderItem, error)
+	UpdateStatus(ctx context.Context, tenantID, merchantID int64, orderNo string, newStatus string, rejectReason string, verifiedAt int64) error
 }
 
 type CreateOrderInput struct {
