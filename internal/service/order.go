@@ -31,6 +31,14 @@ func (s *OrderService) Create(ctx context.Context, req *travel.CreateOrderReques
     // merchantID is optional for public orders
     merchantID, _ := auth.MerchantID(ctx)
 
+    // user_id is the account owner who creates the order (归属人)
+    var userID *int64
+    if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
+        userID = id
+    } else if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
+        userID = &id
+    }
+
     var customerID *int64
     if id, e := auth.CustomerID(ctx); e == nil { customerID = id }
 
@@ -54,7 +62,7 @@ func (s *OrderService) Create(ctx context.Context, req *travel.CreateOrderReques
 
     created, err := s.booking.CreateFromReservation(ctx, int64(hold.Reservation.ID), repository.CreateOrderInput{
         TenantID: tenantID, MerchantID: invMerchantID, ProductID: req.GetProductId(), PackageID: req.GetPackageId(),
-        CustomerID: customerID, CustomerEmail: req.GetCustomerEmail(), CustomerName: req.GetCustomerName(),
+        UserID: userID, CustomerID: customerID, CustomerEmail: req.GetCustomerEmail(), CustomerName: req.GetCustomerName(),
         CustomerPhone: req.GetCustomerPhone(), Quantity: int(req.GetQuantity()),
         ServiceDate: req.GetDate(), TimeSlot: req.GetTimeSlot(), UnitPrice: hold.UnitPrice, Currency: hold.Currency,
         Remark: req.GetRemark(), Travelers: toTravelerInputs(req.GetTravelers()),
@@ -112,12 +120,20 @@ func (s *OrderService) ListCustomerOrders(ctx context.Context, req *travel.Custo
     if req == nil { return nil, status.Error(codes.InvalidArgument, "request is nil") }
     tenantID, err := auth.TenantID(ctx)
     if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
-    customerID := req.GetCustomerId()
-    if customerID <= 0 { return nil, status.Error(codes.InvalidArgument, "customer_id is required") }
+    // Use user_id (归属人) from metadata for filtering, fall back to customer_id from request
+    var userID int64
+    if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
+        userID = *id
+    } else if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
+        userID = id
+    } else {
+        userID = req.GetCustomerId()
+    }
+    if userID <= 0 { return nil, status.Error(codes.InvalidArgument, "user_id is required") }
     page, pageSize := req.GetPage(), req.GetPageSize()
     if page <= 0 { page = 1 }
     if pageSize <= 0 || pageSize > 100 { pageSize = 20 }
-    items, total, err := s.orders.ListByCustomer(ctx, tenantID, customerID, req.GetStatus(), page, pageSize)
+    items, total, err := s.orders.ListByUser(ctx, tenantID, userID, req.GetStatus(), page, pageSize)
     if err != nil { return nil, status.Error(codes.Internal, err.Error()) }
     resp := &travel.CustomerOrderListResponse{Total: total}
     for _, o := range items { resp.Items = append(resp.Items, toOrder(o)) }

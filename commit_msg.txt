@@ -1,9 +1,42 @@
-feat: OrderItem 订单项快照 + 按出行人拆分 + proto 重新生成
+﻿feat:
+Order
+添加
+user_id
+字段区分归属人和联系人
 
-- Ent schema: order_item 表已包含 product/package 快照字段 + traveler_id
-- booking_mysql: 创建订单时按出行人拆分 OrderItem，每个 item 携带产品/套餐名称快照
-- repository: ListItemsByOrderID 查询订单项
-- service/order: Get 接口返回 travelers + items，toOrderWithTravelersAndItems 转换
-- proto: Order 消息增加 items/product_name/package_name/service_date/time_slot 字段
-- proto: 新增 OrderItem 消息定义（13 个字段含完整产品快照）
-- make gen-rpc 重新生成 travel.pb.go 包含 OrderItem Go 类型
+-
+Order
+schema
+新增
+user_id
+字段（归属人：创建订单的登录用户ID）
+-
+customer_id
+保留为联系人ID
+-
+Repository
+层新增
+ListByUser
+方法按
+user_id
+查询
+-
+CreateFromReservation
+创建订单时写入
+user_id
+-
+OrderService.Create
+从
+metadata
+提取
+user_id
+写入
+-
+OrderService.ListCustomerOrders
+改用
+user_id
+过滤
+-
+重新生成
+ent
+代码

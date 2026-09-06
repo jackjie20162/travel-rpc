@@ -37,6 +37,20 @@ func (_c *OrderCreate) SetOrderNo(v string) *OrderCreate {
 	return _c
 }
 
+// SetUserID sets the "user_id" field.
+func (_c *OrderCreate) SetUserID(v int64) *OrderCreate {
+	_c.mutation.SetUserID(v)
+	return _c
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableUserID(v *int64) *OrderCreate {
+	if v != nil {
+		_c.SetUserID(*v)
+	}
+	return _c
+}
+
 // SetCustomerID sets the "customer_id" field.
 func (_c *OrderCreate) SetCustomerID(v int64) *OrderCreate {
 	_c.mutation.SetCustomerID(v)
@@ -325,6 +339,10 @@ func (_c *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.OrderNo(); ok {
 		_spec.SetField(order.FieldOrderNo, field.TypeString, value)
 		_node.OrderNo = value
+	}
+	if value, ok := _c.mutation.UserID(); ok {
+		_spec.SetField(order.FieldUserID, field.TypeInt64, value)
+		_node.UserID = value
 	}
 	if value, ok := _c.mutation.CustomerID(); ok {
 		_spec.SetField(order.FieldCustomerID, field.TypeInt64, value)

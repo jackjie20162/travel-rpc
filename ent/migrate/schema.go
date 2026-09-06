@@ -177,6 +177,7 @@ var (
 		{Name: "tenant_id", Type: field.TypeInt64},
 		{Name: "merchant_id", Type: field.TypeInt64},
 		{Name: "order_no", Type: field.TypeString},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true},
 		{Name: "customer_id", Type: field.TypeInt64, Nullable: true},
 		{Name: "customer_email", Type: field.TypeString, Nullable: true},
 		{Name: "customer_name", Type: field.TypeString, Nullable: true},
@@ -205,12 +206,17 @@ var (
 			{
 				Name:    "order_tenant_id_merchant_id_status",
 				Unique:  false,
-				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[2], OrdersColumns[10]},
+				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[2], OrdersColumns[11]},
+			},
+			{
+				Name:    "order_tenant_id_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[4]},
 			},
 			{
 				Name:    "order_tenant_id_customer_id",
 				Unique:  false,
-				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[4]},
+				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[5]},
 			},
 		},
 	}

@@ -133,15 +133,15 @@ func init() {
 	// order.OrderNoValidator is a validator for the "order_no" field. It is called by the builders before save.
 	order.OrderNoValidator = orderDescOrderNo.Validators[0].(func(string) error)
 	// orderDescCurrency is the schema descriptor for currency field.
-	orderDescCurrency := orderFields[8].Descriptor()
+	orderDescCurrency := orderFields[9].Descriptor()
 	// order.DefaultCurrency holds the default value on creation for the currency field.
 	order.DefaultCurrency = orderDescCurrency.Default.(string)
 	// orderDescStatus is the schema descriptor for status field.
-	orderDescStatus := orderFields[9].Descriptor()
+	orderDescStatus := orderFields[10].Descriptor()
 	// order.DefaultStatus holds the default value on creation for the status field.
 	order.DefaultStatus = orderDescStatus.Default.(string)
 	// orderDescPaymentStatus is the schema descriptor for payment_status field.
-	orderDescPaymentStatus := orderFields[10].Descriptor()
+	orderDescPaymentStatus := orderFields[11].Descriptor()
 	// order.DefaultPaymentStatus holds the default value on creation for the payment_status field.
 	order.DefaultPaymentStatus = orderDescPaymentStatus.Default.(string)
 	paymentFields := schema.Payment{}.Fields()

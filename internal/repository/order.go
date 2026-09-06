@@ -14,6 +14,7 @@ type OrderRepository interface {
 	GetByOrderNo(ctx context.Context, tenantID, merchantID int64, orderNo string) (*ent.Order, error)
 	List(ctx context.Context, tenantID, merchantID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error)
 	CountByStatus(ctx context.Context, tenantID, merchantID int64, status string) (int64, error)
+	ListByUser(ctx context.Context, tenantID, userID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error)
 	ListByCustomer(ctx context.Context, tenantID, customerID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error)
 	ListTravelersByOrderID(ctx context.Context, orderID int64) ([]*ent.Traveler, error)
 	ListItemsByOrderID(ctx context.Context, orderID int64) ([]*ent.OrderItem, error)
@@ -24,7 +25,8 @@ type CreateOrderInput struct {
 	MerchantID    int64
 	ProductID     int64
 	PackageID     int64
-	CustomerID    *int64
+	UserID        *int64  // 归属人：创建订单的登录用户ID
+	CustomerID    *int64  // 联系人ID
 	CustomerEmail string
 	CustomerName  string
 	CustomerPhone string

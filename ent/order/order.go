@@ -17,6 +17,8 @@ const (
 	FieldMerchantID = "merchant_id"
 	// FieldOrderNo holds the string denoting the order_no field in the database.
 	FieldOrderNo = "order_no"
+	// FieldUserID holds the string denoting the user_id field in the database.
+	FieldUserID = "user_id"
 	// FieldCustomerID holds the string denoting the customer_id field in the database.
 	FieldCustomerID = "customer_id"
 	// FieldCustomerEmail holds the string denoting the customer_email field in the database.
@@ -53,6 +55,7 @@ var Columns = []string{
 	FieldTenantID,
 	FieldMerchantID,
 	FieldOrderNo,
+	FieldUserID,
 	FieldCustomerID,
 	FieldCustomerEmail,
 	FieldCustomerName,
@@ -110,6 +113,11 @@ func ByMerchantID(opts ...sql.OrderTermOption) OrderOption {
 // ByOrderNo orders the results by the order_no field.
 func ByOrderNo(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldOrderNo, opts...).ToFunc()
+}
+
+// ByUserID orders the results by the user_id field.
+func ByUserID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserID, opts...).ToFunc()
 }
 
 // ByCustomerID orders the results by the customer_id field.

@@ -83,6 +83,33 @@ func (_u *OrderUpdate) SetNillableOrderNo(v *string) *OrderUpdate {
 	return _u
 }
 
+// SetUserID sets the "user_id" field.
+func (_u *OrderUpdate) SetUserID(v int64) *OrderUpdate {
+	_u.mutation.ResetUserID()
+	_u.mutation.SetUserID(v)
+	return _u
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableUserID(v *int64) *OrderUpdate {
+	if v != nil {
+		_u.SetUserID(*v)
+	}
+	return _u
+}
+
+// AddUserID adds value to the "user_id" field.
+func (_u *OrderUpdate) AddUserID(v int64) *OrderUpdate {
+	_u.mutation.AddUserID(v)
+	return _u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (_u *OrderUpdate) ClearUserID() *OrderUpdate {
+	_u.mutation.ClearUserID()
+	return _u
+}
+
 // SetCustomerID sets the "customer_id" field.
 func (_u *OrderUpdate) SetCustomerID(v int64) *OrderUpdate {
 	_u.mutation.ResetCustomerID()
@@ -402,6 +429,15 @@ func (_u *OrderUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.OrderNo(); ok {
 		_spec.SetField(order.FieldOrderNo, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.UserID(); ok {
+		_spec.SetField(order.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUserID(); ok {
+		_spec.AddField(order.FieldUserID, field.TypeInt64, value)
+	}
+	if _u.mutation.UserIDCleared() {
+		_spec.ClearField(order.FieldUserID, field.TypeInt64)
+	}
 	if value, ok := _u.mutation.CustomerID(); ok {
 		_spec.SetField(order.FieldCustomerID, field.TypeInt64, value)
 	}
@@ -547,6 +583,33 @@ func (_u *OrderUpdateOne) SetNillableOrderNo(v *string) *OrderUpdateOne {
 	if v != nil {
 		_u.SetOrderNo(*v)
 	}
+	return _u
+}
+
+// SetUserID sets the "user_id" field.
+func (_u *OrderUpdateOne) SetUserID(v int64) *OrderUpdateOne {
+	_u.mutation.ResetUserID()
+	_u.mutation.SetUserID(v)
+	return _u
+}
+
+// SetNillableUserID sets the "user_id" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableUserID(v *int64) *OrderUpdateOne {
+	if v != nil {
+		_u.SetUserID(*v)
+	}
+	return _u
+}
+
+// AddUserID adds value to the "user_id" field.
+func (_u *OrderUpdateOne) AddUserID(v int64) *OrderUpdateOne {
+	_u.mutation.AddUserID(v)
+	return _u
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (_u *OrderUpdateOne) ClearUserID() *OrderUpdateOne {
+	_u.mutation.ClearUserID()
 	return _u
 }
 
@@ -898,6 +961,15 @@ func (_u *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error)
 	}
 	if value, ok := _u.mutation.OrderNo(); ok {
 		_spec.SetField(order.FieldOrderNo, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.UserID(); ok {
+		_spec.SetField(order.FieldUserID, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedUserID(); ok {
+		_spec.AddField(order.FieldUserID, field.TypeInt64, value)
+	}
+	if _u.mutation.UserIDCleared() {
+		_spec.ClearField(order.FieldUserID, field.TypeInt64)
 	}
 	if value, ok := _u.mutation.CustomerID(); ok {
 		_spec.SetField(order.FieldCustomerID, field.TypeInt64, value)

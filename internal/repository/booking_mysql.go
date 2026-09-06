@@ -45,6 +45,7 @@ func (r *mysqlBookingRepository) CreateFromReservation(ctx context.Context, rese
 	if err != nil { return nil, &ErrProductInvariant{Msg: "package does not belong to the same product or merchant"} }
 	total := inv.UnitPrice * int64(input.Quantity)
 	builder := tx.Order.Create().SetTenantID(input.TenantID).SetMerchantID(input.MerchantID).SetOrderNo(newOrderNo()).SetTotalAmount(total).SetCurrency(inv.Currency).SetStatus("PENDING_PAYMENT").SetPaymentStatus("PENDING")
+	if input.UserID != nil { builder.SetUserID(*input.UserID) }
 	if input.CustomerID != nil { builder.SetCustomerID(*input.CustomerID) }
 	if input.CustomerEmail != "" { builder.SetCustomerEmail(input.CustomerEmail) }
 	if input.CustomerName != "" { builder.SetCustomerName(input.CustomerName) }

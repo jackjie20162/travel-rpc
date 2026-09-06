@@ -5721,6 +5721,8 @@ type OrderMutation struct {
 	merchant_id     *int64
 	addmerchant_id  *int64
 	order_no        *string
+	user_id         *int64
+	adduser_id      *int64
 	customer_id     *int64
 	addcustomer_id  *int64
 	customer_email  *string
@@ -5986,6 +5988,76 @@ func (m *OrderMutation) OldOrderNo(ctx context.Context) (v string, err error) {
 // ResetOrderNo resets all changes to the "order_no" field.
 func (m *OrderMutation) ResetOrderNo() {
 	m.order_no = nil
+}
+
+// SetUserID sets the "user_id" field.
+func (m *OrderMutation) SetUserID(i int64) {
+	m.user_id = &i
+	m.adduser_id = nil
+}
+
+// UserID returns the value of the "user_id" field in the mutation.
+func (m *OrderMutation) UserID() (r int64, exists bool) {
+	v := m.user_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserID returns the old "user_id" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldUserID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUserID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUserID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserID: %w", err)
+	}
+	return oldValue.UserID, nil
+}
+
+// AddUserID adds i to the "user_id" field.
+func (m *OrderMutation) AddUserID(i int64) {
+	if m.adduser_id != nil {
+		*m.adduser_id += i
+	} else {
+		m.adduser_id = &i
+	}
+}
+
+// AddedUserID returns the value that was added to the "user_id" field in this mutation.
+func (m *OrderMutation) AddedUserID() (r int64, exists bool) {
+	v := m.adduser_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearUserID clears the value of the "user_id" field.
+func (m *OrderMutation) ClearUserID() {
+	m.user_id = nil
+	m.adduser_id = nil
+	m.clearedFields[order.FieldUserID] = struct{}{}
+}
+
+// UserIDCleared returns if the "user_id" field was cleared in this mutation.
+func (m *OrderMutation) UserIDCleared() bool {
+	_, ok := m.clearedFields[order.FieldUserID]
+	return ok
+}
+
+// ResetUserID resets all changes to the "user_id" field.
+func (m *OrderMutation) ResetUserID() {
+	m.user_id = nil
+	m.adduser_id = nil
+	delete(m.clearedFields, order.FieldUserID)
 }
 
 // SetCustomerID sets the "customer_id" field.
@@ -6648,7 +6720,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 16)
+	fields := make([]string, 0, 17)
 	if m.tenant_id != nil {
 		fields = append(fields, order.FieldTenantID)
 	}
@@ -6657,6 +6729,9 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.order_no != nil {
 		fields = append(fields, order.FieldOrderNo)
+	}
+	if m.user_id != nil {
+		fields = append(fields, order.FieldUserID)
 	}
 	if m.customer_id != nil {
 		fields = append(fields, order.FieldCustomerID)
@@ -6711,6 +6786,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.MerchantID()
 	case order.FieldOrderNo:
 		return m.OrderNo()
+	case order.FieldUserID:
+		return m.UserID()
 	case order.FieldCustomerID:
 		return m.CustomerID()
 	case order.FieldCustomerEmail:
@@ -6752,6 +6829,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldMerchantID(ctx)
 	case order.FieldOrderNo:
 		return m.OldOrderNo(ctx)
+	case order.FieldUserID:
+		return m.OldUserID(ctx)
 	case order.FieldCustomerID:
 		return m.OldCustomerID(ctx)
 	case order.FieldCustomerEmail:
@@ -6807,6 +6886,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOrderNo(v)
+		return nil
+	case order.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserID(v)
 		return nil
 	case order.FieldCustomerID:
 		v, ok := value.(int64)
@@ -6913,6 +6999,9 @@ func (m *OrderMutation) AddedFields() []string {
 	if m.addmerchant_id != nil {
 		fields = append(fields, order.FieldMerchantID)
 	}
+	if m.adduser_id != nil {
+		fields = append(fields, order.FieldUserID)
+	}
 	if m.addcustomer_id != nil {
 		fields = append(fields, order.FieldCustomerID)
 	}
@@ -6931,6 +7020,8 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedTenantID()
 	case order.FieldMerchantID:
 		return m.AddedMerchantID()
+	case order.FieldUserID:
+		return m.AddedUserID()
 	case order.FieldCustomerID:
 		return m.AddedCustomerID()
 	case order.FieldTotalAmount:
@@ -6958,6 +7049,13 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddMerchantID(v)
 		return nil
+	case order.FieldUserID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUserID(v)
+		return nil
 	case order.FieldCustomerID:
 		v, ok := value.(int64)
 		if !ok {
@@ -6980,6 +7078,9 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 // mutation.
 func (m *OrderMutation) ClearedFields() []string {
 	var fields []string
+	if m.FieldCleared(order.FieldUserID) {
+		fields = append(fields, order.FieldUserID)
+	}
 	if m.FieldCleared(order.FieldCustomerID) {
 		fields = append(fields, order.FieldCustomerID)
 	}
@@ -7021,6 +7122,9 @@ func (m *OrderMutation) FieldCleared(name string) bool {
 // error if the field is not defined in the schema.
 func (m *OrderMutation) ClearField(name string) error {
 	switch name {
+	case order.FieldUserID:
+		m.ClearUserID()
+		return nil
 	case order.FieldCustomerID:
 		m.ClearCustomerID()
 		return nil
@@ -7064,6 +7168,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldOrderNo:
 		m.ResetOrderNo()
+		return nil
+	case order.FieldUserID:
+		m.ResetUserID()
 		return nil
 	case order.FieldCustomerID:
 		m.ResetCustomerID()

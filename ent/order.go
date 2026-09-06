@@ -22,7 +22,9 @@ type Order struct {
 	MerchantID int64 `json:"merchant_id,omitempty"`
 	// OrderNo holds the value of the "order_no" field.
 	OrderNo string `json:"order_no,omitempty"`
-	// CustomerID holds the value of the "customer_id" field.
+	// 归属人：创建订单的登录用户ID
+	UserID int64 `json:"user_id,omitempty"`
+	// 联系人ID
 	CustomerID int64 `json:"customer_id,omitempty"`
 	// CustomerEmail holds the value of the "customer_email" field.
 	CustomerEmail string `json:"customer_email,omitempty"`
@@ -56,7 +58,7 @@ func (*Order) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldCustomerID, order.FieldTotalAmount:
+		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount:
 			values[i] = new(sql.NullInt64)
 		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot:
 			values[i] = new(sql.NullString)
@@ -98,6 +100,12 @@ func (_m *Order) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field order_no", values[i])
 			} else if value.Valid {
 				_m.OrderNo = value.String
+			}
+		case order.FieldUserID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field user_id", values[i])
+			} else if value.Valid {
+				_m.UserID = value.Int64
 			}
 		case order.FieldCustomerID:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -221,6 +229,9 @@ func (_m *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("order_no=")
 	builder.WriteString(_m.OrderNo)
+	builder.WriteString(", ")
+	builder.WriteString("user_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.UserID))
 	builder.WriteString(", ")
 	builder.WriteString("customer_id=")
 	builder.WriteString(fmt.Sprintf("%v", _m.CustomerID))

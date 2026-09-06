@@ -30,6 +30,9 @@ func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInpu
 	builder := tx.Order.Create().SetTenantID(input.TenantID).SetMerchantID(input.MerchantID).
 		SetOrderNo(newOrderNo()).SetTotalAmount(total).SetCurrency(input.Currency).
 		SetStatus("PENDING_PAYMENT").SetPaymentStatus("PENDING")
+	if input.UserID != nil {
+		builder.SetUserID(*input.UserID)
+	}
 	if input.CustomerID != nil {
 		builder.SetCustomerID(*input.CustomerID)
 	}
@@ -84,6 +87,26 @@ func (r *mysqlOrderRepository) CountByStatus(ctx context.Context, tenantID, merc
 	}
 	n, err := r.client.Order.Query().Where(preds...).Count(ctx)
 	return int64(n), err
+}
+
+func (r *mysqlOrderRepository) ListByUser(ctx context.Context, tenantID, userID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.UserIDEQ(userID)}
+	if status != "" {
+		preds = append(preds, order.StatusEQ(status))
+	}
+	q := r.client.Order.Query().Where(preds...)
+	total, err := q.Clone().Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	if page > 0 && pageSize > 0 {
+		q = q.Offset(int((page - 1) * pageSize)).Limit(int(pageSize))
+	}
+	items, err := q.Order(ent.Desc(order.FieldID)).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return items, int64(total), nil
 }
 
 func (r *mysqlOrderRepository) ListByCustomer(ctx context.Context, tenantID, customerID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
