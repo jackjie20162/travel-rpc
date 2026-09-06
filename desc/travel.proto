@@ -538,6 +538,7 @@ service OrderService {
   rpc AcceptOrder(AcceptOrderRequest) returns (Order);
   rpc RequestRefund(RefundRequest) returns (Order);
   rpc HandleRefund(HandleRefundRequest) returns (Order);
+  rpc CancelOrder(OrderNoRequest) returns (Order);
 }
 
 service PaymentService {

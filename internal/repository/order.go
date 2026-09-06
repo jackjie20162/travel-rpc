@@ -25,6 +25,8 @@ type OrderRepository interface {
 	RequestRefund(ctx context.Context, tenantID int64, userID int64, orderNo string, reason string) error
 	// HandleRefund: approved → REFUNDED, rejected → restore prev_status
 	HandleRefund(ctx context.Context, tenantID, merchantID int64, orderNo string, approved bool, reason string) error
+	// CancelOrder: PENDING_PAYMENT → CANCELLED (no refund needed)
+	CancelOrder(ctx context.Context, tenantID int64, userID int64, orderNo string) error
 }
 
 type CreateOrderInput struct {

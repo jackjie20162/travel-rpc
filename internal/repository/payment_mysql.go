@@ -127,7 +127,7 @@ func (r *mysqlPaymentRepository) MarkPaid(ctx context.Context, tenantID, merchan
 	if err != nil {
 		return nil, err
 	}
-	o, err = tx.Order.UpdateOneID(o.ID).SetPaymentStatus("PAID").SetStatus("CONFIRMED").Save(ctx)
+	o, err = tx.Order.UpdateOneID(o.ID).SetPaymentStatus("PAID").SetStatus("PENDING_ACCEPTANCE").Save(ctx)
 	if err != nil {
 		return nil, err
 	}

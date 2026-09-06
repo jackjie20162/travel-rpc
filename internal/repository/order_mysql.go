@@ -226,6 +226,19 @@ func (r *mysqlOrderRepository) HandleRefund(ctx context.Context, tenantID, merch
 	return err
 }
 
+func (r *mysqlOrderRepository) CancelOrder(ctx context.Context, tenantID int64, userID int64, orderNo string) error {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.UserIDEQ(userID), order.OrderNoEQ(orderNo)}
+	o, err := r.client.Order.Query().Where(preds...).Only(ctx)
+	if err != nil {
+		return err
+	}
+	if o.Status != "PENDING_PAYMENT" {
+		return fmt.Errorf("order cannot be cancelled in %s status", o.Status)
+	}
+	_, err = r.client.Order.UpdateOneID(o.ID).SetStatus("CANCELLED").Save(ctx)
+	return err
+}
+
 func newOrderNo() string {
 	return fmt.Sprintf("TRV%s", time.Now().UTC().Format("20060102150405.000000000"))
 }

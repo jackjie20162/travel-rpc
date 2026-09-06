@@ -2,6 +2,7 @@ package service
 
 import (
     "context"
+    "strings"
     "time"
 
     "gitee.com/meinongyihe/travel-rpc/ent"
@@ -304,6 +305,29 @@ func (s *OrderService) HandleRefund(ctx context.Context, req *travel.HandleRefun
         return nil, status.Error(codes.Internal, "failed to fetch updated order")
     }
     return toOrder(updated), nil
+}
+
+func (s *OrderService) CancelOrder(ctx context.Context, req *travel.OrderNoRequest) (*travel.Order, error) {
+	if req == nil || req.GetOrderNo() == "" {
+		return nil, status.Error(codes.InvalidArgument, "order number is required")
+	}
+	tenantID, err := auth.TenantID(ctx)
+	if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+	userID, err := auth.AuthenticatedUserID(ctx)
+	if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+
+	if err := s.orders.CancelOrder(ctx, tenantID, int64(userID), req.GetOrderNo()); err != nil {
+		if strings.Contains(err.Error(), "cannot be cancelled") {
+			return nil, status.Error(codes.FailedPrecondition, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	o, err := s.orders.GetByOrderNo(ctx, tenantID, 0, req.GetOrderNo())
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to fetch updated order")
+	}
+	return toOrder(o), nil
 }
 
 func toOrder(o *ent.Order) *travel.Order {
