@@ -26,7 +26,10 @@ func (r *productRepository) GetByID(ctx context.Context, id int64) (*ent.Product
 }
 
 func (r *productRepository) List(ctx context.Context, tenantID int64, keyword, destination string, offset, limit int) ([]*ent.Product, int, error) {
-	q := r.client.Product.Query().Where(product.TenantIDEQ(tenantID))
+	q := r.client.Product.Query()
+	if tenantID > 0 {
+		q = q.Where(product.TenantIDEQ(tenantID))
+	}
 	if keyword != "" {
 		q = q.Where(product.TitleContains(keyword))
 	}

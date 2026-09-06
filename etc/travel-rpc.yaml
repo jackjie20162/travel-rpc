@@ -1,14 +1,21 @@
 Name: travel-rpc
-ListenOn: 0.0.0.0:9201
+ListenOn: 0.0.0.0:9205
+Timeout: 30000
 
 DatabaseConf:
   Type: mysql
   Host: 127.0.0.1
   Port: 13307
   DBName: travel
-  Username: root
-  Password: '123456'
+  Username: root # set your username
+  Password: '123456'  # set your password
   MaxOpenConn: 100
   SSLMode: disable
   CacheTime: 5
-  Debug: true
+  Debug: true # 打印每条 SQL（含参数、耗时），生产环境建议关闭
+RedisConf:
+  Host: 127.0.0.1:6380
+  Db: 0
+
+JWTAccessSecret: wanl-shop-jwt-secret-change-me
+JWTAccessExpire: 604800 # 7 days in seconds

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+// User message
+
+message UserInfo {
+  optional uint64 id = 1;
+  optional string username = 2;
+  optional string nickname = 3;
+  optional string password = 4;
+  optional string salt = 5;
+  optional string email = 6;
+  optional string mobile = 7;
+  optional string avatar = 8;
+  optional uint32 level = 9;
+  optional int32 gender = 10;
+  optional string birthday = 11;
+  optional string bio = 12;
+  optional double money = 13;
+  optional int64 score = 14;
+  optional uint32 successions = 15;
+  optional uint32 maxsuccessions = 16;
+  optional int64 prevtime = 17;
+  optional int64 logintime = 18;
+  optional string loginip = 19;
+  optional uint32 loginfailure = 20;
+  optional int64 loginfailuretime = 21;
+  optional string joinip = 22;
+  optional int64 jointime = 23;
+  optional int64 createtime = 24;
+  optional int64 updatetime = 25;
+  optional string token = 26;
+  optional uint32 status = 27;
+  optional string verification = 28;
+}
+
+message UserListResp {
+  uint64 total = 1;
+  repeated UserInfo data = 2;
+}
+
+message UserListReq {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  optional string username = 3;
+  optional string nickname = 4;
+  optional string password = 5;
+}
+
+
+service Travel {
+
+  // User management
+  // group: user
+  rpc createUser (UserInfo) returns (BaseIDResp);
+  // group: user
+  rpc updateUser (UserInfo) returns (BaseResp);
+  // group: user
+  rpc getUserList (UserListReq) returns (UserListResp);
+  // group: user
+  rpc getUserById (IDReq) returns (UserInfo);
+  // group: user
+  rpc deleteUser (IDsReq) returns (BaseResp);
+
+
+}

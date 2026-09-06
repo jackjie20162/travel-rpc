@@ -26,8 +26,9 @@ type InventoryAvailability struct {
 }
 
 type ReservationResult struct {
-	Reservation *ent.InventoryReservation
-	Remaining   int
-	UnitPrice   int64
-	Currency    string
+	Reservation          *ent.InventoryReservation
+	Remaining            int
+	UnitPrice            int64
+	Currency             string
+	InventoryMerchantID  int64
 }

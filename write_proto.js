@@ -1,0 +1,434 @@
+const fs = require('fs');
+const content = `syntax = "proto3";
+
+package travel;
+option go_package = "gitee.com/meinongyihe/travel-rpc/travel";
+
+message AuthToken {
+  string token = 1;
+  User user = 2;
+}
+
+message ChangePasswordRequest {
+  string old_password = 1;
+  string new_password = 2;
+}
+
+message CreateOrderRequest {
+  int64 product_id = 1;
+  int64 package_id = 2;
+  string date = 3;
+  string time_slot = 4;
+  int32 quantity = 5;
+  string customer_email = 6;
+  string reservation_key = 7;
+  int64 customer_id = 8;
+}
+
+message CreatePackageRequest {
+  int64 product_id = 1;
+  string code = 2;
+  string name = 3;
+  string pricing_mode = 4;
+  string inventory_mode = 5;
+  int32 min_order_qty = 6;
+  string sell_currency = 7;
+  string cost_currency = 8;
+  string group_prices = 9;
+  string tier_prices = 10;
+}
+
+message CreatePaymentRequest {
+  string order_no = 1;
+  string provider = 2;
+  string idempotency_key = 3;
+}
+
+message CreateProductRequest {
+  string code = 1;
+  string title = 2;
+  string slug = 3;
+  string destination = 4;
+  string description = 5;
+  string currency = 6;
+  int64 min_price = 7;
+  string highlights = 8;
+  string cover_image = 9;
+  string images = 10;
+  string video_url = 11;
+  string rich_content = 12;
+  string booking_notice = 13;
+}
+
+message CreateItineraryStopRequest {
+  int64 product_id = 1;
+  string stop_type = 2;
+  string title = 3;
+  string description = 4;
+  int32 sequence = 5;
+  string location_name = 6;
+  string address = 7;
+  double latitude = 8;
+  double longitude = 9;
+  int32 duration_minutes = 10;
+  string transport_type = 11;
+  string start_time = 12;
+  string end_time = 13;
+  bool is_pickup = 14;
+  bool is_dropoff = 15;
+  bool agreement_no_shopping = 16;
+  bool agreement_adjustable = 17;
+}
+
+message UpdateItineraryStopRequest {
+  int64 id = 1;
+  int64 product_id = 2;
+  string stop_type = 3;
+  string title = 4;
+  string description = 5;
+  int32 sequence = 6;
+  string location_name = 7;
+  string address = 8;
+  double latitude = 9;
+  double longitude = 10;
+  int32 duration_minutes = 11;
+  string transport_type = 12;
+  string start_time = 13;
+  string end_time = 14;
+  bool is_pickup = 15;
+  bool is_dropoff = 16;
+  bool agreement_no_shopping = 17;
+  bool agreement_adjustable = 18;
+}
+
+message DeleteItineraryStopRequest {
+  int64 id = 1;
+  int64 product_id = 2;
+}
+
+message ItineraryStopListRequest {
+  int64 product_id = 1;
+}
+
+message ItineraryStopListResponse {
+  repeated ItineraryStop items = 1;
+}
+
+message Empty {}
+
+message InitResponse {
+  string msg = 1;
+}
+
+message InventoryItem {
+  int64 id = 1;
+  int64 package_id = 2;
+  string date = 3;
+  string time_slot = 4;
+  int32 capacity = 5;
+  int32 reserved = 6;
+  int64 unit_price = 7;
+  string currency = 8;
+  string status = 9;
+  string inventory_mode = 10;
+  int32 total_capacity = 11;
+  bool is_open = 12;
+}
+
+message InventoryListRequest {
+  int64 package_id = 1;
+}
+
+message InventoryListResponse {
+  repeated InventoryItem items = 1;
+}
+
+message InventoryRequest {
+  int64 package_id = 1;
+  string date = 2;
+  string time_slot = 3;
+  int32 quantity = 4;
+}
+
+message InventoryResponse {
+  bool available = 1;
+  int32 remaining = 2;
+  int64 unit_price = 3;
+  string currency = 4;
+}
+
+message LoginByMobileRequest {
+  string mobile = 1;
+  string password = 2;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message MarkPaymentPaidRequest {
+  string payment_no = 1;
+  string provider_payment_id = 2;
+}
+
+message OkResponse {
+  bool ok = 1;
+  string msg = 2;
+}
+
+message Order {
+  int64 id = 1;
+  string order_no = 2;
+  string status = 3;
+  int64 total_amount = 4;
+  string currency = 5;
+}
+
+message OrderNoRequest {
+  string order_no = 1;
+}
+
+message PackageListRequest {
+  int64 product_id = 1;
+}
+
+message PackageListResponse {
+  repeated ProductPackage items = 1;
+}
+
+message Payment {
+  int64 id = 1;
+  string payment_no = 2;
+  string order_no = 3;
+  string provider = 4;
+  string provider_payment_id = 5;
+  int64 amount = 6;
+  string currency = 7;
+  string status = 8;
+}
+
+message PaymentNoRequest {
+  string payment_no = 1;
+}
+
+message Product {
+  int64 id = 1;
+  int64 tenant_id = 2;
+  int64 merchant_id = 3;
+  string code = 4;
+  string title = 5;
+  string slug = 6;
+  string destination = 7;
+  string description = 8;
+  string currency = 9;
+  int64 min_price = 10;
+  string status = 11;
+  string highlights = 12;
+  string cover_image = 13;
+  string images = 14;
+  string video_url = 15;
+  string rich_content = 16;
+  string booking_notice = 17;
+}
+
+message ProductIdRequest {
+  int64 id = 1;
+}
+
+message ProductListRequest {
+  string keyword = 1;
+  string destination = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message ProductListResponse {
+  repeated Product items = 1;
+  int64 total = 2;
+}
+
+message ProductPackage {
+  int64 id = 1;
+  int64 product_id = 2;
+  string code = 3;
+  string name = 4;
+  string status = 5;
+  string pricing_mode = 6;
+  string inventory_mode = 7;
+  int32 min_order_qty = 8;
+  string sell_currency = 9;
+  string cost_currency = 10;
+  string group_prices = 11;
+  string tier_prices = 12;
+}
+
+message PublishProductRequest {
+  int64 product_id = 1;
+  bool published = 2;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string email = 3;
+  string mobile = 4;
+  string nickname = 5;
+}
+
+message ReserveInventoryRequest {
+  int64 package_id = 1;
+  string date = 2;
+  string time_slot = 3;
+  int32 quantity = 4;
+  string reservation_key = 5;
+}
+
+message ReserveInventoryResponse {
+  bool reserved = 1;
+  int32 remaining = 2;
+  int64 unit_price = 3;
+  string currency = 4;
+}
+
+message SetPaymentProviderIDRequest {
+  string payment_no = 1;
+  string provider_payment_id = 2;
+}
+
+message UpdateProductRequest {
+  int64 id = 1;
+  string code = 2;
+  string title = 3;
+  string slug = 4;
+  string destination = 5;
+  string description = 6;
+  string currency = 7;
+  int64 min_price = 8;
+  string highlights = 9;
+  string cover_image = 10;
+  string images = 11;
+  string video_url = 12;
+  string rich_content = 13;
+  string booking_notice = 14;
+}
+
+message UpdateProfileRequest {
+  string nickname = 1;
+  string avatar = 2;
+  string email = 3;
+  string mobile = 4;
+  string bio = 5;
+  string birthday = 6;
+  int32 gender = 7;
+}
+
+message UpsertInventoryRequest {
+  int64 package_id = 1;
+  string date = 2;
+  string time_slot = 3;
+  int32 capacity = 4;
+  int64 unit_price = 5;
+  string currency = 6;
+  string status = 7;
+  string inventory_mode = 8;
+  int32 total_capacity = 9;
+  bool is_open = 10;
+}
+
+message User {
+  int64 id = 1;
+  string username = 2;
+  string nickname = 3;
+  string email = 4;
+  string mobile = 5;
+  string avatar = 6;
+  int32 level = 7;
+  int32 gender = 8;
+  string birthday = 9;
+  string bio = 10;
+  double money = 11;
+  int32 score = 12;
+  int64 jointime = 13;
+  int64 logintime = 14;
+  string loginip = 15;
+  string status = 16;
+  int64 createtime = 17;
+}
+
+message UserIdRequest {
+  int64 id = 1;
+}
+
+message ItineraryStop {
+  int64 id = 1;
+  int64 product_id = 2;
+  string stop_type = 3;
+  string title = 4;
+  string description = 5;
+  int32 sequence = 6;
+  string location_name = 7;
+  string address = 8;
+  double latitude = 9;
+  double longitude = 10;
+  int32 duration_minutes = 11;
+  string transport_type = 12;
+  string start_time = 13;
+  string end_time = 14;
+  bool is_pickup = 15;
+  bool is_dropoff = 16;
+  bool agreement_no_shopping = 17;
+  bool agreement_adjustable = 18;
+}
+
+service CatalogService {
+  rpc GetProduct(ProductIdRequest) returns (Product);
+  rpc ListProducts(ProductListRequest) returns (ProductListResponse);
+}
+
+service InitService {
+  rpc InitDatabase(Empty) returns (InitResponse);
+}
+
+service InventoryService {
+  rpc Check(InventoryRequest) returns (InventoryResponse);
+  rpc Reserve(ReserveInventoryRequest) returns (ReserveInventoryResponse);
+}
+
+service OrderService {
+  rpc Create(CreateOrderRequest) returns (Order);
+  rpc Get(OrderNoRequest) returns (Order);
+}
+
+service PaymentService {
+  rpc Create(CreatePaymentRequest) returns (Payment);
+  rpc Get(PaymentNoRequest) returns (Payment);
+  rpc SetProviderID(SetPaymentProviderIDRequest) returns (Payment);
+  rpc MarkPaid(MarkPaymentPaidRequest) returns (Payment);
+}
+
+service TravelManagementService {
+  rpc CreateProduct(CreateProductRequest) returns (Product);
+  rpc UpdateProduct(UpdateProductRequest) returns (Product);
+  rpc CreatePackage(CreatePackageRequest) returns (ProductPackage);
+  rpc ListPackages(PackageListRequest) returns (PackageListResponse);
+  rpc UpsertInventory(UpsertInventoryRequest) returns (InventoryItem);
+  rpc ListInventory(InventoryListRequest) returns (InventoryListResponse);
+  rpc PublishProduct(PublishProductRequest) returns (Product);
+  rpc CreateItineraryStop(CreateItineraryStopRequest) returns (ItineraryStop);
+  rpc UpdateItineraryStop(UpdateItineraryStopRequest) returns (ItineraryStop);
+  rpc DeleteItineraryStop(DeleteItineraryStopRequest) returns (Empty);
+  rpc ListItineraryStops(ItineraryStopListRequest) returns (ItineraryStopListResponse);
+}
+
+service UserService {
+  rpc Register(RegisterRequest) returns (AuthToken);
+  rpc Login(LoginRequest) returns (AuthToken);
+  rpc LoginByMobile(LoginByMobileRequest) returns (AuthToken);
+  rpc GetProfile(UserIdRequest) returns (User);
+  rpc UpdateProfile(UpdateProfileRequest) returns (User);
+  rpc ChangePassword(ChangePasswordRequest) returns (OkResponse);
+}
+`;
+fs.writeFileSync('desc/travel.proto', content);
+console.log('Proto file written successfully');

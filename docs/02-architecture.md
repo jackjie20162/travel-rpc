@@ -42,6 +42,7 @@ The Travel service must be deployable, testable and upgradeable without requirin
 - order lifecycle
 - traveler/voucher domain data
 - tenant/merchant isolation rules
+- end-user account management (registration, authentication, profile)
 - Ent/MySQL persistence
 
 ## 3. Domain ownership
@@ -51,6 +52,7 @@ The Travel service must be deployable, testable and upgradeable without requirin
 - OrderService: booking/order lifecycle
 - Traveler/Voucher: order-associated domain data
 - Tenant/Merchant: isolation context within Travel domain
+- UserService: end-user registration, authentication, profile management
 
 ## 4. Dependency rule
 

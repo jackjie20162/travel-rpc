@@ -12,10 +12,15 @@ func (OrderItem) Fields() []ent.Field {
 		field.Int64("order_id"),
 		field.Int64("product_id"),
 		field.Int64("package_id"),
+		field.Int64("traveler_id").Optional(),
 		field.Int("quantity"),
 		field.Int64("unit_price"),
 		field.Int64("total_amount"),
 		field.String("service_date"),
 		field.String("time_slot").Optional(),
+		field.String("product_code").Optional(),
+		field.String("product_name").Optional(),
+		field.String("package_code").Optional(),
+		field.String("package_name").Optional(),
 	}
 }

@@ -13,6 +13,8 @@ func (Traveler) Fields() []ent.Field {
 		field.Int64("tenant_id"),
 		field.Int64("order_id"),
 		field.String("name").NotEmpty(),
+		field.String("id_type").Optional(),
+		field.String("id_number").Optional(),
 		field.String("email").Optional(),
 		field.String("phone").Optional(),
 		field.String("nationality").Optional(),

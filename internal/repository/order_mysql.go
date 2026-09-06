@@ -7,30 +7,49 @@ import (
 
 	"gitee.com/meinongyihe/travel-rpc/ent"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
+	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
+	"gitee.com/meinongyihe/travel-rpc/ent/predicate"
+	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
 )
 
-type mysqlOrderRepository struct { client *ent.Client }
+type mysqlOrderRepository struct{ client *ent.Client }
 
-func NewOrderRepository(client *ent.Client) OrderRepository { return &mysqlOrderRepository{client:client} }
+func NewOrderRepository(client *ent.Client) OrderRepository {
+	return &mysqlOrderRepository{client: client}
+}
 
 func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInput) (*ent.Order, error) {
-	if input.TenantID <= 0 || input.MerchantID <= 0 || input.Quantity <= 0 || input.UnitPrice < 0 || input.Currency == "" || input.ProductID <= 0 || input.PackageID <= 0 || input.ServiceDate == "" { return nil, &ErrInvalidOrder{} }
+	if input.TenantID <= 0 || input.MerchantID <= 0 || input.Quantity <= 0 || input.UnitPrice < 0 || input.Currency == "" || input.ProductID <= 0 || input.PackageID <= 0 || input.ServiceDate == "" {
+		return nil, &ErrInvalidOrder{}
+	}
 	tx, err := r.client.Tx(ctx)
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 	total := input.UnitPrice * int64(input.Quantity)
 	builder := tx.Order.Create().SetTenantID(input.TenantID).SetMerchantID(input.MerchantID).
 		SetOrderNo(newOrderNo()).SetTotalAmount(total).SetCurrency(input.Currency).
 		SetStatus("PENDING_PAYMENT").SetPaymentStatus("PENDING")
-	if input.CustomerID != nil { builder.SetCustomerID(*input.CustomerID) }
-	if input.CustomerEmail != "" { builder.SetCustomerEmail(input.CustomerEmail) }
+	if input.CustomerID != nil {
+		builder.SetCustomerID(*input.CustomerID)
+	}
+	if input.CustomerEmail != "" {
+		builder.SetCustomerEmail(input.CustomerEmail)
+	}
 	item, err := builder.Save(ctx)
-	if err != nil { _ = tx.Rollback(); return nil, err }
+	if err != nil {
+		_ = tx.Rollback()
+		return nil, err
+	}
 	if _, err = tx.OrderItem.Create().SetOrderID(int64(item.ID)).SetProductID(input.ProductID).SetPackageID(input.PackageID).
 		SetQuantity(input.Quantity).SetUnitPrice(input.UnitPrice).SetTotalAmount(total).
 		SetServiceDate(input.ServiceDate).SetTimeSlot(input.TimeSlot).Save(ctx); err != nil {
-		_ = tx.Rollback(); return nil, err
+		_ = tx.Rollback()
+		return nil, err
 	}
-	if err = tx.Commit(); err != nil { return nil, err }
+	if err = tx.Commit(); err != nil {
+		return nil, err
+	}
 	return item, nil
 }
 
@@ -38,7 +57,67 @@ func (r *mysqlOrderRepository) GetByOrderNo(ctx context.Context, tenantID, merch
 	return r.client.Order.Query().Where(order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID), order.OrderNoEQ(orderNo)).Only(ctx)
 }
 
-func newOrderNo() string { return fmt.Sprintf("TRV%s", time.Now().UTC().Format("20060102150405.000000000")) }
+func (r *mysqlOrderRepository) List(ctx context.Context, tenantID, merchantID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID)}
+	if status != "" {
+		preds = append(preds, order.StatusEQ(status))
+	}
+	q := r.client.Order.Query().Where(preds...)
+	total, err := q.Clone().Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	if page > 0 && pageSize > 0 {
+		q = q.Offset(int((page - 1) * pageSize)).Limit(int(pageSize))
+	}
+	items, err := q.Order(ent.Desc(order.FieldID)).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return items, int64(total), nil
+}
+
+func (r *mysqlOrderRepository) CountByStatus(ctx context.Context, tenantID, merchantID int64, status string) (int64, error) {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID)}
+	if status != "" {
+		preds = append(preds, order.StatusEQ(status))
+	}
+	n, err := r.client.Order.Query().Where(preds...).Count(ctx)
+	return int64(n), err
+}
+
+func (r *mysqlOrderRepository) ListByCustomer(ctx context.Context, tenantID, customerID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.CustomerIDEQ(customerID)}
+	if status != "" {
+		preds = append(preds, order.StatusEQ(status))
+	}
+	q := r.client.Order.Query().Where(preds...)
+	total, err := q.Clone().Count(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	if page > 0 && pageSize > 0 {
+		q = q.Offset(int((page - 1) * pageSize)).Limit(int(pageSize))
+	}
+	items, err := q.Order(ent.Desc(order.FieldID)).All(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	return items, int64(total), nil
+}
+
+func (r *mysqlOrderRepository) ListTravelersByOrderID(ctx context.Context, orderID int64) ([]*ent.Traveler, error) {
+	return r.client.Traveler.Query().Where(traveler.OrderIDEQ(orderID)).All(ctx)
+}
+
+func (r *mysqlOrderRepository) ListItemsByOrderID(ctx context.Context, orderID int64) ([]*ent.OrderItem, error) {
+	return r.client.OrderItem.Query().Where(orderitem.OrderIDEQ(orderID)).Order(ent.Asc(orderitem.FieldID)).All(ctx)
+}
+
+func newOrderNo() string {
+	return fmt.Sprintf("TRV%s", time.Now().UTC().Format("20060102150405.000000000"))
+}
 
 type ErrInvalidOrder struct{}
+
 func (e *ErrInvalidOrder) Error() string { return "invalid order" }

@@ -19,6 +19,14 @@ func (ProductPackage) Fields() []ent.Field {
 		field.String("code").NotEmpty(),
 		field.String("name").NotEmpty(),
 		field.String("status").Default("ACTIVE"),
+		// --- 套餐发布扩展字段 ---
+		field.String("pricing_mode").Default("SAME_PRICE"),   // SAME_PRICE / GROUP_PRICE / TIER_PRICE
+		field.String("inventory_mode").Default("UNLIMITED"), // UNLIMITED / DAILY / TOTAL
+		field.Int("min_order_qty").Default(1),               // 起订人数
+		field.String("sell_currency").Default("AED"),        // 卖价币种
+		field.String("cost_currency").Default("AED"),        // 底价币种
+		field.Text("group_prices").Optional(),               // 人群报价 JSON
+		field.Text("tier_prices").Optional(),                // 阶梯报价 JSON
 	}
 }
 

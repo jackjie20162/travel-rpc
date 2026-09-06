@@ -36,8 +36,8 @@ func (s *InventoryService) Reserve(ctx context.Context, req *travel.ReserveInven
 	}
 	tenantID, err := auth.TenantID(ctx)
 	if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
-	merchantID, err := auth.MerchantID(ctx)
-	if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+	// merchantID is optional for public catalog reservations
+	merchantID, _ := auth.MerchantID(ctx)
 	result, err := s.repo.Reserve(ctx, tenantID, merchantID, req.GetPackageId(), req.GetDate(), req.GetTimeSlot(), int(req.GetQuantity()), req.GetReservationKey())
 	if err != nil {
 		if _, ok := err.(*repository.ErrInsufficientInventory); ok { return nil, status.Error(codes.ResourceExhausted, "insufficient inventory") }

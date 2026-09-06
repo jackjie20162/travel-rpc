@@ -12,6 +12,7 @@ const (
 	TenantIDKey  = "x-tenant-id"
 	MerchantIDKey = "x-merchant-id"
 	CustomerIDKey = "x-customer-id"
+	UserIDKey     = "x-user-id"
 )
 
 // TenantID extracts the authenticated tenant scope propagated by the API gateway.
@@ -38,6 +39,12 @@ func CustomerID(ctx context.Context) (*int64, error) {
 }
 
 var errMissingMetadata = fmt.Errorf("missing authenticated scope metadata")
+
+// AuthenticatedUserID extracts the authenticated end-user ID from gRPC metadata.
+// This is set by the API gateway after token verification.
+func AuthenticatedUserID(ctx context.Context) (int64, error) {
+	return metadataID(ctx, UserIDKey)
+}
 
 func metadataID(ctx context.Context, key string) (int64, error) {
 	md, ok := metadata.FromIncomingContext(ctx)

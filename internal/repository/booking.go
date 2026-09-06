@@ -18,3 +18,13 @@ func (e *ErrReservationNotActive) Error() string { return "inventory reservation
 
 type ErrReservationExpired struct{}
 func (e *ErrReservationExpired) Error() string { return "inventory reservation has expired" }
+
+// ErrProductNotPublished is returned when the product is not in PUBLISHED status.
+type ErrProductNotPublished struct{ Status string }
+func (e *ErrProductNotPublished) Error() string {
+	return "product is not published (current status: " + e.Status + ")"
+}
+
+// ErrProductInvariant is returned when product tenant/merchant/currency does not match.
+type ErrProductInvariant struct{ Msg string }
+func (e *ErrProductInvariant) Error() string { return e.Msg }

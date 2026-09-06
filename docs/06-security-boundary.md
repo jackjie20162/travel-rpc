@@ -8,3 +8,7 @@
 6. Reservation keys should be idempotent so retries cannot double-reserve inventory.
 7. Payment callbacks must be authenticated, verified and idempotent before changing order state.
 8. Logs must not expose payment credentials or unnecessary traveler personal data.
+9. User passwords must never be stored in plaintext; salted hash only.
+10. Auth tokens are server-generated random strings; clients must not choose or predict them.
+11. Profile mutation and password change require a valid Bearer token.
+12. The RPC layer trusts `x-user-id` only when injected by the authenticated API gateway, never from public request fields.
