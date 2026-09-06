@@ -1720,3 +1720,219 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "travel.proto",
 }
+
+const (
+	ReviewService_Create_FullMethodName        = "/travel.ReviewService/Create"
+	ReviewService_ListByProduct_FullMethodName = "/travel.ReviewService/ListByProduct"
+	ReviewService_GetByOrder_FullMethodName    = "/travel.ReviewService/GetByOrder"
+	ReviewService_Reply_FullMethodName         = "/travel.ReviewService/Reply"
+)
+
+// ReviewServiceClient is the client API for ReviewService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ReviewServiceClient interface {
+	Create(ctx context.Context, in *CreateReviewRequest, opts ...grpc.CallOption) (*Review, error)
+	ListByProduct(ctx context.Context, in *ReviewListRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
+	GetByOrder(ctx context.Context, in *OrderNoReviewRequest, opts ...grpc.CallOption) (*Review, error)
+	Reply(ctx context.Context, in *ReplyReviewRequest, opts ...grpc.CallOption) (*Review, error)
+}
+
+type reviewServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewReviewServiceClient(cc grpc.ClientConnInterface) ReviewServiceClient {
+	return &reviewServiceClient{cc}
+}
+
+func (c *reviewServiceClient) Create(ctx context.Context, in *CreateReviewRequest, opts ...grpc.CallOption) (*Review, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Review)
+	err := c.cc.Invoke(ctx, ReviewService_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reviewServiceClient) ListByProduct(ctx context.Context, in *ReviewListRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReviewListResponse)
+	err := c.cc.Invoke(ctx, ReviewService_ListByProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reviewServiceClient) GetByOrder(ctx context.Context, in *OrderNoReviewRequest, opts ...grpc.CallOption) (*Review, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Review)
+	err := c.cc.Invoke(ctx, ReviewService_GetByOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *reviewServiceClient) Reply(ctx context.Context, in *ReplyReviewRequest, opts ...grpc.CallOption) (*Review, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Review)
+	err := c.cc.Invoke(ctx, ReviewService_Reply_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ReviewServiceServer is the server API for ReviewService service.
+// All implementations must embed UnimplementedReviewServiceServer
+// for forward compatibility.
+type ReviewServiceServer interface {
+	Create(context.Context, *CreateReviewRequest) (*Review, error)
+	ListByProduct(context.Context, *ReviewListRequest) (*ReviewListResponse, error)
+	GetByOrder(context.Context, *OrderNoReviewRequest) (*Review, error)
+	Reply(context.Context, *ReplyReviewRequest) (*Review, error)
+	mustEmbedUnimplementedReviewServiceServer()
+}
+
+// UnimplementedReviewServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedReviewServiceServer struct{}
+
+func (UnimplementedReviewServiceServer) Create(context.Context, *CreateReviewRequest) (*Review, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedReviewServiceServer) ListByProduct(context.Context, *ReviewListRequest) (*ReviewListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListByProduct not implemented")
+}
+func (UnimplementedReviewServiceServer) GetByOrder(context.Context, *OrderNoReviewRequest) (*Review, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetByOrder not implemented")
+}
+func (UnimplementedReviewServiceServer) Reply(context.Context, *ReplyReviewRequest) (*Review, error) {
+	return nil, status.Error(codes.Unimplemented, "method Reply not implemented")
+}
+func (UnimplementedReviewServiceServer) mustEmbedUnimplementedReviewServiceServer() {}
+func (UnimplementedReviewServiceServer) testEmbeddedByValue()                       {}
+
+// UnsafeReviewServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ReviewServiceServer will
+// result in compilation errors.
+type UnsafeReviewServiceServer interface {
+	mustEmbedUnimplementedReviewServiceServer()
+}
+
+func RegisterReviewServiceServer(s grpc.ServiceRegistrar, srv ReviewServiceServer) {
+	// If the following call panics, it indicates UnimplementedReviewServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ReviewService_ServiceDesc, srv)
+}
+
+func _ReviewService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReviewServiceServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReviewService_Create_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReviewServiceServer).Create(ctx, req.(*CreateReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReviewService_ListByProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReviewListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReviewServiceServer).ListByProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReviewService_ListByProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReviewServiceServer).ListByProduct(ctx, req.(*ReviewListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReviewService_GetByOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OrderNoReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReviewServiceServer).GetByOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReviewService_GetByOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReviewServiceServer).GetByOrder(ctx, req.(*OrderNoReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ReviewService_Reply_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReplyReviewRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReviewServiceServer).Reply(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReviewService_Reply_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReviewServiceServer).Reply(ctx, req.(*ReplyReviewRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ReviewService_ServiceDesc is the grpc.ServiceDesc for ReviewService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ReviewService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "travel.ReviewService",
+	HandlerType: (*ReviewServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Create",
+			Handler:    _ReviewService_Create_Handler,
+		},
+		{
+			MethodName: "ListByProduct",
+			Handler:    _ReviewService_ListByProduct_Handler,
+		},
+		{
+			MethodName: "GetByOrder",
+			Handler:    _ReviewService_GetByOrder_Handler,
+		},
+		{
+			MethodName: "Reply",
+			Handler:    _ReviewService_Reply_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "travel.proto",
+}

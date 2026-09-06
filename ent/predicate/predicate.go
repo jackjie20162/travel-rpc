@@ -33,6 +33,9 @@ type Product func(*sql.Selector)
 // ProductPackage is the predicate function for productpackage builders.
 type ProductPackage func(*sql.Selector)
 
+// Review is the predicate function for review builders.
+type Review func(*sql.Selector)
+
 // Tenant is the predicate function for tenant builders.
 type Tenant func(*sql.Selector)
 

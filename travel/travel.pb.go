@@ -2880,6 +2880,8 @@ type Product struct {
 	VideoUrl      string                 `protobuf:"bytes,15,opt,name=video_url,json=videoUrl,proto3" json:"video_url,omitempty"`
 	RichContent   string                 `protobuf:"bytes,16,opt,name=rich_content,json=richContent,proto3" json:"rich_content,omitempty"`
 	BookingNotice string                 `protobuf:"bytes,17,opt,name=booking_notice,json=bookingNotice,proto3" json:"booking_notice,omitempty"`
+	AvgRating     float64                `protobuf:"fixed64,18,opt,name=avg_rating,json=avgRating,proto3" json:"avg_rating,omitempty"`
+	ReviewCount   int32                  `protobuf:"varint,19,opt,name=review_count,json=reviewCount,proto3" json:"review_count,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3031,6 +3033,20 @@ func (x *Product) GetBookingNotice() string {
 		return x.BookingNotice
 	}
 	return ""
+}
+
+func (x *Product) GetAvgRating() float64 {
+	if x != nil {
+		return x.AvgRating
+	}
+	return 0
+}
+
+func (x *Product) GetReviewCount() int32 {
+	if x != nil {
+		return x.ReviewCount
+	}
+	return 0
 }
 
 type ProductIdRequest struct {
@@ -4577,6 +4593,502 @@ func (x *ItineraryStop) GetDropoffLongitude() float64 {
 	return 0
 }
 
+type Review struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	TenantId      int64                  `protobuf:"varint,2,opt,name=tenant_id,json=tenantId,proto3" json:"tenant_id,omitempty"`
+	MerchantId    int64                  `protobuf:"varint,3,opt,name=merchant_id,json=merchantId,proto3" json:"merchant_id,omitempty"`
+	OrderId       int64                  `protobuf:"varint,4,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	ProductId     int64                  `protobuf:"varint,6,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	UserId        int64                  `protobuf:"varint,7,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Rating        int32                  `protobuf:"varint,8,opt,name=rating,proto3" json:"rating,omitempty"`
+	ServiceRating int32                  `protobuf:"varint,9,opt,name=service_rating,json=serviceRating,proto3" json:"service_rating,omitempty"`
+	ValueRating   int32                  `protobuf:"varint,10,opt,name=value_rating,json=valueRating,proto3" json:"value_rating,omitempty"`
+	Content       string                 `protobuf:"bytes,11,opt,name=content,proto3" json:"content,omitempty"`
+	Images        string                 `protobuf:"bytes,12,opt,name=images,proto3" json:"images,omitempty"`
+	ReplyContent  string                 `protobuf:"bytes,13,opt,name=reply_content,json=replyContent,proto3" json:"reply_content,omitempty"`
+	ReplyTime     int64                  `protobuf:"varint,14,opt,name=reply_time,json=replyTime,proto3" json:"reply_time,omitempty"`
+	Status        string                 `protobuf:"bytes,15,opt,name=status,proto3" json:"status,omitempty"`
+	Createtime    int64                  `protobuf:"varint,16,opt,name=createtime,proto3" json:"createtime,omitempty"`
+	UserName      string                 `protobuf:"bytes,17,opt,name=user_name,json=userName,proto3" json:"user_name,omitempty"`
+	ProductName   string                 `protobuf:"bytes,18,opt,name=product_name,json=productName,proto3" json:"product_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Review) Reset() {
+	*x = Review{}
+	mi := &file_travel_proto_msgTypes[51]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Review) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Review) ProtoMessage() {}
+
+func (x *Review) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[51]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Review.ProtoReflect.Descriptor instead.
+func (*Review) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{51}
+}
+
+func (x *Review) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Review) GetTenantId() int64 {
+	if x != nil {
+		return x.TenantId
+	}
+	return 0
+}
+
+func (x *Review) GetMerchantId() int64 {
+	if x != nil {
+		return x.MerchantId
+	}
+	return 0
+}
+
+func (x *Review) GetOrderId() int64 {
+	if x != nil {
+		return x.OrderId
+	}
+	return 0
+}
+
+func (x *Review) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *Review) GetProductId() int64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *Review) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *Review) GetRating() int32 {
+	if x != nil {
+		return x.Rating
+	}
+	return 0
+}
+
+func (x *Review) GetServiceRating() int32 {
+	if x != nil {
+		return x.ServiceRating
+	}
+	return 0
+}
+
+func (x *Review) GetValueRating() int32 {
+	if x != nil {
+		return x.ValueRating
+	}
+	return 0
+}
+
+func (x *Review) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *Review) GetImages() string {
+	if x != nil {
+		return x.Images
+	}
+	return ""
+}
+
+func (x *Review) GetReplyContent() string {
+	if x != nil {
+		return x.ReplyContent
+	}
+	return ""
+}
+
+func (x *Review) GetReplyTime() int64 {
+	if x != nil {
+		return x.ReplyTime
+	}
+	return 0
+}
+
+func (x *Review) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Review) GetCreatetime() int64 {
+	if x != nil {
+		return x.Createtime
+	}
+	return 0
+}
+
+func (x *Review) GetUserName() string {
+	if x != nil {
+		return x.UserName
+	}
+	return ""
+}
+
+func (x *Review) GetProductName() string {
+	if x != nil {
+		return x.ProductName
+	}
+	return ""
+}
+
+type CreateReviewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	ProductId     int64                  `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Rating        int32                  `protobuf:"varint,3,opt,name=rating,proto3" json:"rating,omitempty"`
+	ServiceRating int32                  `protobuf:"varint,4,opt,name=service_rating,json=serviceRating,proto3" json:"service_rating,omitempty"`
+	ValueRating   int32                  `protobuf:"varint,5,opt,name=value_rating,json=valueRating,proto3" json:"value_rating,omitempty"`
+	Content       string                 `protobuf:"bytes,6,opt,name=content,proto3" json:"content,omitempty"`
+	Images        string                 `protobuf:"bytes,7,opt,name=images,proto3" json:"images,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateReviewRequest) Reset() {
+	*x = CreateReviewRequest{}
+	mi := &file_travel_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateReviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateReviewRequest) ProtoMessage() {}
+
+func (x *CreateReviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateReviewRequest.ProtoReflect.Descriptor instead.
+func (*CreateReviewRequest) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *CreateReviewRequest) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *CreateReviewRequest) GetProductId() int64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *CreateReviewRequest) GetRating() int32 {
+	if x != nil {
+		return x.Rating
+	}
+	return 0
+}
+
+func (x *CreateReviewRequest) GetServiceRating() int32 {
+	if x != nil {
+		return x.ServiceRating
+	}
+	return 0
+}
+
+func (x *CreateReviewRequest) GetValueRating() int32 {
+	if x != nil {
+		return x.ValueRating
+	}
+	return 0
+}
+
+func (x *CreateReviewRequest) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CreateReviewRequest) GetImages() string {
+	if x != nil {
+		return x.Images
+	}
+	return ""
+}
+
+type ReviewListRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProductId     int64                  `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
+	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReviewListRequest) Reset() {
+	*x = ReviewListRequest{}
+	mi := &file_travel_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReviewListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReviewListRequest) ProtoMessage() {}
+
+func (x *ReviewListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReviewListRequest.ProtoReflect.Descriptor instead.
+func (*ReviewListRequest) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *ReviewListRequest) GetProductId() int64 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *ReviewListRequest) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *ReviewListRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ReviewListRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+type ReviewListResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Items         []*Review              `protobuf:"bytes,1,rep,name=items,proto3" json:"items,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	AvgRating     float64                `protobuf:"fixed64,3,opt,name=avg_rating,json=avgRating,proto3" json:"avg_rating,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReviewListResponse) Reset() {
+	*x = ReviewListResponse{}
+	mi := &file_travel_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReviewListResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReviewListResponse) ProtoMessage() {}
+
+func (x *ReviewListResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReviewListResponse.ProtoReflect.Descriptor instead.
+func (*ReviewListResponse) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *ReviewListResponse) GetItems() []*Review {
+	if x != nil {
+		return x.Items
+	}
+	return nil
+}
+
+func (x *ReviewListResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ReviewListResponse) GetAvgRating() float64 {
+	if x != nil {
+		return x.AvgRating
+	}
+	return 0
+}
+
+type OrderNoReviewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *OrderNoReviewRequest) Reset() {
+	*x = OrderNoReviewRequest{}
+	mi := &file_travel_proto_msgTypes[55]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *OrderNoReviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*OrderNoReviewRequest) ProtoMessage() {}
+
+func (x *OrderNoReviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[55]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use OrderNoReviewRequest.ProtoReflect.Descriptor instead.
+func (*OrderNoReviewRequest) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *OrderNoReviewRequest) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+type ReplyReviewRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	ReplyContent  string                 `protobuf:"bytes,2,opt,name=reply_content,json=replyContent,proto3" json:"reply_content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ReplyReviewRequest) Reset() {
+	*x = ReplyReviewRequest{}
+	mi := &file_travel_proto_msgTypes[56]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ReplyReviewRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ReplyReviewRequest) ProtoMessage() {}
+
+func (x *ReplyReviewRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[56]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ReplyReviewRequest.ProtoReflect.Descriptor instead.
+func (*ReplyReviewRequest) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{56}
+}
+
+func (x *ReplyReviewRequest) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ReplyReviewRequest) GetReplyContent() string {
+	if x != nil {
+		return x.ReplyContent
+	}
+	return ""
+}
+
 var File_travel_proto protoreflect.FileDescriptor
 
 const file_travel_proto_rawDesc = "" +
@@ -4864,7 +5376,7 @@ const file_travel_proto_rawDesc = "" +
 	"\x06status\x18\b \x01(\tR\x06status\"1\n" +
 	"\x10PaymentNoRequest\x12\x1d\n" +
 	"\n" +
-	"payment_no\x18\x01 \x01(\tR\tpaymentNo\"\xea\x03\n" +
+	"payment_no\x18\x01 \x01(\tR\tpaymentNo\"\xac\x04\n" +
 	"\aProduct\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\x03R\btenantId\x12\x1f\n" +
@@ -4887,7 +5399,10 @@ const file_travel_proto_rawDesc = "" +
 	"\x06images\x18\x0e \x01(\tR\x06images\x12\x1b\n" +
 	"\tvideo_url\x18\x0f \x01(\tR\bvideoUrl\x12!\n" +
 	"\frich_content\x18\x10 \x01(\tR\vrichContent\x12%\n" +
-	"\x0ebooking_notice\x18\x11 \x01(\tR\rbookingNotice\"\"\n" +
+	"\x0ebooking_notice\x18\x11 \x01(\tR\rbookingNotice\x12\x1d\n" +
+	"\n" +
+	"avg_rating\x18\x12 \x01(\x01R\tavgRating\x12!\n" +
+	"\freview_count\x18\x13 \x01(\x05R\vreviewCount\"\"\n" +
 	"\x10ProductIdRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"\x81\x01\n" +
 	"\x12ProductListRequest\x12\x18\n" +
@@ -5046,7 +5561,57 @@ const file_travel_proto_rawDesc = "" +
 	"\x10dropoff_location\x18\x1d \x01(\tR\x0fdropoffLocation\x12'\n" +
 	"\x0fdropoff_address\x18\x1e \x01(\tR\x0edropoffAddress\x12)\n" +
 	"\x10dropoff_latitude\x18\x1f \x01(\x01R\x0fdropoffLatitude\x12+\n" +
-	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude2\xdb\x01\n" +
+	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude\"\x94\x04\n" +
+	"\x06Review\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
+	"\ttenant_id\x18\x02 \x01(\x03R\btenantId\x12\x1f\n" +
+	"\vmerchant_id\x18\x03 \x01(\x03R\n" +
+	"merchantId\x12\x19\n" +
+	"\border_id\x18\x04 \x01(\x03R\aorderId\x12\x19\n" +
+	"\border_no\x18\x05 \x01(\tR\aorderNo\x12\x1d\n" +
+	"\n" +
+	"product_id\x18\x06 \x01(\x03R\tproductId\x12\x17\n" +
+	"\auser_id\x18\a \x01(\x03R\x06userId\x12\x16\n" +
+	"\x06rating\x18\b \x01(\x05R\x06rating\x12%\n" +
+	"\x0eservice_rating\x18\t \x01(\x05R\rserviceRating\x12!\n" +
+	"\fvalue_rating\x18\n" +
+	" \x01(\x05R\vvalueRating\x12\x18\n" +
+	"\acontent\x18\v \x01(\tR\acontent\x12\x16\n" +
+	"\x06images\x18\f \x01(\tR\x06images\x12#\n" +
+	"\rreply_content\x18\r \x01(\tR\freplyContent\x12\x1d\n" +
+	"\n" +
+	"reply_time\x18\x0e \x01(\x03R\treplyTime\x12\x16\n" +
+	"\x06status\x18\x0f \x01(\tR\x06status\x12\x1e\n" +
+	"\n" +
+	"createtime\x18\x10 \x01(\x03R\n" +
+	"createtime\x12\x1b\n" +
+	"\tuser_name\x18\x11 \x01(\tR\buserName\x12!\n" +
+	"\fproduct_name\x18\x12 \x01(\tR\vproductName\"\xe3\x01\n" +
+	"\x13CreateReviewRequest\x12\x19\n" +
+	"\border_no\x18\x01 \x01(\tR\aorderNo\x12\x1d\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\x03R\tproductId\x12\x16\n" +
+	"\x06rating\x18\x03 \x01(\x05R\x06rating\x12%\n" +
+	"\x0eservice_rating\x18\x04 \x01(\x05R\rserviceRating\x12!\n" +
+	"\fvalue_rating\x18\x05 \x01(\x05R\vvalueRating\x12\x18\n" +
+	"\acontent\x18\x06 \x01(\tR\acontent\x12\x16\n" +
+	"\x06images\x18\a \x01(\tR\x06images\"{\n" +
+	"\x11ReviewListRequest\x12\x1d\n" +
+	"\n" +
+	"product_id\x18\x01 \x01(\x03R\tproductId\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\tR\x06status\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\"o\n" +
+	"\x12ReviewListResponse\x12$\n" +
+	"\x05items\x18\x01 \x03(\v2\x0e.travel.ReviewR\x05items\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\x12\x1d\n" +
+	"\n" +
+	"avg_rating\x18\x03 \x01(\x01R\tavgRating\"1\n" +
+	"\x14OrderNoReviewRequest\x12\x19\n" +
+	"\border_no\x18\x01 \x01(\tR\aorderNo\"I\n" +
+	"\x12ReplyReviewRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12#\n" +
+	"\rreply_content\x18\x02 \x01(\tR\freplyContent2\xdb\x01\n" +
 	"\x0eCatalogService\x127\n" +
 	"\n" +
 	"GetProduct\x12\x18.travel.ProductIdRequest\x1a\x0f.travel.Product\x12G\n" +
@@ -5088,7 +5653,13 @@ const file_travel_proto_rawDesc = "" +
 	"\n" +
 	"GetProfile\x12\x15.travel.UserIdRequest\x1a\f.travel.User\x12;\n" +
 	"\rUpdateProfile\x12\x1c.travel.UpdateProfileRequest\x1a\f.travel.User\x12C\n" +
-	"\x0eChangePassword\x12\x1d.travel.ChangePasswordRequest\x1a\x12.travel.OkResponseB)Z'gitee.com/meinongyihe/travel-rpc/travelb\x06proto3"
+	"\x0eChangePassword\x12\x1d.travel.ChangePasswordRequest\x1a\x12.travel.OkResponse2\xff\x01\n" +
+	"\rReviewService\x125\n" +
+	"\x06Create\x12\x1b.travel.CreateReviewRequest\x1a\x0e.travel.Review\x12F\n" +
+	"\rListByProduct\x12\x19.travel.ReviewListRequest\x1a\x1a.travel.ReviewListResponse\x12:\n" +
+	"\n" +
+	"GetByOrder\x12\x1c.travel.OrderNoReviewRequest\x1a\x0e.travel.Review\x123\n" +
+	"\x05Reply\x12\x1a.travel.ReplyReviewRequest\x1a\x0e.travel.ReviewB)Z'gitee.com/meinongyihe/travel-rpc/travelb\x06proto3"
 
 var (
 	file_travel_proto_rawDescOnce sync.Once
@@ -5102,7 +5673,7 @@ func file_travel_proto_rawDescGZIP() []byte {
 	return file_travel_proto_rawDescData
 }
 
-var file_travel_proto_msgTypes = make([]protoimpl.MessageInfo, 51)
+var file_travel_proto_msgTypes = make([]protoimpl.MessageInfo, 57)
 var file_travel_proto_goTypes = []any{
 	(*AuthToken)(nil),                   // 0: travel.AuthToken
 	(*ChangePasswordRequest)(nil),       // 1: travel.ChangePasswordRequest
@@ -5155,6 +5726,12 @@ var file_travel_proto_goTypes = []any{
 	(*VerifyOrderRequest)(nil),          // 48: travel.VerifyOrderRequest
 	(*UserIdRequest)(nil),               // 49: travel.UserIdRequest
 	(*ItineraryStop)(nil),               // 50: travel.ItineraryStop
+	(*Review)(nil),                      // 51: travel.Review
+	(*CreateReviewRequest)(nil),         // 52: travel.CreateReviewRequest
+	(*ReviewListRequest)(nil),           // 53: travel.ReviewListRequest
+	(*ReviewListResponse)(nil),          // 54: travel.ReviewListResponse
+	(*OrderNoReviewRequest)(nil),        // 55: travel.OrderNoReviewRequest
+	(*ReplyReviewRequest)(nil),          // 56: travel.ReplyReviewRequest
 }
 var file_travel_proto_depIdxs = []int32{
 	47, // 0: travel.AuthToken.user:type_name -> travel.User
@@ -5167,77 +5744,86 @@ var file_travel_proto_depIdxs = []int32{
 	23, // 7: travel.CustomerOrderListResponse.items:type_name -> travel.Order
 	38, // 8: travel.PackageListResponse.items:type_name -> travel.ProductPackage
 	34, // 9: travel.ProductListResponse.items:type_name -> travel.Product
-	35, // 10: travel.CatalogService.GetProduct:input_type -> travel.ProductIdRequest
-	36, // 11: travel.CatalogService.ListProducts:input_type -> travel.ProductListRequest
-	30, // 12: travel.CatalogService.ListPackages:input_type -> travel.PackageListRequest
-	12, // 13: travel.InitService.InitDatabase:input_type -> travel.Empty
-	17, // 14: travel.InventoryService.Check:input_type -> travel.InventoryRequest
-	41, // 15: travel.InventoryService.Reserve:input_type -> travel.ReserveInventoryRequest
-	2,  // 16: travel.OrderService.Create:input_type -> travel.CreateOrderRequest
-	25, // 17: travel.OrderService.Get:input_type -> travel.OrderNoRequest
-	26, // 18: travel.OrderService.ListMerchantOrders:input_type -> travel.MerchantOrderListRequest
-	28, // 19: travel.OrderService.ListCustomerOrders:input_type -> travel.CustomerOrderListRequest
-	48, // 20: travel.OrderService.VerifyOrder:input_type -> travel.VerifyOrderRequest
-	5,  // 21: travel.PaymentService.Create:input_type -> travel.CreatePaymentRequest
-	33, // 22: travel.PaymentService.Get:input_type -> travel.PaymentNoRequest
-	43, // 23: travel.PaymentService.SetProviderID:input_type -> travel.SetPaymentProviderIDRequest
-	21, // 24: travel.PaymentService.MarkPaid:input_type -> travel.MarkPaymentPaidRequest
-	36, // 25: travel.TravelManagementService.ListProducts:input_type -> travel.ProductListRequest
-	6,  // 26: travel.TravelManagementService.CreateProduct:input_type -> travel.CreateProductRequest
-	44, // 27: travel.TravelManagementService.UpdateProduct:input_type -> travel.UpdateProductRequest
-	4,  // 28: travel.TravelManagementService.CreatePackage:input_type -> travel.CreatePackageRequest
-	30, // 29: travel.TravelManagementService.ListPackages:input_type -> travel.PackageListRequest
-	46, // 30: travel.TravelManagementService.UpsertInventory:input_type -> travel.UpsertInventoryRequest
-	15, // 31: travel.TravelManagementService.ListInventory:input_type -> travel.InventoryListRequest
-	39, // 32: travel.TravelManagementService.PublishProduct:input_type -> travel.PublishProductRequest
-	7,  // 33: travel.TravelManagementService.CreateItineraryStop:input_type -> travel.CreateItineraryStopRequest
-	8,  // 34: travel.TravelManagementService.UpdateItineraryStop:input_type -> travel.UpdateItineraryStopRequest
-	9,  // 35: travel.TravelManagementService.DeleteItineraryStop:input_type -> travel.DeleteItineraryStopRequest
-	10, // 36: travel.TravelManagementService.ListItineraryStops:input_type -> travel.ItineraryStopListRequest
-	40, // 37: travel.UserService.Register:input_type -> travel.RegisterRequest
-	20, // 38: travel.UserService.Login:input_type -> travel.LoginRequest
-	19, // 39: travel.UserService.LoginByMobile:input_type -> travel.LoginByMobileRequest
-	49, // 40: travel.UserService.GetProfile:input_type -> travel.UserIdRequest
-	45, // 41: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
-	1,  // 42: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
-	34, // 43: travel.CatalogService.GetProduct:output_type -> travel.Product
-	37, // 44: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
-	31, // 45: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
-	13, // 46: travel.InitService.InitDatabase:output_type -> travel.InitResponse
-	18, // 47: travel.InventoryService.Check:output_type -> travel.InventoryResponse
-	42, // 48: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
-	23, // 49: travel.OrderService.Create:output_type -> travel.Order
-	23, // 50: travel.OrderService.Get:output_type -> travel.Order
-	27, // 51: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
-	29, // 52: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
-	23, // 53: travel.OrderService.VerifyOrder:output_type -> travel.Order
-	32, // 54: travel.PaymentService.Create:output_type -> travel.Payment
-	32, // 55: travel.PaymentService.Get:output_type -> travel.Payment
-	32, // 56: travel.PaymentService.SetProviderID:output_type -> travel.Payment
-	32, // 57: travel.PaymentService.MarkPaid:output_type -> travel.Payment
-	37, // 58: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
-	34, // 59: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
-	34, // 60: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
-	38, // 61: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
-	31, // 62: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
-	14, // 63: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
-	16, // 64: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
-	34, // 65: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
-	50, // 66: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
-	50, // 67: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
-	12, // 68: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
-	11, // 69: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
-	0,  // 70: travel.UserService.Register:output_type -> travel.AuthToken
-	0,  // 71: travel.UserService.Login:output_type -> travel.AuthToken
-	0,  // 72: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
-	47, // 73: travel.UserService.GetProfile:output_type -> travel.User
-	47, // 74: travel.UserService.UpdateProfile:output_type -> travel.User
-	22, // 75: travel.UserService.ChangePassword:output_type -> travel.OkResponse
-	43, // [43:76] is the sub-list for method output_type
-	10, // [10:43] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	51, // 10: travel.ReviewListResponse.items:type_name -> travel.Review
+	35, // 11: travel.CatalogService.GetProduct:input_type -> travel.ProductIdRequest
+	36, // 12: travel.CatalogService.ListProducts:input_type -> travel.ProductListRequest
+	30, // 13: travel.CatalogService.ListPackages:input_type -> travel.PackageListRequest
+	12, // 14: travel.InitService.InitDatabase:input_type -> travel.Empty
+	17, // 15: travel.InventoryService.Check:input_type -> travel.InventoryRequest
+	41, // 16: travel.InventoryService.Reserve:input_type -> travel.ReserveInventoryRequest
+	2,  // 17: travel.OrderService.Create:input_type -> travel.CreateOrderRequest
+	25, // 18: travel.OrderService.Get:input_type -> travel.OrderNoRequest
+	26, // 19: travel.OrderService.ListMerchantOrders:input_type -> travel.MerchantOrderListRequest
+	28, // 20: travel.OrderService.ListCustomerOrders:input_type -> travel.CustomerOrderListRequest
+	48, // 21: travel.OrderService.VerifyOrder:input_type -> travel.VerifyOrderRequest
+	5,  // 22: travel.PaymentService.Create:input_type -> travel.CreatePaymentRequest
+	33, // 23: travel.PaymentService.Get:input_type -> travel.PaymentNoRequest
+	43, // 24: travel.PaymentService.SetProviderID:input_type -> travel.SetPaymentProviderIDRequest
+	21, // 25: travel.PaymentService.MarkPaid:input_type -> travel.MarkPaymentPaidRequest
+	36, // 26: travel.TravelManagementService.ListProducts:input_type -> travel.ProductListRequest
+	6,  // 27: travel.TravelManagementService.CreateProduct:input_type -> travel.CreateProductRequest
+	44, // 28: travel.TravelManagementService.UpdateProduct:input_type -> travel.UpdateProductRequest
+	4,  // 29: travel.TravelManagementService.CreatePackage:input_type -> travel.CreatePackageRequest
+	30, // 30: travel.TravelManagementService.ListPackages:input_type -> travel.PackageListRequest
+	46, // 31: travel.TravelManagementService.UpsertInventory:input_type -> travel.UpsertInventoryRequest
+	15, // 32: travel.TravelManagementService.ListInventory:input_type -> travel.InventoryListRequest
+	39, // 33: travel.TravelManagementService.PublishProduct:input_type -> travel.PublishProductRequest
+	7,  // 34: travel.TravelManagementService.CreateItineraryStop:input_type -> travel.CreateItineraryStopRequest
+	8,  // 35: travel.TravelManagementService.UpdateItineraryStop:input_type -> travel.UpdateItineraryStopRequest
+	9,  // 36: travel.TravelManagementService.DeleteItineraryStop:input_type -> travel.DeleteItineraryStopRequest
+	10, // 37: travel.TravelManagementService.ListItineraryStops:input_type -> travel.ItineraryStopListRequest
+	40, // 38: travel.UserService.Register:input_type -> travel.RegisterRequest
+	20, // 39: travel.UserService.Login:input_type -> travel.LoginRequest
+	19, // 40: travel.UserService.LoginByMobile:input_type -> travel.LoginByMobileRequest
+	49, // 41: travel.UserService.GetProfile:input_type -> travel.UserIdRequest
+	45, // 42: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
+	1,  // 43: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
+	52, // 44: travel.ReviewService.Create:input_type -> travel.CreateReviewRequest
+	53, // 45: travel.ReviewService.ListByProduct:input_type -> travel.ReviewListRequest
+	55, // 46: travel.ReviewService.GetByOrder:input_type -> travel.OrderNoReviewRequest
+	56, // 47: travel.ReviewService.Reply:input_type -> travel.ReplyReviewRequest
+	34, // 48: travel.CatalogService.GetProduct:output_type -> travel.Product
+	37, // 49: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
+	31, // 50: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
+	13, // 51: travel.InitService.InitDatabase:output_type -> travel.InitResponse
+	18, // 52: travel.InventoryService.Check:output_type -> travel.InventoryResponse
+	42, // 53: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
+	23, // 54: travel.OrderService.Create:output_type -> travel.Order
+	23, // 55: travel.OrderService.Get:output_type -> travel.Order
+	27, // 56: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
+	29, // 57: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
+	23, // 58: travel.OrderService.VerifyOrder:output_type -> travel.Order
+	32, // 59: travel.PaymentService.Create:output_type -> travel.Payment
+	32, // 60: travel.PaymentService.Get:output_type -> travel.Payment
+	32, // 61: travel.PaymentService.SetProviderID:output_type -> travel.Payment
+	32, // 62: travel.PaymentService.MarkPaid:output_type -> travel.Payment
+	37, // 63: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
+	34, // 64: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
+	34, // 65: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
+	38, // 66: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
+	31, // 67: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
+	14, // 68: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
+	16, // 69: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
+	34, // 70: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
+	50, // 71: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
+	50, // 72: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
+	12, // 73: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
+	11, // 74: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
+	0,  // 75: travel.UserService.Register:output_type -> travel.AuthToken
+	0,  // 76: travel.UserService.Login:output_type -> travel.AuthToken
+	0,  // 77: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
+	47, // 78: travel.UserService.GetProfile:output_type -> travel.User
+	47, // 79: travel.UserService.UpdateProfile:output_type -> travel.User
+	22, // 80: travel.UserService.ChangePassword:output_type -> travel.OkResponse
+	51, // 81: travel.ReviewService.Create:output_type -> travel.Review
+	54, // 82: travel.ReviewService.ListByProduct:output_type -> travel.ReviewListResponse
+	51, // 83: travel.ReviewService.GetByOrder:output_type -> travel.Review
+	51, // 84: travel.ReviewService.Reply:output_type -> travel.Review
+	48, // [48:85] is the sub-list for method output_type
+	11, // [11:48] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_travel_proto_init() }
@@ -5251,9 +5837,9 @@ func file_travel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_travel_proto_rawDesc), len(file_travel_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   51,
+			NumMessages:   57,
 			NumExtensions: 0,
-			NumServices:   7,
+			NumServices:   8,
 		},
 		GoTypes:           file_travel_proto_goTypes,
 		DependencyIndexes: file_travel_proto_depIdxs,

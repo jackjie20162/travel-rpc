@@ -21,6 +21,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
 	"gitee.com/meinongyihe/travel-rpc/ent/user"
@@ -94,6 +95,7 @@ func checkColumn(t, c string) error {
 			payment.Table:              payment.ValidColumn,
 			product.Table:              product.ValidColumn,
 			productpackage.Table:       productpackage.ValidColumn,
+			review.Table:               review.ValidColumn,
 			tenant.Table:               tenant.ValidColumn,
 			traveler.Table:             traveler.ValidColumn,
 			user.Table:                 user.ValidColumn,

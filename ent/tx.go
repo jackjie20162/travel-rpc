@@ -32,6 +32,8 @@ type Tx struct {
 	Product *ProductClient
 	// ProductPackage is the client for interacting with the ProductPackage builders.
 	ProductPackage *ProductPackageClient
+	// Review is the client for interacting with the Review builders.
+	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
 	Tenant *TenantClient
 	// Traveler is the client for interacting with the Traveler builders.
@@ -180,6 +182,7 @@ func (tx *Tx) init() {
 	tx.Payment = NewPaymentClient(tx.config)
 	tx.Product = NewProductClient(tx.config)
 	tx.ProductPackage = NewProductPackageClient(tx.config)
+	tx.Review = NewReviewClient(tx.config)
 	tx.Tenant = NewTenantClient(tx.config)
 	tx.Traveler = NewTravelerClient(tx.config)
 	tx.User = NewUserClient(tx.config)

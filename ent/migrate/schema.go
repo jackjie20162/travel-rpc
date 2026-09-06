@@ -365,6 +365,52 @@ var (
 			},
 		},
 	}
+	// ReviewsColumns holds the columns for the "reviews" table.
+	ReviewsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "tenant_id", Type: field.TypeInt64},
+		{Name: "merchant_id", Type: field.TypeInt64},
+		{Name: "order_id", Type: field.TypeInt64},
+		{Name: "order_no", Type: field.TypeString},
+		{Name: "product_id", Type: field.TypeInt64},
+		{Name: "user_id", Type: field.TypeInt64, Nullable: true},
+		{Name: "rating", Type: field.TypeInt, Default: 5},
+		{Name: "service_rating", Type: field.TypeInt, Nullable: true},
+		{Name: "value_rating", Type: field.TypeInt, Nullable: true},
+		{Name: "content", Type: field.TypeString, Nullable: true},
+		{Name: "images", Type: field.TypeString, Nullable: true},
+		{Name: "reply_content", Type: field.TypeString, Nullable: true},
+		{Name: "reply_time", Type: field.TypeInt64, Nullable: true},
+		{Name: "status", Type: field.TypeString, Default: "PENDING"},
+	}
+	// ReviewsTable holds the schema information for the "reviews" table.
+	ReviewsTable = &schema.Table{
+		Name:       "reviews",
+		Columns:    ReviewsColumns,
+		PrimaryKey: []*schema.Column{ReviewsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "review_order_no",
+				Unique:  true,
+				Columns: []*schema.Column{ReviewsColumns[4]},
+			},
+			{
+				Name:    "review_product_id_status",
+				Unique:  false,
+				Columns: []*schema.Column{ReviewsColumns[5], ReviewsColumns[14]},
+			},
+			{
+				Name:    "review_tenant_id_merchant_id_status",
+				Unique:  false,
+				Columns: []*schema.Column{ReviewsColumns[1], ReviewsColumns[2], ReviewsColumns[14]},
+			},
+			{
+				Name:    "review_user_id",
+				Unique:  false,
+				Columns: []*schema.Column{ReviewsColumns[6]},
+			},
+		},
+	}
 	// TenantsColumns holds the columns for the "tenants" table.
 	TenantsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -522,6 +568,7 @@ var (
 		PaymentsTable,
 		ProductsTable,
 		ProductPackagesTable,
+		ReviewsTable,
 		TenantsTable,
 		TravelersTable,
 		UsersTable,

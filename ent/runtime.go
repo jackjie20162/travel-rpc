@@ -13,6 +13,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/schema"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
@@ -222,6 +223,20 @@ func init() {
 	productpackageDescCostCurrency := productpackageFields[10].Descriptor()
 	// productpackage.DefaultCostCurrency holds the default value on creation for the cost_currency field.
 	productpackage.DefaultCostCurrency = productpackageDescCostCurrency.Default.(string)
+	reviewFields := schema.Review{}.Fields()
+	_ = reviewFields
+	// reviewDescOrderNo is the schema descriptor for order_no field.
+	reviewDescOrderNo := reviewFields[3].Descriptor()
+	// review.OrderNoValidator is a validator for the "order_no" field. It is called by the builders before save.
+	review.OrderNoValidator = reviewDescOrderNo.Validators[0].(func(string) error)
+	// reviewDescRating is the schema descriptor for rating field.
+	reviewDescRating := reviewFields[6].Descriptor()
+	// review.DefaultRating holds the default value on creation for the rating field.
+	review.DefaultRating = reviewDescRating.Default.(int)
+	// reviewDescStatus is the schema descriptor for status field.
+	reviewDescStatus := reviewFields[13].Descriptor()
+	// review.DefaultStatus holds the default value on creation for the status field.
+	review.DefaultStatus = reviewDescStatus.Default.(string)
 	tenantFields := schema.Tenant{}.Fields()
 	_ = tenantFields
 	// tenantDescCode is the schema descriptor for code field.

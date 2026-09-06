@@ -23,6 +23,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
 	"gitee.com/meinongyihe/travel-rpc/ent/user"
@@ -54,6 +55,8 @@ type Client struct {
 	Product *ProductClient
 	// ProductPackage is the client for interacting with the ProductPackage builders.
 	ProductPackage *ProductPackageClient
+	// Review is the client for interacting with the Review builders.
+	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
 	Tenant *TenantClient
 	// Traveler is the client for interacting with the Traveler builders.
@@ -82,6 +85,7 @@ func (c *Client) init() {
 	c.Payment = NewPaymentClient(c.config)
 	c.Product = NewProductClient(c.config)
 	c.ProductPackage = NewProductPackageClient(c.config)
+	c.Review = NewReviewClient(c.config)
 	c.Tenant = NewTenantClient(c.config)
 	c.Traveler = NewTravelerClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -187,6 +191,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Payment:              NewPaymentClient(cfg),
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
+		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
 		User:                 NewUserClient(cfg),
@@ -219,6 +224,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Payment:              NewPaymentClient(cfg),
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
+		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
 		User:                 NewUserClient(cfg),
@@ -253,8 +259,8 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant, c.Order,
-		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Tenant, c.Traveler,
-		c.User, c.Voucher,
+		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Review, c.Tenant,
+		c.Traveler, c.User, c.Voucher,
 	} {
 		n.Use(hooks...)
 	}
@@ -265,8 +271,8 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant, c.Order,
-		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Tenant, c.Traveler,
-		c.User, c.Voucher,
+		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Review, c.Tenant,
+		c.Traveler, c.User, c.Voucher,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -293,6 +299,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Product.mutate(ctx, m)
 	case *ProductPackageMutation:
 		return c.ProductPackage.mutate(ctx, m)
+	case *ReviewMutation:
+		return c.Review.mutate(ctx, m)
 	case *TenantMutation:
 		return c.Tenant.mutate(ctx, m)
 	case *TravelerMutation:
@@ -1503,6 +1511,139 @@ func (c *ProductPackageClient) mutate(ctx context.Context, m *ProductPackageMuta
 	}
 }
 
+// ReviewClient is a client for the Review schema.
+type ReviewClient struct {
+	config
+}
+
+// NewReviewClient returns a client for the Review from the given config.
+func NewReviewClient(c config) *ReviewClient {
+	return &ReviewClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `review.Hooks(f(g(h())))`.
+func (c *ReviewClient) Use(hooks ...Hook) {
+	c.hooks.Review = append(c.hooks.Review, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `review.Intercept(f(g(h())))`.
+func (c *ReviewClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Review = append(c.inters.Review, interceptors...)
+}
+
+// Create returns a builder for creating a Review entity.
+func (c *ReviewClient) Create() *ReviewCreate {
+	mutation := newReviewMutation(c.config, OpCreate)
+	return &ReviewCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Review entities.
+func (c *ReviewClient) CreateBulk(builders ...*ReviewCreate) *ReviewCreateBulk {
+	return &ReviewCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ReviewClient) MapCreateBulk(slice any, setFunc func(*ReviewCreate, int)) *ReviewCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ReviewCreateBulk{err: fmt.Errorf("calling to ReviewClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ReviewCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ReviewCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Review.
+func (c *ReviewClient) Update() *ReviewUpdate {
+	mutation := newReviewMutation(c.config, OpUpdate)
+	return &ReviewUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ReviewClient) UpdateOne(_m *Review) *ReviewUpdateOne {
+	mutation := newReviewMutation(c.config, OpUpdateOne, withReview(_m))
+	return &ReviewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ReviewClient) UpdateOneID(id int) *ReviewUpdateOne {
+	mutation := newReviewMutation(c.config, OpUpdateOne, withReviewID(id))
+	return &ReviewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Review.
+func (c *ReviewClient) Delete() *ReviewDelete {
+	mutation := newReviewMutation(c.config, OpDelete)
+	return &ReviewDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ReviewClient) DeleteOne(_m *Review) *ReviewDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ReviewClient) DeleteOneID(id int) *ReviewDeleteOne {
+	builder := c.Delete().Where(review.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ReviewDeleteOne{builder}
+}
+
+// Query returns a query builder for Review.
+func (c *ReviewClient) Query() *ReviewQuery {
+	return &ReviewQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeReview},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Review entity by its id.
+func (c *ReviewClient) Get(ctx context.Context, id int) (*Review, error) {
+	return c.Query().Where(review.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ReviewClient) GetX(ctx context.Context, id int) *Review {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ReviewClient) Hooks() []Hook {
+	return c.hooks.Review
+}
+
+// Interceptors returns the client interceptors.
+func (c *ReviewClient) Interceptors() []Interceptor {
+	return c.inters.Review
+}
+
+func (c *ReviewClient) mutate(ctx context.Context, m *ReviewMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ReviewCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ReviewUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ReviewUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ReviewDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Review mutation op: %q", m.Op())
+	}
+}
+
 // TenantClient is a client for the Tenant schema.
 type TenantClient struct {
 	config
@@ -2039,11 +2180,12 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 type (
 	hooks struct {
 		Inventory, InventoryReservation, ItineraryStop, Merchant, Order, OrderItem,
-		Payment, Product, ProductPackage, Tenant, Traveler, User, Voucher []ent.Hook
+		Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
+		Voucher []ent.Hook
 	}
 	inters struct {
 		Inventory, InventoryReservation, ItineraryStop, Merchant, Order, OrderItem,
-		Payment, Product, ProductPackage, Tenant, Traveler, User,
+		Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
 		Voucher []ent.Interceptor
 	}
 )
