@@ -32,18 +32,17 @@ func (s *OrderService) Create(ctx context.Context, req *travel.CreateOrderReques
     // merchantID is optional for public orders
     merchantID, _ := auth.MerchantID(ctx)
 
-    // user_id is the account owner who creates the order (归属人)
+    // user_id is the account owner who creates the order (账号归属人)
     var userID *int64
-    if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
-        userID = id
-    } else if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
+    if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
         userID = &id
-    } else if cid := req.GetCustomerId(); cid > 0 {
-        userID = &cid
     }
 
+    // customer_id is the contact person (联系人), only set when X-Customer-ID header is present
     var customerID *int64
-    if id, e := auth.CustomerID(ctx); e == nil { customerID = id }
+    if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
+        customerID = id
+    }
 
     // Reservation is a short-lived inventory hold. The following booking
     // transaction atomically creates the order and confirms that hold.
@@ -123,12 +122,12 @@ func (s *OrderService) ListCustomerOrders(ctx context.Context, req *travel.Custo
     if req == nil { return nil, status.Error(codes.InvalidArgument, "request is nil") }
     tenantID, err := auth.TenantID(ctx)
     if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
-    // Use user_id (归属人) from metadata for filtering, fall back to customer_id from request
+    // Use user_id (账号归属人) from metadata for filtering
     var userID int64
-    if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
-        userID = *id
-    } else if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
+    if id, e := auth.AuthenticatedUserID(ctx); e == nil && id > 0 {
         userID = id
+    } else if id, e := auth.CustomerID(ctx); e == nil && id != nil && *id > 0 {
+        userID = *id
     } else {
         userID = req.GetCustomerId()
     }
