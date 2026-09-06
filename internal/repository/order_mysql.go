@@ -57,7 +57,11 @@ func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInpu
 }
 
 func (r *mysqlOrderRepository) GetByOrderNo(ctx context.Context, tenantID, merchantID int64, orderNo string) (*ent.Order, error) {
-	return r.client.Order.Query().Where(order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID), order.OrderNoEQ(orderNo)).Only(ctx)
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.OrderNoEQ(orderNo)}
+	if merchantID > 0 {
+		preds = append(preds, order.MerchantIDEQ(merchantID))
+	}
+	return r.client.Order.Query().Where(preds...).Only(ctx)
 }
 
 func (r *mysqlOrderRepository) List(ctx context.Context, tenantID, merchantID int64, status string, page, pageSize int32) ([]*ent.Order, int64, error) {
