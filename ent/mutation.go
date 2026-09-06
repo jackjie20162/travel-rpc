@@ -5743,6 +5743,7 @@ type OrderMutation struct {
 	reject_reason   *string
 	verified_at     *int64
 	addverified_at  *int64
+	prev_status     *string
 	clearedFields   map[string]struct{}
 	done            bool
 	oldValue        func(context.Context) (*Order, error)
@@ -6810,6 +6811,55 @@ func (m *OrderMutation) ResetVerifiedAt() {
 	delete(m.clearedFields, order.FieldVerifiedAt)
 }
 
+// SetPrevStatus sets the "prev_status" field.
+func (m *OrderMutation) SetPrevStatus(s string) {
+	m.prev_status = &s
+}
+
+// PrevStatus returns the value of the "prev_status" field in the mutation.
+func (m *OrderMutation) PrevStatus() (r string, exists bool) {
+	v := m.prev_status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPrevStatus returns the old "prev_status" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldPrevStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPrevStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPrevStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPrevStatus: %w", err)
+	}
+	return oldValue.PrevStatus, nil
+}
+
+// ClearPrevStatus clears the value of the "prev_status" field.
+func (m *OrderMutation) ClearPrevStatus() {
+	m.prev_status = nil
+	m.clearedFields[order.FieldPrevStatus] = struct{}{}
+}
+
+// PrevStatusCleared returns if the "prev_status" field was cleared in this mutation.
+func (m *OrderMutation) PrevStatusCleared() bool {
+	_, ok := m.clearedFields[order.FieldPrevStatus]
+	return ok
+}
+
+// ResetPrevStatus resets all changes to the "prev_status" field.
+func (m *OrderMutation) ResetPrevStatus() {
+	m.prev_status = nil
+	delete(m.clearedFields, order.FieldPrevStatus)
+}
+
 // Where appends a list predicates to the OrderMutation builder.
 func (m *OrderMutation) Where(ps ...predicate.Order) {
 	m.predicates = append(m.predicates, ps...)
@@ -6844,7 +6894,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 20)
 	if m.tenant_id != nil {
 		fields = append(fields, order.FieldTenantID)
 	}
@@ -6902,6 +6952,9 @@ func (m *OrderMutation) Fields() []string {
 	if m.verified_at != nil {
 		fields = append(fields, order.FieldVerifiedAt)
 	}
+	if m.prev_status != nil {
+		fields = append(fields, order.FieldPrevStatus)
+	}
 	return fields
 }
 
@@ -6948,6 +7001,8 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.RejectReason()
 	case order.FieldVerifiedAt:
 		return m.VerifiedAt()
+	case order.FieldPrevStatus:
+		return m.PrevStatus()
 	}
 	return nil, false
 }
@@ -6995,6 +7050,8 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldRejectReason(ctx)
 	case order.FieldVerifiedAt:
 		return m.OldVerifiedAt(ctx)
+	case order.FieldPrevStatus:
+		return m.OldPrevStatus(ctx)
 	}
 	return nil, fmt.Errorf("unknown Order field %s", name)
 }
@@ -7137,6 +7194,13 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetVerifiedAt(v)
 		return nil
+	case order.FieldPrevStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPrevStatus(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)
 }
@@ -7278,6 +7342,9 @@ func (m *OrderMutation) ClearedFields() []string {
 	if m.FieldCleared(order.FieldVerifiedAt) {
 		fields = append(fields, order.FieldVerifiedAt)
 	}
+	if m.FieldCleared(order.FieldPrevStatus) {
+		fields = append(fields, order.FieldPrevStatus)
+	}
 	return fields
 }
 
@@ -7327,6 +7394,9 @@ func (m *OrderMutation) ClearField(name string) error {
 		return nil
 	case order.FieldVerifiedAt:
 		m.ClearVerifiedAt()
+		return nil
+	case order.FieldPrevStatus:
+		m.ClearPrevStatus()
 		return nil
 	}
 	return fmt.Errorf("unknown Order nullable field %s", name)
@@ -7392,6 +7462,9 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldVerifiedAt:
 		m.ResetVerifiedAt()
+		return nil
+	case order.FieldPrevStatus:
+		m.ResetPrevStatus()
 		return nil
 	}
 	return fmt.Errorf("unknown Order field %s", name)

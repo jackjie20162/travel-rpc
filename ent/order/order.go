@@ -49,6 +49,8 @@ const (
 	FieldRejectReason = "reject_reason"
 	// FieldVerifiedAt holds the string denoting the verified_at field in the database.
 	FieldVerifiedAt = "verified_at"
+	// FieldPrevStatus holds the string denoting the prev_status field in the database.
+	FieldPrevStatus = "prev_status"
 	// Table holds the table name of the order in the database.
 	Table = "orders"
 )
@@ -75,6 +77,7 @@ var Columns = []string{
 	FieldTimeSlot,
 	FieldRejectReason,
 	FieldVerifiedAt,
+	FieldPrevStatus,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -199,4 +202,9 @@ func ByRejectReason(opts ...sql.OrderTermOption) OrderOption {
 // ByVerifiedAt orders the results by the verified_at field.
 func ByVerifiedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldVerifiedAt, opts...).ToFunc()
+}
+
+// ByPrevStatus orders the results by the prev_status field.
+func ByPrevStatus(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPrevStatus, opts...).ToFunc()
 }

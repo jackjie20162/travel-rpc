@@ -458,6 +458,23 @@ message VerifyOrderRequest {
   string reason = 3;   // required when action=REJECT
 }
 
+message AcceptOrderRequest {
+  string order_no = 1;
+  string action = 2;   // ACCEPT or REJECT
+  string reason = 3;   // required when action=REJECT
+}
+
+message RefundRequest {
+  string order_no = 1;
+  string reason = 2;
+}
+
+message HandleRefundRequest {
+  string order_no = 1;
+  string action = 2;   // APPROVE or REJECT
+  string reason = 3;
+}
+
 message UserIdRequest {
   int64 id = 1;
 }
@@ -518,6 +535,9 @@ service OrderService {
   rpc ListMerchantOrders(MerchantOrderListRequest) returns (MerchantOrderListResponse);
   rpc ListCustomerOrders(CustomerOrderListRequest) returns (CustomerOrderListResponse);
   rpc VerifyOrder(VerifyOrderRequest) returns (Order);
+  rpc AcceptOrder(AcceptOrderRequest) returns (Order);
+  rpc RequestRefund(RefundRequest) returns (Order);
+  rpc HandleRefund(HandleRefundRequest) returns (Order);
 }
 
 service PaymentService {

@@ -53,7 +53,9 @@ type Order struct {
 	// 商户拒绝接单原因
 	RejectReason string `json:"reject_reason,omitempty"`
 	// 核销时间戳
-	VerifiedAt   int64 `json:"verified_at,omitempty"`
+	VerifiedAt int64 `json:"verified_at,omitempty"`
+	// 退款申请前的状态，用于拒绝退款时恢复
+	PrevStatus   string `json:"prev_status,omitempty"`
 	selectValues sql.SelectValues
 }
 
@@ -64,7 +66,7 @@ func (*Order) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount, order.FieldVerifiedAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot, order.FieldRejectReason:
+		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot, order.FieldRejectReason, order.FieldPrevStatus:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -201,6 +203,12 @@ func (_m *Order) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.VerifiedAt = value.Int64
 			}
+		case order.FieldPrevStatus:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field prev_status", values[i])
+			} else if value.Valid {
+				_m.PrevStatus = value.String
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -293,6 +301,9 @@ func (_m *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("verified_at=")
 	builder.WriteString(fmt.Sprintf("%v", _m.VerifiedAt))
+	builder.WriteString(", ")
+	builder.WriteString("prev_status=")
+	builder.WriteString(_m.PrevStatus)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -407,6 +407,26 @@ func (_u *OrderUpdate) ClearVerifiedAt() *OrderUpdate {
 	return _u
 }
 
+// SetPrevStatus sets the "prev_status" field.
+func (_u *OrderUpdate) SetPrevStatus(v string) *OrderUpdate {
+	_u.mutation.SetPrevStatus(v)
+	return _u
+}
+
+// SetNillablePrevStatus sets the "prev_status" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillablePrevStatus(v *string) *OrderUpdate {
+	if v != nil {
+		_u.SetPrevStatus(*v)
+	}
+	return _u
+}
+
+// ClearPrevStatus clears the value of the "prev_status" field.
+func (_u *OrderUpdate) ClearPrevStatus() *OrderUpdate {
+	_u.mutation.ClearPrevStatus()
+	return _u
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_u *OrderUpdate) Mutation() *OrderMutation {
 	return _u.mutation
@@ -571,6 +591,12 @@ func (_u *OrderUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.VerifiedAtCleared() {
 		_spec.ClearField(order.FieldVerifiedAt, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.PrevStatus(); ok {
+		_spec.SetField(order.FieldPrevStatus, field.TypeString, value)
+	}
+	if _u.mutation.PrevStatusCleared() {
+		_spec.ClearField(order.FieldPrevStatus, field.TypeString)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -972,6 +998,26 @@ func (_u *OrderUpdateOne) ClearVerifiedAt() *OrderUpdateOne {
 	return _u
 }
 
+// SetPrevStatus sets the "prev_status" field.
+func (_u *OrderUpdateOne) SetPrevStatus(v string) *OrderUpdateOne {
+	_u.mutation.SetPrevStatus(v)
+	return _u
+}
+
+// SetNillablePrevStatus sets the "prev_status" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillablePrevStatus(v *string) *OrderUpdateOne {
+	if v != nil {
+		_u.SetPrevStatus(*v)
+	}
+	return _u
+}
+
+// ClearPrevStatus clears the value of the "prev_status" field.
+func (_u *OrderUpdateOne) ClearPrevStatus() *OrderUpdateOne {
+	_u.mutation.ClearPrevStatus()
+	return _u
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_u *OrderUpdateOne) Mutation() *OrderMutation {
 	return _u.mutation
@@ -1166,6 +1212,12 @@ func (_u *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error)
 	}
 	if _u.mutation.VerifiedAtCleared() {
 		_spec.ClearField(order.FieldVerifiedAt, field.TypeInt64)
+	}
+	if value, ok := _u.mutation.PrevStatus(); ok {
+		_spec.SetField(order.FieldPrevStatus, field.TypeString, value)
+	}
+	if _u.mutation.PrevStatusCleared() {
+		_spec.ClearField(order.FieldPrevStatus, field.TypeString)
 	}
 	_node = &Order{config: _u.config}
 	_spec.Assign = _node.assignValues

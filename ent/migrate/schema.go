@@ -193,6 +193,7 @@ var (
 		{Name: "time_slot", Type: field.TypeString, Nullable: true},
 		{Name: "reject_reason", Type: field.TypeString, Nullable: true},
 		{Name: "verified_at", Type: field.TypeInt64, Nullable: true},
+		{Name: "prev_status", Type: field.TypeString, Nullable: true},
 	}
 	// OrdersTable holds the schema information for the "orders" table.
 	OrdersTable = &schema.Table{

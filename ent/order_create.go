@@ -253,6 +253,20 @@ func (_c *OrderCreate) SetNillableVerifiedAt(v *int64) *OrderCreate {
 	return _c
 }
 
+// SetPrevStatus sets the "prev_status" field.
+func (_c *OrderCreate) SetPrevStatus(v string) *OrderCreate {
+	_c.mutation.SetPrevStatus(v)
+	return _c
+}
+
+// SetNillablePrevStatus sets the "prev_status" field if the given value is not nil.
+func (_c *OrderCreate) SetNillablePrevStatus(v *string) *OrderCreate {
+	if v != nil {
+		_c.SetPrevStatus(*v)
+	}
+	return _c
+}
+
 // Mutation returns the OrderMutation object of the builder.
 func (_c *OrderCreate) Mutation() *OrderMutation {
 	return _c.mutation
@@ -431,6 +445,10 @@ func (_c *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.VerifiedAt(); ok {
 		_spec.SetField(order.FieldVerifiedAt, field.TypeInt64, value)
 		_node.VerifiedAt = value
+	}
+	if value, ok := _c.mutation.PrevStatus(); ok {
+		_spec.SetField(order.FieldPrevStatus, field.TypeString, value)
+		_node.PrevStatus = value
 	}
 	return _node, _spec
 }

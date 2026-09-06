@@ -19,6 +19,12 @@ type OrderRepository interface {
 	ListTravelersByOrderID(ctx context.Context, orderID int64) ([]*ent.Traveler, error)
 	ListItemsByOrderID(ctx context.Context, orderID int64) ([]*ent.OrderItem, error)
 	UpdateStatus(ctx context.Context, tenantID, merchantID int64, orderNo string, newStatus string, rejectReason string, verifiedAt int64) error
+	// AcceptOrder transitions PENDING_ACCEPTANCE → PENDING_VERIFY (accept) or CANCELLED (reject)
+	AcceptOrder(ctx context.Context, tenantID, merchantID int64, orderNo string, newStatus string, rejectReason string) error
+	// RequestRefund transitions order to PENDING_REFUND, saving prev_status
+	RequestRefund(ctx context.Context, tenantID int64, userID int64, orderNo string, reason string) error
+	// HandleRefund: approved → REFUNDED, rejected → restore prev_status
+	HandleRefund(ctx context.Context, tenantID, merchantID int64, orderNo string, approved bool, reason string) error
 }
 
 type CreateOrderInput struct {

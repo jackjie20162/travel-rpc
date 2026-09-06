@@ -170,6 +170,62 @@ func (r *mysqlOrderRepository) UpdateStatus(ctx context.Context, tenantID, merch
 	return err
 }
 
+func (r *mysqlOrderRepository) AcceptOrder(ctx context.Context, tenantID, merchantID int64, orderNo string, newStatus string, rejectReason string) error {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID), order.OrderNoEQ(orderNo)}
+	o, err := r.client.Order.Query().Where(preds...).Only(ctx)
+	if err != nil {
+		return err
+	}
+	u := r.client.Order.UpdateOneID(o.ID).SetStatus(newStatus)
+	if rejectReason != "" {
+		u = u.SetRejectReason(rejectReason)
+	}
+	_, err = u.Save(ctx)
+	return err
+}
+
+func (r *mysqlOrderRepository) RequestRefund(ctx context.Context, tenantID int64, userID int64, orderNo string, reason string) error {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.UserIDEQ(userID), order.OrderNoEQ(orderNo)}
+	o, err := r.client.Order.Query().Where(preds...).Only(ctx)
+	if err != nil {
+		return err
+	}
+	// Save current status as prev_status before transitioning to PENDING_REFUND
+	_, err = r.client.Order.UpdateOneID(o.ID).
+		SetPrevStatus(o.Status).
+		SetStatus("PENDING_REFUND").
+		SetRejectReason(reason).
+		Save(ctx)
+	return err
+}
+
+func (r *mysqlOrderRepository) HandleRefund(ctx context.Context, tenantID, merchantID int64, orderNo string, approved bool, reason string) error {
+	preds := []predicate.Order{order.TenantIDEQ(tenantID), order.MerchantIDEQ(merchantID), order.OrderNoEQ(orderNo)}
+	o, err := r.client.Order.Query().Where(preds...).Only(ctx)
+	if err != nil {
+		return err
+	}
+	if approved {
+		_, err = r.client.Order.UpdateOneID(o.ID).
+			SetStatus("REFUNDED").
+			SetPaymentStatus("REFUNDED").
+			SetRejectReason(reason).
+			Save(ctx)
+	} else {
+		// Restore previous status
+		prevStatus := o.PrevStatus
+		if prevStatus == "" {
+			prevStatus = "PENDING_VERIFY"
+		}
+		_, err = r.client.Order.UpdateOneID(o.ID).
+			SetStatus(prevStatus).
+			ClearPrevStatus().
+			SetRejectReason(reason).
+			Save(ctx)
+	}
+	return err
+}
+
 func newOrderNo() string {
 	return fmt.Sprintf("TRV%s", time.Now().UTC().Format("20060102150405.000000000"))
 }

@@ -147,6 +147,11 @@ func VerifiedAt(v int64) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldVerifiedAt, v))
 }
 
+// PrevStatus applies equality check predicate on the "prev_status" field. It's identical to PrevStatusEQ.
+func PrevStatus(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldPrevStatus, v))
+}
+
 // TenantIDEQ applies the EQ predicate on the "tenant_id" field.
 func TenantIDEQ(v int64) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldTenantID, v))
@@ -1350,6 +1355,81 @@ func VerifiedAtIsNil() predicate.Order {
 // VerifiedAtNotNil applies the NotNil predicate on the "verified_at" field.
 func VerifiedAtNotNil() predicate.Order {
 	return predicate.Order(sql.FieldNotNull(FieldVerifiedAt))
+}
+
+// PrevStatusEQ applies the EQ predicate on the "prev_status" field.
+func PrevStatusEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldPrevStatus, v))
+}
+
+// PrevStatusNEQ applies the NEQ predicate on the "prev_status" field.
+func PrevStatusNEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldPrevStatus, v))
+}
+
+// PrevStatusIn applies the In predicate on the "prev_status" field.
+func PrevStatusIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldPrevStatus, vs...))
+}
+
+// PrevStatusNotIn applies the NotIn predicate on the "prev_status" field.
+func PrevStatusNotIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldPrevStatus, vs...))
+}
+
+// PrevStatusGT applies the GT predicate on the "prev_status" field.
+func PrevStatusGT(v string) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldPrevStatus, v))
+}
+
+// PrevStatusGTE applies the GTE predicate on the "prev_status" field.
+func PrevStatusGTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldPrevStatus, v))
+}
+
+// PrevStatusLT applies the LT predicate on the "prev_status" field.
+func PrevStatusLT(v string) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldPrevStatus, v))
+}
+
+// PrevStatusLTE applies the LTE predicate on the "prev_status" field.
+func PrevStatusLTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldPrevStatus, v))
+}
+
+// PrevStatusContains applies the Contains predicate on the "prev_status" field.
+func PrevStatusContains(v string) predicate.Order {
+	return predicate.Order(sql.FieldContains(FieldPrevStatus, v))
+}
+
+// PrevStatusHasPrefix applies the HasPrefix predicate on the "prev_status" field.
+func PrevStatusHasPrefix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasPrefix(FieldPrevStatus, v))
+}
+
+// PrevStatusHasSuffix applies the HasSuffix predicate on the "prev_status" field.
+func PrevStatusHasSuffix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasSuffix(FieldPrevStatus, v))
+}
+
+// PrevStatusIsNil applies the IsNil predicate on the "prev_status" field.
+func PrevStatusIsNil() predicate.Order {
+	return predicate.Order(sql.FieldIsNull(FieldPrevStatus))
+}
+
+// PrevStatusNotNil applies the NotNil predicate on the "prev_status" field.
+func PrevStatusNotNil() predicate.Order {
+	return predicate.Order(sql.FieldNotNull(FieldPrevStatus))
+}
+
+// PrevStatusEqualFold applies the EqualFold predicate on the "prev_status" field.
+func PrevStatusEqualFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldEqualFold(FieldPrevStatus, v))
+}
+
+// PrevStatusContainsFold applies the ContainsFold predicate on the "prev_status" field.
+func PrevStatusContainsFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldContainsFold(FieldPrevStatus, v))
 }
 
 // And groups predicates with the AND operator between them.

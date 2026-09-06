@@ -163,19 +163,16 @@ func (s *OrderService) VerifyOrder(ctx context.Context, req *travel.VerifyOrderR
     if err != nil {
         return nil, status.Error(codes.NotFound, "order not found")
     }
-    // Only PAID orders (payment_status=PAID) can be verified/rejected
-    if o.PaymentStatus != "PAID" {
-        return nil, status.Error(codes.FailedPrecondition, "order has not been paid yet")
-    }
-    if o.Status != "PAID" && o.Status != "CONFIRMED" {
-        return nil, status.Error(codes.FailedPrecondition, "order status does not allow verification")
+    // Only PENDING_VERIFY orders can be verified/rejected (核销)
+    if o.Status != "PENDING_VERIFY" {
+        return nil, status.Error(codes.FailedPrecondition, "order is not in pending verify status")
     }
 
     var newStatus string
     var rejectReason string
     var verifiedAt int64
     if action == "CONFIRM" {
-        newStatus = "COMPLETED"
+        newStatus = "VERIFIED"
         verifiedAt = time.Now().Unix()
     } else {
         newStatus = "REFUNDED"
@@ -187,6 +184,121 @@ func (s *OrderService) VerifyOrder(ctx context.Context, req *travel.VerifyOrderR
     }
 
     // Re-fetch the updated order
+    updated, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.Internal, "failed to fetch updated order")
+    }
+    return toOrder(updated), nil
+}
+
+func (s *OrderService) AcceptOrder(ctx context.Context, req *travel.AcceptOrderRequest) (*travel.Order, error) {
+    if req == nil || req.GetOrderNo() == "" {
+        return nil, status.Error(codes.InvalidArgument, "order number is required")
+    }
+    action := req.GetAction()
+    if action != "ACCEPT" && action != "REJECT" {
+        return nil, status.Error(codes.InvalidArgument, "action must be ACCEPT or REJECT")
+    }
+    if action == "REJECT" && req.GetReason() == "" {
+        return nil, status.Error(codes.InvalidArgument, "reason is required when rejecting an order")
+    }
+    tenantID, err := auth.TenantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+    merchantID, err := auth.MerchantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+
+    // Fetch the order to validate current status
+    o, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.NotFound, "order not found")
+    }
+    // Only PENDING_ACCEPTANCE orders can be accepted/rejected
+    if o.Status != "PENDING_ACCEPTANCE" {
+        return nil, status.Error(codes.FailedPrecondition, "order is not in pending acceptance status")
+    }
+
+    var newStatus string
+    var rejectReason string
+    if action == "ACCEPT" {
+        newStatus = "PENDING_VERIFY"
+    } else {
+        newStatus = "CANCELLED"
+        rejectReason = req.GetReason()
+    }
+
+    if err := s.orders.AcceptOrder(ctx, tenantID, merchantID, req.GetOrderNo(), newStatus, rejectReason); err != nil {
+        return nil, status.Error(codes.Internal, err.Error())
+    }
+
+    updated, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.Internal, "failed to fetch updated order")
+    }
+    return toOrder(updated), nil
+}
+
+func (s *OrderService) RequestRefund(ctx context.Context, req *travel.RefundRequest) (*travel.Order, error) {
+    if req == nil || req.GetOrderNo() == "" {
+        return nil, status.Error(codes.InvalidArgument, "order number is required")
+    }
+    if req.GetReason() == "" {
+        return nil, status.Error(codes.InvalidArgument, "reason is required")
+    }
+    tenantID, err := auth.TenantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+    userID, err := auth.AuthenticatedUserID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+
+    // Fetch the order to validate current status
+    o, err := s.orders.GetByOrderNo(ctx, tenantID, 0, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.NotFound, "order not found")
+    }
+    // Only PENDING_ACCEPTANCE or PENDING_VERIFY orders can request refund
+    if o.Status != "PENDING_ACCEPTANCE" && o.Status != "PENDING_VERIFY" {
+        return nil, status.Error(codes.FailedPrecondition, "order status does not allow refund request")
+    }
+
+    if err := s.orders.RequestRefund(ctx, tenantID, int64(userID), req.GetOrderNo(), req.GetReason()); err != nil {
+        return nil, status.Error(codes.Internal, err.Error())
+    }
+
+    // Re-fetch without merchantID since this is a customer operation
+    updated, err := s.orders.GetByOrderNo(ctx, tenantID, o.MerchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.Internal, "failed to fetch updated order")
+    }
+    return toOrder(updated), nil
+}
+
+func (s *OrderService) HandleRefund(ctx context.Context, req *travel.HandleRefundRequest) (*travel.Order, error) {
+    if req == nil || req.GetOrderNo() == "" {
+        return nil, status.Error(codes.InvalidArgument, "order number is required")
+    }
+    action := req.GetAction()
+    if action != "APPROVE" && action != "REJECT" {
+        return nil, status.Error(codes.InvalidArgument, "action must be APPROVE or REJECT")
+    }
+    tenantID, err := auth.TenantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+    merchantID, err := auth.MerchantID(ctx)
+    if err != nil { return nil, status.Error(codes.Unauthenticated, err.Error()) }
+
+    // Fetch the order to validate current status
+    o, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
+    if err != nil {
+        return nil, status.Error(codes.NotFound, "order not found")
+    }
+    // Only PENDING_REFUND orders can be handled
+    if o.Status != "PENDING_REFUND" {
+        return nil, status.Error(codes.FailedPrecondition, "order is not in pending refund status")
+    }
+
+    approved := action == "APPROVE"
+    if err := s.orders.HandleRefund(ctx, tenantID, merchantID, req.GetOrderNo(), approved, req.GetReason()); err != nil {
+        return nil, status.Error(codes.Internal, err.Error())
+    }
+
     updated, err := s.orders.GetByOrderNo(ctx, tenantID, merchantID, req.GetOrderNo())
     if err != nil {
         return nil, status.Error(codes.Internal, "failed to fetch updated order")

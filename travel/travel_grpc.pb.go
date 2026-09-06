@@ -444,6 +444,9 @@ const (
 	OrderService_ListMerchantOrders_FullMethodName = "/travel.OrderService/ListMerchantOrders"
 	OrderService_ListCustomerOrders_FullMethodName = "/travel.OrderService/ListCustomerOrders"
 	OrderService_VerifyOrder_FullMethodName        = "/travel.OrderService/VerifyOrder"
+	OrderService_AcceptOrder_FullMethodName        = "/travel.OrderService/AcceptOrder"
+	OrderService_RequestRefund_FullMethodName      = "/travel.OrderService/RequestRefund"
+	OrderService_HandleRefund_FullMethodName       = "/travel.OrderService/HandleRefund"
 )
 
 // OrderServiceClient is the client API for OrderService service.
@@ -455,6 +458,9 @@ type OrderServiceClient interface {
 	ListMerchantOrders(ctx context.Context, in *MerchantOrderListRequest, opts ...grpc.CallOption) (*MerchantOrderListResponse, error)
 	ListCustomerOrders(ctx context.Context, in *CustomerOrderListRequest, opts ...grpc.CallOption) (*CustomerOrderListResponse, error)
 	VerifyOrder(ctx context.Context, in *VerifyOrderRequest, opts ...grpc.CallOption) (*Order, error)
+	AcceptOrder(ctx context.Context, in *AcceptOrderRequest, opts ...grpc.CallOption) (*Order, error)
+	RequestRefund(ctx context.Context, in *RefundRequest, opts ...grpc.CallOption) (*Order, error)
+	HandleRefund(ctx context.Context, in *HandleRefundRequest, opts ...grpc.CallOption) (*Order, error)
 }
 
 type orderServiceClient struct {
@@ -515,6 +521,36 @@ func (c *orderServiceClient) VerifyOrder(ctx context.Context, in *VerifyOrderReq
 	return out, nil
 }
 
+func (c *orderServiceClient) AcceptOrder(ctx context.Context, in *AcceptOrderRequest, opts ...grpc.CallOption) (*Order, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Order)
+	err := c.cc.Invoke(ctx, OrderService_AcceptOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) RequestRefund(ctx context.Context, in *RefundRequest, opts ...grpc.CallOption) (*Order, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Order)
+	err := c.cc.Invoke(ctx, OrderService_RequestRefund_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) HandleRefund(ctx context.Context, in *HandleRefundRequest, opts ...grpc.CallOption) (*Order, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Order)
+	err := c.cc.Invoke(ctx, OrderService_HandleRefund_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // OrderServiceServer is the server API for OrderService service.
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility.
@@ -524,6 +560,9 @@ type OrderServiceServer interface {
 	ListMerchantOrders(context.Context, *MerchantOrderListRequest) (*MerchantOrderListResponse, error)
 	ListCustomerOrders(context.Context, *CustomerOrderListRequest) (*CustomerOrderListResponse, error)
 	VerifyOrder(context.Context, *VerifyOrderRequest) (*Order, error)
+	AcceptOrder(context.Context, *AcceptOrderRequest) (*Order, error)
+	RequestRefund(context.Context, *RefundRequest) (*Order, error)
+	HandleRefund(context.Context, *HandleRefundRequest) (*Order, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -548,6 +587,15 @@ func (UnimplementedOrderServiceServer) ListCustomerOrders(context.Context, *Cust
 }
 func (UnimplementedOrderServiceServer) VerifyOrder(context.Context, *VerifyOrderRequest) (*Order, error) {
 	return nil, status.Error(codes.Unimplemented, "method VerifyOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) AcceptOrder(context.Context, *AcceptOrderRequest) (*Order, error) {
+	return nil, status.Error(codes.Unimplemented, "method AcceptOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) RequestRefund(context.Context, *RefundRequest) (*Order, error) {
+	return nil, status.Error(codes.Unimplemented, "method RequestRefund not implemented")
+}
+func (UnimplementedOrderServiceServer) HandleRefund(context.Context, *HandleRefundRequest) (*Order, error) {
+	return nil, status.Error(codes.Unimplemented, "method HandleRefund not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 func (UnimplementedOrderServiceServer) testEmbeddedByValue()                      {}
@@ -660,6 +708,60 @@ func _OrderService_VerifyOrder_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _OrderService_AcceptOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcceptOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).AcceptOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_AcceptOrder_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).AcceptOrder(ctx, req.(*AcceptOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_RequestRefund_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefundRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).RequestRefund(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_RequestRefund_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).RequestRefund(ctx, req.(*RefundRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_HandleRefund_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HandleRefundRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).HandleRefund(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_HandleRefund_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).HandleRefund(ctx, req.(*HandleRefundRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // OrderService_ServiceDesc is the grpc.ServiceDesc for OrderService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -686,6 +788,18 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "VerifyOrder",
 			Handler:    _OrderService_VerifyOrder_Handler,
+		},
+		{
+			MethodName: "AcceptOrder",
+			Handler:    _OrderService_AcceptOrder_Handler,
+		},
+		{
+			MethodName: "RequestRefund",
+			Handler:    _OrderService_RequestRefund_Handler,
+		},
+		{
+			MethodName: "HandleRefund",
+			Handler:    _OrderService_HandleRefund_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
