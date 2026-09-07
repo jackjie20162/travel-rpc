@@ -38,6 +38,10 @@ func (r *mysqlUserRepository) GetByUsername(ctx context.Context, username string
 	return r.client.User.Query().Where(user.UsernameEQ(username)).Only(ctx)
 }
 
+func (r *mysqlUserRepository) GetByEmail(ctx context.Context, email string) (*ent.User, error) {
+	return r.client.User.Query().Where(user.EmailEQ(email)).Only(ctx)
+}
+
 func (r *mysqlUserRepository) GetByMobile(ctx context.Context, mobile string) (*ent.User, error) {
 	return r.client.User.Query().Where(user.MobileEQ(mobile)).Only(ctx)
 }

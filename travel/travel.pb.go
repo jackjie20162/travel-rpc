@@ -1855,8 +1855,7 @@ func (x *LoginByMobileRequest) GetPassword() string {
 
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1891,16 +1890,9 @@ func (*LoginRequest) Descriptor() ([]byte, []int) {
 	return file_travel_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *LoginRequest) GetUsername() string {
+func (x *LoginRequest) GetEmail() string {
 	if x != nil {
-		return x.Username
-	}
-	return ""
-}
-
-func (x *LoginRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
+		return x.Email
 	}
 	return ""
 }
@@ -5497,10 +5489,9 @@ const file_travel_proto_rawDesc = "" +
 	"\bcurrency\x18\x04 \x01(\tR\bcurrency\"J\n" +
 	"\x14LoginByMobileRequest\x12\x16\n" +
 	"\x06mobile\x18\x01 \x01(\tR\x06mobile\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"F\n" +
-	"\fLoginRequest\x12\x1a\n" +
-	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"g\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"$\n" +
+	"\fLoginRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"g\n" +
 	"\x16MarkPaymentPaidRequest\x12\x1d\n" +
 	"\n" +
 	"payment_no\x18\x01 \x01(\tR\tpaymentNo\x12.\n" +

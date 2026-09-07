@@ -11,6 +11,7 @@ type UserRepository interface {
 	Create(ctx context.Context, input CreateUserInput) (*ent.User, error)
 	GetByID(ctx context.Context, id int64) (*ent.User, error)
 	GetByUsername(ctx context.Context, username string) (*ent.User, error)
+	GetByEmail(ctx context.Context, email string) (*ent.User, error)
 	GetByMobile(ctx context.Context, mobile string) (*ent.User, error)
 	GetByToken(ctx context.Context, token string) (*ent.User, error)
 	Update(ctx context.Context, id int64, input UpdateUserInput) (*ent.User, error)

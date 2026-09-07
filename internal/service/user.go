@@ -74,20 +74,16 @@ func (s *UserService) Register(ctx context.Context, req *travel.RegisterRequest)
 // ── Login ──
 
 func (s *UserService) Login(ctx context.Context, req *travel.LoginRequest) (*travel.AuthToken, error) {
-	if req == nil || req.GetUsername() == "" || req.GetPassword() == "" {
-		return nil, status.Error(codes.InvalidArgument, "username and password are required")
+	if req == nil || req.GetEmail() == "" {
+		return nil, status.Error(codes.InvalidArgument, "email is required")
 	}
 
-	u, err := s.users.GetByUsername(ctx, req.GetUsername())
+	u, err := s.users.GetByEmail(ctx, req.GetEmail())
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "user not found")
 	}
 	if u.Status != "normal" {
 		return nil, status.Error(codes.PermissionDenied, "account is disabled")
-	}
-
-	if hashPassword(req.GetPassword(), u.Salt) != u.Password {
-		return nil, status.Error(codes.Unauthenticated, "invalid password")
 	}
 
 	token := generateToken()

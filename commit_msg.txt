@@ -1,0 +1,5 @@
+feat: 添加 GetUserByUsername RPC 方法支持验证码登录
+
+- travel.proto 新增 UsernameRequest 消息和 GetUserByUsername RPC
+- user.go 实现 GetUserByUsername 方法
+- 重新生成 pb.go 文件
