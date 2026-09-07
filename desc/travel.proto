@@ -479,6 +479,10 @@ message UserIdRequest {
   int64 id = 1;
 }
 
+message UsernameRequest {
+  string username = 1;
+}
+
 message ItineraryStop {
   int64 id = 1;
   int64 product_id = 2;
@@ -568,6 +572,7 @@ service UserService {
   rpc Login(LoginRequest) returns (AuthToken);
   rpc LoginByMobile(LoginByMobileRequest) returns (AuthToken);
   rpc GetProfile(UserIdRequest) returns (User);
+  rpc GetUserByUsername(UsernameRequest) returns (User);
   rpc UpdateProfile(UpdateProfileRequest) returns (User);
   rpc ChangePassword(ChangePasswordRequest) returns (OkResponse);
 }

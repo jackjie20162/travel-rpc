@@ -142,6 +142,19 @@ func (s *UserService) GetProfile(ctx context.Context, req *travel.UserIdRequest)
 	return toUser(u), nil
 }
 
+// ── GetUserByUsername ──
+
+func (s *UserService) GetUserByUsername(ctx context.Context, req *travel.UsernameRequest) (*travel.User, error) {
+	if req == nil || req.GetUsername() == "" {
+		return nil, status.Error(codes.InvalidArgument, "username is required")
+	}
+	u, err := s.users.GetByUsername(ctx, req.GetUsername())
+	if err != nil {
+		return nil, status.Error(codes.NotFound, "user not found")
+	}
+	return toUser(u), nil
+}
+
 // ── UpdateProfile ──
 
 func (s *UserService) UpdateProfile(ctx context.Context, req *travel.UpdateProfileRequest) (*travel.User, error) {

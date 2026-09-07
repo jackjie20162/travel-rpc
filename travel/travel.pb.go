@@ -4473,6 +4473,50 @@ func (x *UserIdRequest) GetId() int64 {
 	return 0
 }
 
+type UsernameRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UsernameRequest) Reset() {
+	*x = UsernameRequest{}
+	mi := &file_travel_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UsernameRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UsernameRequest) ProtoMessage() {}
+
+func (x *UsernameRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_travel_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UsernameRequest.ProtoReflect.Descriptor instead.
+func (*UsernameRequest) Descriptor() ([]byte, []int) {
+	return file_travel_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *UsernameRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
 type ItineraryStop struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	Id                  int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -4513,7 +4557,7 @@ type ItineraryStop struct {
 
 func (x *ItineraryStop) Reset() {
 	*x = ItineraryStop{}
-	mi := &file_travel_proto_msgTypes[53]
+	mi := &file_travel_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4525,7 +4569,7 @@ func (x *ItineraryStop) String() string {
 func (*ItineraryStop) ProtoMessage() {}
 
 func (x *ItineraryStop) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[53]
+	mi := &file_travel_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4538,7 +4582,7 @@ func (x *ItineraryStop) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ItineraryStop.ProtoReflect.Descriptor instead.
 func (*ItineraryStop) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{53}
+	return file_travel_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *ItineraryStop) GetId() int64 {
@@ -4791,7 +4835,7 @@ type Review struct {
 
 func (x *Review) Reset() {
 	*x = Review{}
-	mi := &file_travel_proto_msgTypes[54]
+	mi := &file_travel_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4803,7 +4847,7 @@ func (x *Review) String() string {
 func (*Review) ProtoMessage() {}
 
 func (x *Review) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[54]
+	mi := &file_travel_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4816,7 +4860,7 @@ func (x *Review) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Review.ProtoReflect.Descriptor instead.
 func (*Review) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{54}
+	return file_travel_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *Review) GetId() int64 {
@@ -4960,7 +5004,7 @@ type CreateReviewRequest struct {
 
 func (x *CreateReviewRequest) Reset() {
 	*x = CreateReviewRequest{}
-	mi := &file_travel_proto_msgTypes[55]
+	mi := &file_travel_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -4972,7 +5016,7 @@ func (x *CreateReviewRequest) String() string {
 func (*CreateReviewRequest) ProtoMessage() {}
 
 func (x *CreateReviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[55]
+	mi := &file_travel_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -4985,7 +5029,7 @@ func (x *CreateReviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateReviewRequest.ProtoReflect.Descriptor instead.
 func (*CreateReviewRequest) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{55}
+	return file_travel_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *CreateReviewRequest) GetOrderNo() string {
@@ -5049,7 +5093,7 @@ type ReviewListRequest struct {
 
 func (x *ReviewListRequest) Reset() {
 	*x = ReviewListRequest{}
-	mi := &file_travel_proto_msgTypes[56]
+	mi := &file_travel_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5061,7 +5105,7 @@ func (x *ReviewListRequest) String() string {
 func (*ReviewListRequest) ProtoMessage() {}
 
 func (x *ReviewListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[56]
+	mi := &file_travel_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5074,7 +5118,7 @@ func (x *ReviewListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewListRequest.ProtoReflect.Descriptor instead.
 func (*ReviewListRequest) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{56}
+	return file_travel_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *ReviewListRequest) GetProductId() int64 {
@@ -5116,7 +5160,7 @@ type ReviewListResponse struct {
 
 func (x *ReviewListResponse) Reset() {
 	*x = ReviewListResponse{}
-	mi := &file_travel_proto_msgTypes[57]
+	mi := &file_travel_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5128,7 +5172,7 @@ func (x *ReviewListResponse) String() string {
 func (*ReviewListResponse) ProtoMessage() {}
 
 func (x *ReviewListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[57]
+	mi := &file_travel_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5141,7 +5185,7 @@ func (x *ReviewListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewListResponse.ProtoReflect.Descriptor instead.
 func (*ReviewListResponse) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{57}
+	return file_travel_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *ReviewListResponse) GetItems() []*Review {
@@ -5174,7 +5218,7 @@ type OrderNoReviewRequest struct {
 
 func (x *OrderNoReviewRequest) Reset() {
 	*x = OrderNoReviewRequest{}
-	mi := &file_travel_proto_msgTypes[58]
+	mi := &file_travel_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5186,7 +5230,7 @@ func (x *OrderNoReviewRequest) String() string {
 func (*OrderNoReviewRequest) ProtoMessage() {}
 
 func (x *OrderNoReviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[58]
+	mi := &file_travel_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5199,7 +5243,7 @@ func (x *OrderNoReviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OrderNoReviewRequest.ProtoReflect.Descriptor instead.
 func (*OrderNoReviewRequest) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{58}
+	return file_travel_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *OrderNoReviewRequest) GetOrderNo() string {
@@ -5219,7 +5263,7 @@ type ReplyReviewRequest struct {
 
 func (x *ReplyReviewRequest) Reset() {
 	*x = ReplyReviewRequest{}
-	mi := &file_travel_proto_msgTypes[59]
+	mi := &file_travel_proto_msgTypes[60]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -5231,7 +5275,7 @@ func (x *ReplyReviewRequest) String() string {
 func (*ReplyReviewRequest) ProtoMessage() {}
 
 func (x *ReplyReviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_travel_proto_msgTypes[59]
+	mi := &file_travel_proto_msgTypes[60]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -5244,7 +5288,7 @@ func (x *ReplyReviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReplyReviewRequest.ProtoReflect.Descriptor instead.
 func (*ReplyReviewRequest) Descriptor() ([]byte, []int) {
-	return file_travel_proto_rawDescGZIP(), []int{59}
+	return file_travel_proto_rawDescGZIP(), []int{60}
 }
 
 func (x *ReplyReviewRequest) GetId() int64 {
@@ -5706,7 +5750,9 @@ const file_travel_proto_rawDesc = "" +
 	"\x06action\x18\x02 \x01(\tR\x06action\x12\x16\n" +
 	"\x06reason\x18\x03 \x01(\tR\x06reason\"\x1f\n" +
 	"\rUserIdRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"\xf3\b\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\"-\n" +
+	"\x0fUsernameRequest\x12\x1a\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"\xf3\b\n" +
 	"\rItineraryStop\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
@@ -5832,13 +5878,14 @@ const file_travel_proto_rawDesc = "" +
 	"\x13CreateItineraryStop\x12\".travel.CreateItineraryStopRequest\x1a\x15.travel.ItineraryStop\x12P\n" +
 	"\x13UpdateItineraryStop\x12\".travel.UpdateItineraryStopRequest\x1a\x15.travel.ItineraryStop\x12H\n" +
 	"\x13DeleteItineraryStop\x12\".travel.DeleteItineraryStopRequest\x1a\r.travel.Empty\x12Y\n" +
-	"\x12ListItineraryStops\x12 .travel.ItineraryStopListRequest\x1a!.travel.ItineraryStopListResponse2\xee\x02\n" +
+	"\x12ListItineraryStops\x12 .travel.ItineraryStopListRequest\x1a!.travel.ItineraryStopListResponse2\xaa\x03\n" +
 	"\vUserService\x126\n" +
 	"\bRegister\x12\x17.travel.RegisterRequest\x1a\x11.travel.AuthToken\x120\n" +
 	"\x05Login\x12\x14.travel.LoginRequest\x1a\x11.travel.AuthToken\x12@\n" +
 	"\rLoginByMobile\x12\x1c.travel.LoginByMobileRequest\x1a\x11.travel.AuthToken\x121\n" +
 	"\n" +
-	"GetProfile\x12\x15.travel.UserIdRequest\x1a\f.travel.User\x12;\n" +
+	"GetProfile\x12\x15.travel.UserIdRequest\x1a\f.travel.User\x12:\n" +
+	"\x11GetUserByUsername\x12\x17.travel.UsernameRequest\x1a\f.travel.User\x12;\n" +
 	"\rUpdateProfile\x12\x1c.travel.UpdateProfileRequest\x1a\f.travel.User\x12C\n" +
 	"\x0eChangePassword\x12\x1d.travel.ChangePasswordRequest\x1a\x12.travel.OkResponse2\xff\x01\n" +
 	"\rReviewService\x125\n" +
@@ -5860,7 +5907,7 @@ func file_travel_proto_rawDescGZIP() []byte {
 	return file_travel_proto_rawDescData
 }
 
-var file_travel_proto_msgTypes = make([]protoimpl.MessageInfo, 60)
+var file_travel_proto_msgTypes = make([]protoimpl.MessageInfo, 61)
 var file_travel_proto_goTypes = []any{
 	(*AuthToken)(nil),                   // 0: travel.AuthToken
 	(*ChangePasswordRequest)(nil),       // 1: travel.ChangePasswordRequest
@@ -5915,18 +5962,19 @@ var file_travel_proto_goTypes = []any{
 	(*RefundRequest)(nil),               // 50: travel.RefundRequest
 	(*HandleRefundRequest)(nil),         // 51: travel.HandleRefundRequest
 	(*UserIdRequest)(nil),               // 52: travel.UserIdRequest
-	(*ItineraryStop)(nil),               // 53: travel.ItineraryStop
-	(*Review)(nil),                      // 54: travel.Review
-	(*CreateReviewRequest)(nil),         // 55: travel.CreateReviewRequest
-	(*ReviewListRequest)(nil),           // 56: travel.ReviewListRequest
-	(*ReviewListResponse)(nil),          // 57: travel.ReviewListResponse
-	(*OrderNoReviewRequest)(nil),        // 58: travel.OrderNoReviewRequest
-	(*ReplyReviewRequest)(nil),          // 59: travel.ReplyReviewRequest
+	(*UsernameRequest)(nil),             // 53: travel.UsernameRequest
+	(*ItineraryStop)(nil),               // 54: travel.ItineraryStop
+	(*Review)(nil),                      // 55: travel.Review
+	(*CreateReviewRequest)(nil),         // 56: travel.CreateReviewRequest
+	(*ReviewListRequest)(nil),           // 57: travel.ReviewListRequest
+	(*ReviewListResponse)(nil),          // 58: travel.ReviewListResponse
+	(*OrderNoReviewRequest)(nil),        // 59: travel.OrderNoReviewRequest
+	(*ReplyReviewRequest)(nil),          // 60: travel.ReplyReviewRequest
 }
 var file_travel_proto_depIdxs = []int32{
 	47, // 0: travel.AuthToken.user:type_name -> travel.User
 	3,  // 1: travel.CreateOrderRequest.travelers:type_name -> travel.Traveler
-	53, // 2: travel.ItineraryStopListResponse.items:type_name -> travel.ItineraryStop
+	54, // 2: travel.ItineraryStopListResponse.items:type_name -> travel.ItineraryStop
 	14, // 3: travel.InventoryListResponse.items:type_name -> travel.InventoryItem
 	3,  // 4: travel.Order.travelers:type_name -> travel.Traveler
 	24, // 5: travel.Order.items:type_name -> travel.OrderItem
@@ -5934,7 +5982,7 @@ var file_travel_proto_depIdxs = []int32{
 	23, // 7: travel.CustomerOrderListResponse.items:type_name -> travel.Order
 	38, // 8: travel.PackageListResponse.items:type_name -> travel.ProductPackage
 	34, // 9: travel.ProductListResponse.items:type_name -> travel.Product
-	54, // 10: travel.ReviewListResponse.items:type_name -> travel.Review
+	55, // 10: travel.ReviewListResponse.items:type_name -> travel.Review
 	35, // 11: travel.CatalogService.GetProduct:input_type -> travel.ProductIdRequest
 	36, // 12: travel.CatalogService.ListProducts:input_type -> travel.ProductListRequest
 	30, // 13: travel.CatalogService.ListPackages:input_type -> travel.PackageListRequest
@@ -5970,55 +6018,57 @@ var file_travel_proto_depIdxs = []int32{
 	20, // 43: travel.UserService.Login:input_type -> travel.LoginRequest
 	19, // 44: travel.UserService.LoginByMobile:input_type -> travel.LoginByMobileRequest
 	52, // 45: travel.UserService.GetProfile:input_type -> travel.UserIdRequest
-	45, // 46: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
-	1,  // 47: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
-	55, // 48: travel.ReviewService.Create:input_type -> travel.CreateReviewRequest
-	56, // 49: travel.ReviewService.ListByProduct:input_type -> travel.ReviewListRequest
-	58, // 50: travel.ReviewService.GetByOrder:input_type -> travel.OrderNoReviewRequest
-	59, // 51: travel.ReviewService.Reply:input_type -> travel.ReplyReviewRequest
-	34, // 52: travel.CatalogService.GetProduct:output_type -> travel.Product
-	37, // 53: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
-	31, // 54: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
-	13, // 55: travel.InitService.InitDatabase:output_type -> travel.InitResponse
-	18, // 56: travel.InventoryService.Check:output_type -> travel.InventoryResponse
-	42, // 57: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
-	23, // 58: travel.OrderService.Create:output_type -> travel.Order
-	23, // 59: travel.OrderService.Get:output_type -> travel.Order
-	27, // 60: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
-	29, // 61: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
-	23, // 62: travel.OrderService.VerifyOrder:output_type -> travel.Order
-	23, // 63: travel.OrderService.AcceptOrder:output_type -> travel.Order
-	23, // 64: travel.OrderService.RequestRefund:output_type -> travel.Order
-	23, // 65: travel.OrderService.HandleRefund:output_type -> travel.Order
-	23, // 66: travel.OrderService.CancelOrder:output_type -> travel.Order
-	32, // 67: travel.PaymentService.Create:output_type -> travel.Payment
-	32, // 68: travel.PaymentService.Get:output_type -> travel.Payment
-	32, // 69: travel.PaymentService.SetProviderID:output_type -> travel.Payment
-	32, // 70: travel.PaymentService.MarkPaid:output_type -> travel.Payment
-	37, // 71: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
-	34, // 72: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
-	34, // 73: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
-	38, // 74: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
-	31, // 75: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
-	14, // 76: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
-	16, // 77: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
-	34, // 78: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
-	53, // 79: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
-	53, // 80: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
-	12, // 81: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
-	11, // 82: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
-	0,  // 83: travel.UserService.Register:output_type -> travel.AuthToken
-	0,  // 84: travel.UserService.Login:output_type -> travel.AuthToken
-	0,  // 85: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
-	47, // 86: travel.UserService.GetProfile:output_type -> travel.User
-	47, // 87: travel.UserService.UpdateProfile:output_type -> travel.User
-	22, // 88: travel.UserService.ChangePassword:output_type -> travel.OkResponse
-	54, // 89: travel.ReviewService.Create:output_type -> travel.Review
-	57, // 90: travel.ReviewService.ListByProduct:output_type -> travel.ReviewListResponse
-	54, // 91: travel.ReviewService.GetByOrder:output_type -> travel.Review
-	54, // 92: travel.ReviewService.Reply:output_type -> travel.Review
-	52, // [52:93] is the sub-list for method output_type
-	11, // [11:52] is the sub-list for method input_type
+	53, // 46: travel.UserService.GetUserByUsername:input_type -> travel.UsernameRequest
+	45, // 47: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
+	1,  // 48: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
+	56, // 49: travel.ReviewService.Create:input_type -> travel.CreateReviewRequest
+	57, // 50: travel.ReviewService.ListByProduct:input_type -> travel.ReviewListRequest
+	59, // 51: travel.ReviewService.GetByOrder:input_type -> travel.OrderNoReviewRequest
+	60, // 52: travel.ReviewService.Reply:input_type -> travel.ReplyReviewRequest
+	34, // 53: travel.CatalogService.GetProduct:output_type -> travel.Product
+	37, // 54: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
+	31, // 55: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
+	13, // 56: travel.InitService.InitDatabase:output_type -> travel.InitResponse
+	18, // 57: travel.InventoryService.Check:output_type -> travel.InventoryResponse
+	42, // 58: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
+	23, // 59: travel.OrderService.Create:output_type -> travel.Order
+	23, // 60: travel.OrderService.Get:output_type -> travel.Order
+	27, // 61: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
+	29, // 62: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
+	23, // 63: travel.OrderService.VerifyOrder:output_type -> travel.Order
+	23, // 64: travel.OrderService.AcceptOrder:output_type -> travel.Order
+	23, // 65: travel.OrderService.RequestRefund:output_type -> travel.Order
+	23, // 66: travel.OrderService.HandleRefund:output_type -> travel.Order
+	23, // 67: travel.OrderService.CancelOrder:output_type -> travel.Order
+	32, // 68: travel.PaymentService.Create:output_type -> travel.Payment
+	32, // 69: travel.PaymentService.Get:output_type -> travel.Payment
+	32, // 70: travel.PaymentService.SetProviderID:output_type -> travel.Payment
+	32, // 71: travel.PaymentService.MarkPaid:output_type -> travel.Payment
+	37, // 72: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
+	34, // 73: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
+	34, // 74: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
+	38, // 75: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
+	31, // 76: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
+	14, // 77: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
+	16, // 78: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
+	34, // 79: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
+	54, // 80: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
+	54, // 81: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
+	12, // 82: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
+	11, // 83: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
+	0,  // 84: travel.UserService.Register:output_type -> travel.AuthToken
+	0,  // 85: travel.UserService.Login:output_type -> travel.AuthToken
+	0,  // 86: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
+	47, // 87: travel.UserService.GetProfile:output_type -> travel.User
+	47, // 88: travel.UserService.GetUserByUsername:output_type -> travel.User
+	47, // 89: travel.UserService.UpdateProfile:output_type -> travel.User
+	22, // 90: travel.UserService.ChangePassword:output_type -> travel.OkResponse
+	55, // 91: travel.ReviewService.Create:output_type -> travel.Review
+	58, // 92: travel.ReviewService.ListByProduct:output_type -> travel.ReviewListResponse
+	55, // 93: travel.ReviewService.GetByOrder:output_type -> travel.Review
+	55, // 94: travel.ReviewService.Reply:output_type -> travel.Review
+	53, // [53:95] is the sub-list for method output_type
+	11, // [11:53] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name
@@ -6035,7 +6085,7 @@ func file_travel_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_travel_proto_rawDesc), len(file_travel_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   60,
+			NumMessages:   61,
 			NumExtensions: 0,
 			NumServices:   8,
 		},

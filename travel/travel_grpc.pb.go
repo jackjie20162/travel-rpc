@@ -1582,12 +1582,13 @@ var TravelManagementService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	UserService_Register_FullMethodName       = "/travel.UserService/Register"
-	UserService_Login_FullMethodName          = "/travel.UserService/Login"
-	UserService_LoginByMobile_FullMethodName  = "/travel.UserService/LoginByMobile"
-	UserService_GetProfile_FullMethodName     = "/travel.UserService/GetProfile"
-	UserService_UpdateProfile_FullMethodName  = "/travel.UserService/UpdateProfile"
-	UserService_ChangePassword_FullMethodName = "/travel.UserService/ChangePassword"
+	UserService_Register_FullMethodName          = "/travel.UserService/Register"
+	UserService_Login_FullMethodName             = "/travel.UserService/Login"
+	UserService_LoginByMobile_FullMethodName     = "/travel.UserService/LoginByMobile"
+	UserService_GetProfile_FullMethodName        = "/travel.UserService/GetProfile"
+	UserService_GetUserByUsername_FullMethodName = "/travel.UserService/GetUserByUsername"
+	UserService_UpdateProfile_FullMethodName     = "/travel.UserService/UpdateProfile"
+	UserService_ChangePassword_FullMethodName    = "/travel.UserService/ChangePassword"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -1598,6 +1599,7 @@ type UserServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*AuthToken, error)
 	LoginByMobile(ctx context.Context, in *LoginByMobileRequest, opts ...grpc.CallOption) (*AuthToken, error)
 	GetProfile(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*User, error)
+	GetUserByUsername(ctx context.Context, in *UsernameRequest, opts ...grpc.CallOption) (*User, error)
 	UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*User, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*OkResponse, error)
 }
@@ -1650,6 +1652,16 @@ func (c *userServiceClient) GetProfile(ctx context.Context, in *UserIdRequest, o
 	return out, nil
 }
 
+func (c *userServiceClient) GetUserByUsername(ctx context.Context, in *UsernameRequest, opts ...grpc.CallOption) (*User, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(User)
+	err := c.cc.Invoke(ctx, UserService_GetUserByUsername_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userServiceClient) UpdateProfile(ctx context.Context, in *UpdateProfileRequest, opts ...grpc.CallOption) (*User, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(User)
@@ -1678,6 +1690,7 @@ type UserServiceServer interface {
 	Login(context.Context, *LoginRequest) (*AuthToken, error)
 	LoginByMobile(context.Context, *LoginByMobileRequest) (*AuthToken, error)
 	GetProfile(context.Context, *UserIdRequest) (*User, error)
+	GetUserByUsername(context.Context, *UsernameRequest) (*User, error)
 	UpdateProfile(context.Context, *UpdateProfileRequest) (*User, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*OkResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
@@ -1701,6 +1714,9 @@ func (UnimplementedUserServiceServer) LoginByMobile(context.Context, *LoginByMob
 }
 func (UnimplementedUserServiceServer) GetProfile(context.Context, *UserIdRequest) (*User, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetProfile not implemented")
+}
+func (UnimplementedUserServiceServer) GetUserByUsername(context.Context, *UsernameRequest) (*User, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserByUsername not implemented")
 }
 func (UnimplementedUserServiceServer) UpdateProfile(context.Context, *UpdateProfileRequest) (*User, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateProfile not implemented")
@@ -1801,6 +1817,24 @@ func _UserService_GetProfile_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetUserByUsername_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UsernameRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetUserByUsername(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_GetUserByUsername_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetUserByUsername(ctx, req.(*UsernameRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserService_UpdateProfile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateProfileRequest)
 	if err := dec(in); err != nil {
@@ -1859,6 +1893,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProfile",
 			Handler:    _UserService_GetProfile_Handler,
+		},
+		{
+			MethodName: "GetUserByUsername",
+			Handler:    _UserService_GetUserByUsername_Handler,
 		},
 		{
 			MethodName: "UpdateProfile",
