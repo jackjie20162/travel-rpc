@@ -1,5 +1,13 @@
 # Development Log
 
+## 2026-09-08 — 已发布产品允许修改行程
+
+### 变更
+- 移除 `ManagementService` 行程节点 Create/Update/Delete 中的 PUBLISHED 状态拦截（原报错 `published product cannot modify itinerary`）：已发布产品可直接修改行程，无需先下架。
+- 保留产品存在性与租户/商户归属校验。
+- 商户后台编辑页同步移除「已发布不可改行程」提示条与一键下架按钮。
+- 注：套餐新增（`published product cannot add packages`）的限制未变。
+
 ## 2026-09-08 — 行程编辑器结构重构与 type_params 通道
 
 ### 背景

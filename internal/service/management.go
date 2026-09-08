@@ -491,15 +491,13 @@ func (s *ManagementService) CreateItineraryStop(ctx context.Context, req *travel
 	if req.GetProductId() <= 0 || strings.TrimSpace(req.GetTitle()) == "" {
 		return nil, status.Error(codes.InvalidArgument, "productId and title are required")
 	}
-	p, err := s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
+	// 已发布产品也允许修改行程（仅校验产品归属）
+	_, err = s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "product not found")
 		}
 		return nil, err
-	}
-	if p.Status == "PUBLISHED" {
-		return nil, status.Error(codes.FailedPrecondition, "published product cannot modify itinerary")
 	}
 	stopType := strings.TrimSpace(req.GetStopType())
 	if stopType == "" {
@@ -611,15 +609,12 @@ func (s *ManagementService) UpdateItineraryStop(ctx context.Context, req *travel
 		}
 		return nil, err
 	}
-	p, err := s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
+	_, err = s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "product not found")
 		}
 		return nil, err
-	}
-	if p.Status == "PUBLISHED" {
-		return nil, status.Error(codes.FailedPrecondition, "published product cannot modify itinerary")
 	}
 	stopType := strings.TrimSpace(req.GetStopType())
 	if stopType == "" {
@@ -755,15 +750,12 @@ func (s *ManagementService) DeleteItineraryStop(ctx context.Context, req *travel
 	if req.GetId() <= 0 || req.GetProductId() <= 0 {
 		return nil, status.Error(codes.InvalidArgument, "id and productId are required")
 	}
-	p, err := s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
+	_, err = s.client.Product.Query().Where(product.IDEQ(int(req.GetProductId())), product.TenantIDEQ(tenantID), product.MerchantIDEQ(merchantID)).Only(ctx)
 	if err != nil {
 		if ent.IsNotFound(err) {
 			return nil, status.Error(codes.NotFound, "product not found")
 		}
 		return nil, err
-	}
-	if p.Status == "PUBLISHED" {
-		return nil, status.Error(codes.FailedPrecondition, "published product cannot modify itinerary")
 	}
 	err = s.client.ItineraryStop.DeleteOneID(int(req.GetId())).Where(itinerarystop.ProductIDEQ(req.GetProductId()), itinerarystop.TenantIDEQ(tenantID), itinerarystop.MerchantIDEQ(merchantID)).Exec(ctx)
 	if err != nil {
