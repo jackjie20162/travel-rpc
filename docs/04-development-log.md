@@ -1,5 +1,21 @@
 # Development Log
 
+## 2026-09-08 — 行程选点回显与坐标持久化修复
+
+### 背景
+商户后台反馈：行中「地点和活动」地图选点后点确定，表单不更新。截图证据：弹窗名称框仍为旧值，而已选坐标/逆地理地址已是新点。
+
+### 根因
+- `PointPickMap.vue` 逆地理/搜索回填名称、城市时使用「仅空时填充」策略：已有旧名称时重新选点不会更新名称/城市，确定后旧名称回写表单，表现为「确定不会更改」。
+- `ProductEdit.vue` 的 `stopPayload` 与 onMounted 映射遗漏节点自身 `latitude/longitude`（API/RPC 链路本已支持），选点坐标保存后丢失、重进无法回显。
+
+### 修复
+- `PointPickMap.vue`：点击地图/搜索命中后同步更新名称、城市、地址为所选点结果（之后仍可手动改），并加提示文案。
+- `ProductEdit.vue`：stopPayload 与加载映射补齐 latitude/longitude。
+
+### 验证
+- ✅ merchant-frontend `vite build` 通过
+
 ## 2026-09-08 — 已发布产品允许修改行程
 
 ### 变更
