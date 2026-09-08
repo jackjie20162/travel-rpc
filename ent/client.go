@@ -18,6 +18,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
 	"gitee.com/meinongyihe/travel-rpc/ent/merchant"
+	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
@@ -45,6 +46,8 @@ type Client struct {
 	ItineraryStop *ItineraryStopClient
 	// Merchant is the client for interacting with the Merchant builders.
 	Merchant *MerchantClient
+	// MerchantConfig is the client for interacting with the MerchantConfig builders.
+	MerchantConfig *MerchantConfigClient
 	// Order is the client for interacting with the Order builders.
 	Order *OrderClient
 	// OrderItem is the client for interacting with the OrderItem builders.
@@ -80,6 +83,7 @@ func (c *Client) init() {
 	c.InventoryReservation = NewInventoryReservationClient(c.config)
 	c.ItineraryStop = NewItineraryStopClient(c.config)
 	c.Merchant = NewMerchantClient(c.config)
+	c.MerchantConfig = NewMerchantConfigClient(c.config)
 	c.Order = NewOrderClient(c.config)
 	c.OrderItem = NewOrderItemClient(c.config)
 	c.Payment = NewPaymentClient(c.config)
@@ -186,6 +190,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		InventoryReservation: NewInventoryReservationClient(cfg),
 		ItineraryStop:        NewItineraryStopClient(cfg),
 		Merchant:             NewMerchantClient(cfg),
+		MerchantConfig:       NewMerchantConfigClient(cfg),
 		Order:                NewOrderClient(cfg),
 		OrderItem:            NewOrderItemClient(cfg),
 		Payment:              NewPaymentClient(cfg),
@@ -219,6 +224,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		InventoryReservation: NewInventoryReservationClient(cfg),
 		ItineraryStop:        NewItineraryStopClient(cfg),
 		Merchant:             NewMerchantClient(cfg),
+		MerchantConfig:       NewMerchantConfigClient(cfg),
 		Order:                NewOrderClient(cfg),
 		OrderItem:            NewOrderItemClient(cfg),
 		Payment:              NewPaymentClient(cfg),
@@ -258,9 +264,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant, c.Order,
-		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Review, c.Tenant,
-		c.Traveler, c.User, c.Voucher,
+		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant,
+		c.MerchantConfig, c.Order, c.OrderItem, c.Payment, c.Product, c.ProductPackage,
+		c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Use(hooks...)
 	}
@@ -270,9 +276,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant, c.Order,
-		c.OrderItem, c.Payment, c.Product, c.ProductPackage, c.Review, c.Tenant,
-		c.Traveler, c.User, c.Voucher,
+		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant,
+		c.MerchantConfig, c.Order, c.OrderItem, c.Payment, c.Product, c.ProductPackage,
+		c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -289,6 +295,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.ItineraryStop.mutate(ctx, m)
 	case *MerchantMutation:
 		return c.Merchant.mutate(ctx, m)
+	case *MerchantConfigMutation:
+		return c.MerchantConfig.mutate(ctx, m)
 	case *OrderMutation:
 		return c.Order.mutate(ctx, m)
 	case *OrderItemMutation:
@@ -843,6 +851,139 @@ func (c *MerchantClient) mutate(ctx context.Context, m *MerchantMutation) (Value
 		return (&MerchantDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Merchant mutation op: %q", m.Op())
+	}
+}
+
+// MerchantConfigClient is a client for the MerchantConfig schema.
+type MerchantConfigClient struct {
+	config
+}
+
+// NewMerchantConfigClient returns a client for the MerchantConfig from the given config.
+func NewMerchantConfigClient(c config) *MerchantConfigClient {
+	return &MerchantConfigClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `merchantconfig.Hooks(f(g(h())))`.
+func (c *MerchantConfigClient) Use(hooks ...Hook) {
+	c.hooks.MerchantConfig = append(c.hooks.MerchantConfig, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `merchantconfig.Intercept(f(g(h())))`.
+func (c *MerchantConfigClient) Intercept(interceptors ...Interceptor) {
+	c.inters.MerchantConfig = append(c.inters.MerchantConfig, interceptors...)
+}
+
+// Create returns a builder for creating a MerchantConfig entity.
+func (c *MerchantConfigClient) Create() *MerchantConfigCreate {
+	mutation := newMerchantConfigMutation(c.config, OpCreate)
+	return &MerchantConfigCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of MerchantConfig entities.
+func (c *MerchantConfigClient) CreateBulk(builders ...*MerchantConfigCreate) *MerchantConfigCreateBulk {
+	return &MerchantConfigCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *MerchantConfigClient) MapCreateBulk(slice any, setFunc func(*MerchantConfigCreate, int)) *MerchantConfigCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &MerchantConfigCreateBulk{err: fmt.Errorf("calling to MerchantConfigClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*MerchantConfigCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &MerchantConfigCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for MerchantConfig.
+func (c *MerchantConfigClient) Update() *MerchantConfigUpdate {
+	mutation := newMerchantConfigMutation(c.config, OpUpdate)
+	return &MerchantConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *MerchantConfigClient) UpdateOne(_m *MerchantConfig) *MerchantConfigUpdateOne {
+	mutation := newMerchantConfigMutation(c.config, OpUpdateOne, withMerchantConfig(_m))
+	return &MerchantConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *MerchantConfigClient) UpdateOneID(id int) *MerchantConfigUpdateOne {
+	mutation := newMerchantConfigMutation(c.config, OpUpdateOne, withMerchantConfigID(id))
+	return &MerchantConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for MerchantConfig.
+func (c *MerchantConfigClient) Delete() *MerchantConfigDelete {
+	mutation := newMerchantConfigMutation(c.config, OpDelete)
+	return &MerchantConfigDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *MerchantConfigClient) DeleteOne(_m *MerchantConfig) *MerchantConfigDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *MerchantConfigClient) DeleteOneID(id int) *MerchantConfigDeleteOne {
+	builder := c.Delete().Where(merchantconfig.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &MerchantConfigDeleteOne{builder}
+}
+
+// Query returns a query builder for MerchantConfig.
+func (c *MerchantConfigClient) Query() *MerchantConfigQuery {
+	return &MerchantConfigQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeMerchantConfig},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a MerchantConfig entity by its id.
+func (c *MerchantConfigClient) Get(ctx context.Context, id int) (*MerchantConfig, error) {
+	return c.Query().Where(merchantconfig.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *MerchantConfigClient) GetX(ctx context.Context, id int) *MerchantConfig {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *MerchantConfigClient) Hooks() []Hook {
+	return c.hooks.MerchantConfig
+}
+
+// Interceptors returns the client interceptors.
+func (c *MerchantConfigClient) Interceptors() []Interceptor {
+	return c.inters.MerchantConfig
+}
+
+func (c *MerchantConfigClient) mutate(ctx context.Context, m *MerchantConfigMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&MerchantConfigCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&MerchantConfigUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&MerchantConfigUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&MerchantConfigDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown MerchantConfig mutation op: %q", m.Op())
 	}
 }
 
@@ -2179,13 +2320,13 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Inventory, InventoryReservation, ItineraryStop, Merchant, Order, OrderItem,
-		Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
+		Inventory, InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
+		OrderItem, Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
 		Voucher []ent.Hook
 	}
 	inters struct {
-		Inventory, InventoryReservation, ItineraryStop, Merchant, Order, OrderItem,
-		Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
+		Inventory, InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
+		OrderItem, Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
 		Voucher []ent.Interceptor
 	}
 )

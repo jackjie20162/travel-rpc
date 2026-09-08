@@ -1,5 +1,26 @@
 # Development Log
 
+## 2026-09-08 — 行程编辑器结构重构与 type_params 通道
+
+### 背景
+商户后台行程编辑旧实现允许任意增删/改类型节点，且集合/返程与中间节点参数混用同一表单，不符合业务规则：集合与返程各唯一且必须存在，中间仅可插入地点和活动/行中交通/行中餐食；各类型参数差异大（集合分上门接/集合点，返程分送回服务/解散点/自由解散）。
+
+### 实现内容
+- **Ent schema**: `itinerary_stop` 新增 `type_params` text 列，存储节点类型专属参数 JSON；`make gen-ent` 重新生成。
+- **Proto**: `ItineraryStop` / `CreateItineraryStopRequest` / `UpdateItineraryStopRequest` 新增 `type_params` 字段；`make gen-rpc` 重新生成。
+- **RPC service**: `itineraryStopMessage` / Create / Update 增加 TypeParams 映射（Update 无条件覆盖以支持清空）。
+- **travel-api**: `.api` 类型新增 `typeParams`，`goctls api go` 重新生成 types.go；create/update logic 与 `toItineraryStop` 增加透传。
+- **商户后台**:
+  - `ProductEdit.vue` 步骤 2 重构：首集合/尾返程固定不可删，中间插入按钮（地点和活动/行中交通/行中餐食）；分类型表单（集合双模式、交通选项+时长、活动 POI+入内+时长、餐型单选+时长、返程三解散方案+送回行/解散点列表）；保存前结构+必填校验；标题自动生成；typeParams 序列化存取。
+  - 新增 `PointPickMap.vue` 地图定位选点组件（高德国内/世界双供应商，点击选点+逆地理，统一输出 WGS84），服务于集合点/活动地点/解散点定位。
+
+### 验证
+- ✅ travel-rpc / travel-api `go build ./...` 通过
+- ✅ merchant-frontend `vite build` 通过（903ms）
+
+### 文档
+- 更新 `05-data-model.md`：ItineraryStop 结构约束与 type_params JSON 结构说明
+
 ## 2026-09-06 — Merchant order list workflow refinement
 
 ### Implemented

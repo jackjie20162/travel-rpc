@@ -173,7 +173,7 @@ func (s *OrderService) VerifyOrder(ctx context.Context, req *travel.VerifyOrderR
     var rejectReason string
     var verifiedAt int64
     if action == "CONFIRM" {
-        newStatus = "VERIFIED"
+        newStatus = "COMPLETED"
         verifiedAt = time.Now().Unix()
     } else {
         newStatus = "REFUNDED"

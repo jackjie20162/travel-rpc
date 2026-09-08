@@ -18,6 +18,9 @@ type ItineraryStop func(*sql.Selector)
 // Merchant is the predicate function for merchant builders.
 type Merchant func(*sql.Selector)
 
+// MerchantConfig is the predicate function for merchantconfig builders.
+type MerchantConfig func(*sql.Selector)
+
 // Order is the predicate function for order builders.
 type Order func(*sql.Selector)
 

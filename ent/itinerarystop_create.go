@@ -385,6 +385,104 @@ func (_c *ItineraryStopCreate) SetNillableDropoffLongitude(v *float64) *Itinerar
 	return _c
 }
 
+// SetPickupTime sets the "pickup_time" field.
+func (_c *ItineraryStopCreate) SetPickupTime(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupTime(v)
+	return _c
+}
+
+// SetNillablePickupTime sets the "pickup_time" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupTime(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupTime(*v)
+	}
+	return _c
+}
+
+// SetPickupCity sets the "pickup_city" field.
+func (_c *ItineraryStopCreate) SetPickupCity(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupCity(v)
+	return _c
+}
+
+// SetNillablePickupCity sets the "pickup_city" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupCity(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupCity(*v)
+	}
+	return _c
+}
+
+// SetPickupDistrict sets the "pickup_district" field.
+func (_c *ItineraryStopCreate) SetPickupDistrict(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupDistrict(v)
+	return _c
+}
+
+// SetNillablePickupDistrict sets the "pickup_district" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupDistrict(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupDistrict(*v)
+	}
+	return _c
+}
+
+// SetPickupRangeMode sets the "pickup_range_mode" field.
+func (_c *ItineraryStopCreate) SetPickupRangeMode(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupRangeMode(v)
+	return _c
+}
+
+// SetNillablePickupRangeMode sets the "pickup_range_mode" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupRangeMode(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupRangeMode(*v)
+	}
+	return _c
+}
+
+// SetPickupPolygon sets the "pickup_polygon" field.
+func (_c *ItineraryStopCreate) SetPickupPolygon(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupPolygon(v)
+	return _c
+}
+
+// SetNillablePickupPolygon sets the "pickup_polygon" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupPolygon(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupPolygon(*v)
+	}
+	return _c
+}
+
+// SetPickupRangeOptions sets the "pickup_range_options" field.
+func (_c *ItineraryStopCreate) SetPickupRangeOptions(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupRangeOptions(v)
+	return _c
+}
+
+// SetNillablePickupRangeOptions sets the "pickup_range_options" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupRangeOptions(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupRangeOptions(*v)
+	}
+	return _c
+}
+
+// SetPickupNote sets the "pickup_note" field.
+func (_c *ItineraryStopCreate) SetPickupNote(v string) *ItineraryStopCreate {
+	_c.mutation.SetPickupNote(v)
+	return _c
+}
+
+// SetNillablePickupNote sets the "pickup_note" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillablePickupNote(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetPickupNote(*v)
+	}
+	return _c
+}
+
 // SetIsPickup sets the "is_pickup" field.
 func (_c *ItineraryStopCreate) SetIsPickup(v bool) *ItineraryStopCreate {
 	_c.mutation.SetIsPickup(v)
@@ -437,6 +535,20 @@ func (_c *ItineraryStopCreate) SetAgreementAdjustable(v bool) *ItineraryStopCrea
 func (_c *ItineraryStopCreate) SetNillableAgreementAdjustable(v *bool) *ItineraryStopCreate {
 	if v != nil {
 		_c.SetAgreementAdjustable(*v)
+	}
+	return _c
+}
+
+// SetTypeParams sets the "type_params" field.
+func (_c *ItineraryStopCreate) SetTypeParams(v string) *ItineraryStopCreate {
+	_c.mutation.SetTypeParams(v)
+	return _c
+}
+
+// SetNillableTypeParams sets the "type_params" field if the given value is not nil.
+func (_c *ItineraryStopCreate) SetNillableTypeParams(v *string) *ItineraryStopCreate {
+	if v != nil {
+		_c.SetTypeParams(*v)
 	}
 	return _c
 }
@@ -684,6 +796,34 @@ func (_c *ItineraryStopCreate) createSpec() (*ItineraryStop, *sqlgraph.CreateSpe
 		_spec.SetField(itinerarystop.FieldDropoffLongitude, field.TypeFloat64, value)
 		_node.DropoffLongitude = value
 	}
+	if value, ok := _c.mutation.PickupTime(); ok {
+		_spec.SetField(itinerarystop.FieldPickupTime, field.TypeString, value)
+		_node.PickupTime = value
+	}
+	if value, ok := _c.mutation.PickupCity(); ok {
+		_spec.SetField(itinerarystop.FieldPickupCity, field.TypeString, value)
+		_node.PickupCity = value
+	}
+	if value, ok := _c.mutation.PickupDistrict(); ok {
+		_spec.SetField(itinerarystop.FieldPickupDistrict, field.TypeString, value)
+		_node.PickupDistrict = value
+	}
+	if value, ok := _c.mutation.PickupRangeMode(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeMode, field.TypeString, value)
+		_node.PickupRangeMode = value
+	}
+	if value, ok := _c.mutation.PickupPolygon(); ok {
+		_spec.SetField(itinerarystop.FieldPickupPolygon, field.TypeString, value)
+		_node.PickupPolygon = value
+	}
+	if value, ok := _c.mutation.PickupRangeOptions(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeOptions, field.TypeString, value)
+		_node.PickupRangeOptions = value
+	}
+	if value, ok := _c.mutation.PickupNote(); ok {
+		_spec.SetField(itinerarystop.FieldPickupNote, field.TypeString, value)
+		_node.PickupNote = value
+	}
 	if value, ok := _c.mutation.IsPickup(); ok {
 		_spec.SetField(itinerarystop.FieldIsPickup, field.TypeBool, value)
 		_node.IsPickup = value
@@ -699,6 +839,10 @@ func (_c *ItineraryStopCreate) createSpec() (*ItineraryStop, *sqlgraph.CreateSpe
 	if value, ok := _c.mutation.AgreementAdjustable(); ok {
 		_spec.SetField(itinerarystop.FieldAgreementAdjustable, field.TypeBool, value)
 		_node.AgreementAdjustable = value
+	}
+	if value, ok := _c.mutation.TypeParams(); ok {
+		_spec.SetField(itinerarystop.FieldTypeParams, field.TypeString, value)
+		_node.TypeParams = value
 	}
 	return _node, _spec
 }

@@ -122,10 +122,18 @@ var (
 		{Name: "dropoff_address", Type: field.TypeString, Nullable: true},
 		{Name: "dropoff_latitude", Type: field.TypeFloat64, Nullable: true},
 		{Name: "dropoff_longitude", Type: field.TypeFloat64, Nullable: true},
+		{Name: "pickup_time", Type: field.TypeString, Nullable: true},
+		{Name: "pickup_city", Type: field.TypeString, Nullable: true},
+		{Name: "pickup_district", Type: field.TypeString, Nullable: true},
+		{Name: "pickup_range_mode", Type: field.TypeString, Nullable: true},
+		{Name: "pickup_polygon", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "pickup_range_options", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "pickup_note", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "is_pickup", Type: field.TypeBool, Default: false},
 		{Name: "is_dropoff", Type: field.TypeBool, Default: false},
 		{Name: "agreement_no_shopping", Type: field.TypeBool, Default: false},
 		{Name: "agreement_adjustable", Type: field.TypeBool, Default: false},
+		{Name: "type_params", Type: field.TypeString, Nullable: true, Size: 2147483647},
 	}
 	// ItineraryStopsTable holds the schema information for the "itinerary_stops" table.
 	ItineraryStopsTable = &schema.Table{
@@ -168,6 +176,34 @@ var (
 				Name:    "merchant_tenant_id_status",
 				Unique:  false,
 				Columns: []*schema.Column{MerchantsColumns[1], MerchantsColumns[4]},
+			},
+		},
+	}
+	// MerchantConfigsColumns holds the columns for the "merchant_configs" table.
+	MerchantConfigsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "tenant_id", Type: field.TypeInt64, Default: 0},
+		{Name: "merchant_id", Type: field.TypeInt64, Default: 0},
+		{Name: "config_type", Type: field.TypeString},
+		{Name: "config_key", Type: field.TypeString},
+		{Name: "config_value", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+	}
+	// MerchantConfigsTable holds the schema information for the "merchant_configs" table.
+	MerchantConfigsTable = &schema.Table{
+		Name:       "merchant_configs",
+		Columns:    MerchantConfigsColumns,
+		PrimaryKey: []*schema.Column{MerchantConfigsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "merchantconfig_merchant_id_config_type",
+				Unique:  false,
+				Columns: []*schema.Column{MerchantConfigsColumns[2], MerchantConfigsColumns[3]},
+			},
+			{
+				Name:    "merchantconfig_merchant_id_config_type_config_key",
+				Unique:  true,
+				Columns: []*schema.Column{MerchantConfigsColumns[2], MerchantConfigsColumns[3], MerchantConfigsColumns[4]},
 			},
 		},
 	}
@@ -564,6 +600,7 @@ var (
 		InventoryReservationsTable,
 		ItineraryStopsTable,
 		MerchantsTable,
+		MerchantConfigsTable,
 		OrdersTable,
 		OrderItemsTable,
 		PaymentsTable,

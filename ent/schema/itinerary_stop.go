@@ -52,10 +52,22 @@ func (ItineraryStop) Fields() []ent.Field {
 		field.Float("dropoff_latitude").Optional(),
 		field.Float("dropoff_longitude").Optional(),
 
+		// 上门接/接站信息（高德地图）
+		field.String("pickup_time").Optional(),          // 接站时间 HH:mm
+		field.String("pickup_city").Optional(),           // 接站城市名称
+		field.String("pickup_district").Optional(),       // 接站地区
+		field.String("pickup_range_mode").Optional(),     // 范围模式: CUSTOM(自定义绘制) / PARTIAL(仅列表部分地点)
+		field.Text("pickup_polygon").Optional(),          // 接送范围多边形坐标 JSON: [{lng,lat},...]
+		field.Text("pickup_range_options").Optional(),    // 范围选项 JSON: {drawAllAreas,drawAllHotels,drawAllStations,extraCharge}
+		field.Text("pickup_note").Optional(),             // 接站补充说明
+
 		field.Bool("is_pickup").Default(false),
 		field.Bool("is_dropoff").Default(false),
 		field.Bool("agreement_no_shopping").Default(false),
 		field.Bool("agreement_adjustable").Default(false),
+
+		// 节点类型专属参数 JSON（集合方式/集合点/餐型/返程解散方案等）
+		field.Text("type_params").Optional(),
 	}
 }
 

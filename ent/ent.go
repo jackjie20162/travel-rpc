@@ -16,6 +16,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
 	"gitee.com/meinongyihe/travel-rpc/ent/merchant"
+	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
@@ -90,6 +91,7 @@ func checkColumn(t, c string) error {
 			inventoryreservation.Table: inventoryreservation.ValidColumn,
 			itinerarystop.Table:        itinerarystop.ValidColumn,
 			merchant.Table:             merchant.ValidColumn,
+			merchantconfig.Table:       merchantconfig.ValidColumn,
 			order.Table:                order.ValidColumn,
 			orderitem.Table:            orderitem.ValidColumn,
 			payment.Table:              payment.ValidColumn,

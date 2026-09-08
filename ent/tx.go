@@ -22,6 +22,8 @@ type Tx struct {
 	ItineraryStop *ItineraryStopClient
 	// Merchant is the client for interacting with the Merchant builders.
 	Merchant *MerchantClient
+	// MerchantConfig is the client for interacting with the MerchantConfig builders.
+	MerchantConfig *MerchantConfigClient
 	// Order is the client for interacting with the Order builders.
 	Order *OrderClient
 	// OrderItem is the client for interacting with the OrderItem builders.
@@ -177,6 +179,7 @@ func (tx *Tx) init() {
 	tx.InventoryReservation = NewInventoryReservationClient(tx.config)
 	tx.ItineraryStop = NewItineraryStopClient(tx.config)
 	tx.Merchant = NewMerchantClient(tx.config)
+	tx.MerchantConfig = NewMerchantConfigClient(tx.config)
 	tx.Order = NewOrderClient(tx.config)
 	tx.OrderItem = NewOrderItemClient(tx.config)
 	tx.Payment = NewPaymentClient(tx.config)

@@ -103,6 +103,7 @@ message CreateItineraryStopRequest {
   string dropoff_address = 29;
   double dropoff_latitude = 30;
   double dropoff_longitude = 31;
+  string type_params = 32; // 节点类型专属参数 JSON
 }
 
 message UpdateItineraryStopRequest {
@@ -138,6 +139,7 @@ message UpdateItineraryStopRequest {
   string dropoff_address = 30;
   double dropoff_latitude = 31;
   double dropoff_longitude = 32;
+  string type_params = 33; // 节点类型专属参数 JSON
 }
 
 message DeleteItineraryStopRequest {
@@ -515,6 +517,7 @@ message ItineraryStop {
   string dropoff_address = 30;
   double dropoff_latitude = 31;
   double dropoff_longitude = 32;
+  string type_params = 33; // 节点类型专属参数 JSON
 }
 
 service CatalogService {

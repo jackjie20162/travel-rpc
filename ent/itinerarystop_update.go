@@ -649,6 +649,146 @@ func (_u *ItineraryStopUpdate) ClearDropoffLongitude() *ItineraryStopUpdate {
 	return _u
 }
 
+// SetPickupTime sets the "pickup_time" field.
+func (_u *ItineraryStopUpdate) SetPickupTime(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupTime(v)
+	return _u
+}
+
+// SetNillablePickupTime sets the "pickup_time" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupTime(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupTime(*v)
+	}
+	return _u
+}
+
+// ClearPickupTime clears the value of the "pickup_time" field.
+func (_u *ItineraryStopUpdate) ClearPickupTime() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupTime()
+	return _u
+}
+
+// SetPickupCity sets the "pickup_city" field.
+func (_u *ItineraryStopUpdate) SetPickupCity(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupCity(v)
+	return _u
+}
+
+// SetNillablePickupCity sets the "pickup_city" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupCity(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupCity(*v)
+	}
+	return _u
+}
+
+// ClearPickupCity clears the value of the "pickup_city" field.
+func (_u *ItineraryStopUpdate) ClearPickupCity() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupCity()
+	return _u
+}
+
+// SetPickupDistrict sets the "pickup_district" field.
+func (_u *ItineraryStopUpdate) SetPickupDistrict(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupDistrict(v)
+	return _u
+}
+
+// SetNillablePickupDistrict sets the "pickup_district" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupDistrict(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupDistrict(*v)
+	}
+	return _u
+}
+
+// ClearPickupDistrict clears the value of the "pickup_district" field.
+func (_u *ItineraryStopUpdate) ClearPickupDistrict() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupDistrict()
+	return _u
+}
+
+// SetPickupRangeMode sets the "pickup_range_mode" field.
+func (_u *ItineraryStopUpdate) SetPickupRangeMode(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupRangeMode(v)
+	return _u
+}
+
+// SetNillablePickupRangeMode sets the "pickup_range_mode" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupRangeMode(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupRangeMode(*v)
+	}
+	return _u
+}
+
+// ClearPickupRangeMode clears the value of the "pickup_range_mode" field.
+func (_u *ItineraryStopUpdate) ClearPickupRangeMode() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupRangeMode()
+	return _u
+}
+
+// SetPickupPolygon sets the "pickup_polygon" field.
+func (_u *ItineraryStopUpdate) SetPickupPolygon(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupPolygon(v)
+	return _u
+}
+
+// SetNillablePickupPolygon sets the "pickup_polygon" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupPolygon(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupPolygon(*v)
+	}
+	return _u
+}
+
+// ClearPickupPolygon clears the value of the "pickup_polygon" field.
+func (_u *ItineraryStopUpdate) ClearPickupPolygon() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupPolygon()
+	return _u
+}
+
+// SetPickupRangeOptions sets the "pickup_range_options" field.
+func (_u *ItineraryStopUpdate) SetPickupRangeOptions(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupRangeOptions(v)
+	return _u
+}
+
+// SetNillablePickupRangeOptions sets the "pickup_range_options" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupRangeOptions(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupRangeOptions(*v)
+	}
+	return _u
+}
+
+// ClearPickupRangeOptions clears the value of the "pickup_range_options" field.
+func (_u *ItineraryStopUpdate) ClearPickupRangeOptions() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupRangeOptions()
+	return _u
+}
+
+// SetPickupNote sets the "pickup_note" field.
+func (_u *ItineraryStopUpdate) SetPickupNote(v string) *ItineraryStopUpdate {
+	_u.mutation.SetPickupNote(v)
+	return _u
+}
+
+// SetNillablePickupNote sets the "pickup_note" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillablePickupNote(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetPickupNote(*v)
+	}
+	return _u
+}
+
+// ClearPickupNote clears the value of the "pickup_note" field.
+func (_u *ItineraryStopUpdate) ClearPickupNote() *ItineraryStopUpdate {
+	_u.mutation.ClearPickupNote()
+	return _u
+}
+
 // SetIsPickup sets the "is_pickup" field.
 func (_u *ItineraryStopUpdate) SetIsPickup(v bool) *ItineraryStopUpdate {
 	_u.mutation.SetIsPickup(v)
@@ -702,6 +842,26 @@ func (_u *ItineraryStopUpdate) SetNillableAgreementAdjustable(v *bool) *Itinerar
 	if v != nil {
 		_u.SetAgreementAdjustable(*v)
 	}
+	return _u
+}
+
+// SetTypeParams sets the "type_params" field.
+func (_u *ItineraryStopUpdate) SetTypeParams(v string) *ItineraryStopUpdate {
+	_u.mutation.SetTypeParams(v)
+	return _u
+}
+
+// SetNillableTypeParams sets the "type_params" field if the given value is not nil.
+func (_u *ItineraryStopUpdate) SetNillableTypeParams(v *string) *ItineraryStopUpdate {
+	if v != nil {
+		_u.SetTypeParams(*v)
+	}
+	return _u
+}
+
+// ClearTypeParams clears the value of the "type_params" field.
+func (_u *ItineraryStopUpdate) ClearTypeParams() *ItineraryStopUpdate {
+	_u.mutation.ClearTypeParams()
 	return _u
 }
 
@@ -948,6 +1108,48 @@ func (_u *ItineraryStopUpdate) sqlSave(ctx context.Context) (_node int, err erro
 	if _u.mutation.DropoffLongitudeCleared() {
 		_spec.ClearField(itinerarystop.FieldDropoffLongitude, field.TypeFloat64)
 	}
+	if value, ok := _u.mutation.PickupTime(); ok {
+		_spec.SetField(itinerarystop.FieldPickupTime, field.TypeString, value)
+	}
+	if _u.mutation.PickupTimeCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupTime, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupCity(); ok {
+		_spec.SetField(itinerarystop.FieldPickupCity, field.TypeString, value)
+	}
+	if _u.mutation.PickupCityCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupCity, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupDistrict(); ok {
+		_spec.SetField(itinerarystop.FieldPickupDistrict, field.TypeString, value)
+	}
+	if _u.mutation.PickupDistrictCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupDistrict, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupRangeMode(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeMode, field.TypeString, value)
+	}
+	if _u.mutation.PickupRangeModeCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupRangeMode, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupPolygon(); ok {
+		_spec.SetField(itinerarystop.FieldPickupPolygon, field.TypeString, value)
+	}
+	if _u.mutation.PickupPolygonCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupPolygon, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupRangeOptions(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeOptions, field.TypeString, value)
+	}
+	if _u.mutation.PickupRangeOptionsCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupRangeOptions, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupNote(); ok {
+		_spec.SetField(itinerarystop.FieldPickupNote, field.TypeString, value)
+	}
+	if _u.mutation.PickupNoteCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupNote, field.TypeString)
+	}
 	if value, ok := _u.mutation.IsPickup(); ok {
 		_spec.SetField(itinerarystop.FieldIsPickup, field.TypeBool, value)
 	}
@@ -959,6 +1161,12 @@ func (_u *ItineraryStopUpdate) sqlSave(ctx context.Context) (_node int, err erro
 	}
 	if value, ok := _u.mutation.AgreementAdjustable(); ok {
 		_spec.SetField(itinerarystop.FieldAgreementAdjustable, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.TypeParams(); ok {
+		_spec.SetField(itinerarystop.FieldTypeParams, field.TypeString, value)
+	}
+	if _u.mutation.TypeParamsCleared() {
+		_spec.ClearField(itinerarystop.FieldTypeParams, field.TypeString)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -1602,6 +1810,146 @@ func (_u *ItineraryStopUpdateOne) ClearDropoffLongitude() *ItineraryStopUpdateOn
 	return _u
 }
 
+// SetPickupTime sets the "pickup_time" field.
+func (_u *ItineraryStopUpdateOne) SetPickupTime(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupTime(v)
+	return _u
+}
+
+// SetNillablePickupTime sets the "pickup_time" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupTime(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupTime(*v)
+	}
+	return _u
+}
+
+// ClearPickupTime clears the value of the "pickup_time" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupTime() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupTime()
+	return _u
+}
+
+// SetPickupCity sets the "pickup_city" field.
+func (_u *ItineraryStopUpdateOne) SetPickupCity(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupCity(v)
+	return _u
+}
+
+// SetNillablePickupCity sets the "pickup_city" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupCity(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupCity(*v)
+	}
+	return _u
+}
+
+// ClearPickupCity clears the value of the "pickup_city" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupCity() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupCity()
+	return _u
+}
+
+// SetPickupDistrict sets the "pickup_district" field.
+func (_u *ItineraryStopUpdateOne) SetPickupDistrict(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupDistrict(v)
+	return _u
+}
+
+// SetNillablePickupDistrict sets the "pickup_district" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupDistrict(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupDistrict(*v)
+	}
+	return _u
+}
+
+// ClearPickupDistrict clears the value of the "pickup_district" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupDistrict() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupDistrict()
+	return _u
+}
+
+// SetPickupRangeMode sets the "pickup_range_mode" field.
+func (_u *ItineraryStopUpdateOne) SetPickupRangeMode(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupRangeMode(v)
+	return _u
+}
+
+// SetNillablePickupRangeMode sets the "pickup_range_mode" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupRangeMode(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupRangeMode(*v)
+	}
+	return _u
+}
+
+// ClearPickupRangeMode clears the value of the "pickup_range_mode" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupRangeMode() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupRangeMode()
+	return _u
+}
+
+// SetPickupPolygon sets the "pickup_polygon" field.
+func (_u *ItineraryStopUpdateOne) SetPickupPolygon(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupPolygon(v)
+	return _u
+}
+
+// SetNillablePickupPolygon sets the "pickup_polygon" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupPolygon(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupPolygon(*v)
+	}
+	return _u
+}
+
+// ClearPickupPolygon clears the value of the "pickup_polygon" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupPolygon() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupPolygon()
+	return _u
+}
+
+// SetPickupRangeOptions sets the "pickup_range_options" field.
+func (_u *ItineraryStopUpdateOne) SetPickupRangeOptions(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupRangeOptions(v)
+	return _u
+}
+
+// SetNillablePickupRangeOptions sets the "pickup_range_options" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupRangeOptions(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupRangeOptions(*v)
+	}
+	return _u
+}
+
+// ClearPickupRangeOptions clears the value of the "pickup_range_options" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupRangeOptions() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupRangeOptions()
+	return _u
+}
+
+// SetPickupNote sets the "pickup_note" field.
+func (_u *ItineraryStopUpdateOne) SetPickupNote(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetPickupNote(v)
+	return _u
+}
+
+// SetNillablePickupNote sets the "pickup_note" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillablePickupNote(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetPickupNote(*v)
+	}
+	return _u
+}
+
+// ClearPickupNote clears the value of the "pickup_note" field.
+func (_u *ItineraryStopUpdateOne) ClearPickupNote() *ItineraryStopUpdateOne {
+	_u.mutation.ClearPickupNote()
+	return _u
+}
+
 // SetIsPickup sets the "is_pickup" field.
 func (_u *ItineraryStopUpdateOne) SetIsPickup(v bool) *ItineraryStopUpdateOne {
 	_u.mutation.SetIsPickup(v)
@@ -1655,6 +2003,26 @@ func (_u *ItineraryStopUpdateOne) SetNillableAgreementAdjustable(v *bool) *Itine
 	if v != nil {
 		_u.SetAgreementAdjustable(*v)
 	}
+	return _u
+}
+
+// SetTypeParams sets the "type_params" field.
+func (_u *ItineraryStopUpdateOne) SetTypeParams(v string) *ItineraryStopUpdateOne {
+	_u.mutation.SetTypeParams(v)
+	return _u
+}
+
+// SetNillableTypeParams sets the "type_params" field if the given value is not nil.
+func (_u *ItineraryStopUpdateOne) SetNillableTypeParams(v *string) *ItineraryStopUpdateOne {
+	if v != nil {
+		_u.SetTypeParams(*v)
+	}
+	return _u
+}
+
+// ClearTypeParams clears the value of the "type_params" field.
+func (_u *ItineraryStopUpdateOne) ClearTypeParams() *ItineraryStopUpdateOne {
+	_u.mutation.ClearTypeParams()
 	return _u
 }
 
@@ -1931,6 +2299,48 @@ func (_u *ItineraryStopUpdateOne) sqlSave(ctx context.Context) (_node *Itinerary
 	if _u.mutation.DropoffLongitudeCleared() {
 		_spec.ClearField(itinerarystop.FieldDropoffLongitude, field.TypeFloat64)
 	}
+	if value, ok := _u.mutation.PickupTime(); ok {
+		_spec.SetField(itinerarystop.FieldPickupTime, field.TypeString, value)
+	}
+	if _u.mutation.PickupTimeCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupTime, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupCity(); ok {
+		_spec.SetField(itinerarystop.FieldPickupCity, field.TypeString, value)
+	}
+	if _u.mutation.PickupCityCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupCity, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupDistrict(); ok {
+		_spec.SetField(itinerarystop.FieldPickupDistrict, field.TypeString, value)
+	}
+	if _u.mutation.PickupDistrictCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupDistrict, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupRangeMode(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeMode, field.TypeString, value)
+	}
+	if _u.mutation.PickupRangeModeCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupRangeMode, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupPolygon(); ok {
+		_spec.SetField(itinerarystop.FieldPickupPolygon, field.TypeString, value)
+	}
+	if _u.mutation.PickupPolygonCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupPolygon, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupRangeOptions(); ok {
+		_spec.SetField(itinerarystop.FieldPickupRangeOptions, field.TypeString, value)
+	}
+	if _u.mutation.PickupRangeOptionsCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupRangeOptions, field.TypeString)
+	}
+	if value, ok := _u.mutation.PickupNote(); ok {
+		_spec.SetField(itinerarystop.FieldPickupNote, field.TypeString, value)
+	}
+	if _u.mutation.PickupNoteCleared() {
+		_spec.ClearField(itinerarystop.FieldPickupNote, field.TypeString)
+	}
 	if value, ok := _u.mutation.IsPickup(); ok {
 		_spec.SetField(itinerarystop.FieldIsPickup, field.TypeBool, value)
 	}
@@ -1942,6 +2352,12 @@ func (_u *ItineraryStopUpdateOne) sqlSave(ctx context.Context) (_node *Itinerary
 	}
 	if value, ok := _u.mutation.AgreementAdjustable(); ok {
 		_spec.SetField(itinerarystop.FieldAgreementAdjustable, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.TypeParams(); ok {
+		_spec.SetField(itinerarystop.FieldTypeParams, field.TypeString, value)
+	}
+	if _u.mutation.TypeParamsCleared() {
+		_spec.ClearField(itinerarystop.FieldTypeParams, field.TypeString)
 	}
 	_node = &ItineraryStop{config: _u.config}
 	_spec.Assign = _node.assignValues

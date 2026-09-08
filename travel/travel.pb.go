@@ -682,6 +682,7 @@ type CreateItineraryStopRequest struct {
 	DropoffAddress      string                 `protobuf:"bytes,29,opt,name=dropoff_address,json=dropoffAddress,proto3" json:"dropoff_address,omitempty"`
 	DropoffLatitude     float64                `protobuf:"fixed64,30,opt,name=dropoff_latitude,json=dropoffLatitude,proto3" json:"dropoff_latitude,omitempty"`
 	DropoffLongitude    float64                `protobuf:"fixed64,31,opt,name=dropoff_longitude,json=dropoffLongitude,proto3" json:"dropoff_longitude,omitempty"`
+	TypeParams          string                 `protobuf:"bytes,32,opt,name=type_params,json=typeParams,proto3" json:"type_params,omitempty"` // 节点类型专属参数 JSON
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -933,6 +934,13 @@ func (x *CreateItineraryStopRequest) GetDropoffLongitude() float64 {
 	return 0
 }
 
+func (x *CreateItineraryStopRequest) GetTypeParams() string {
+	if x != nil {
+		return x.TypeParams
+	}
+	return ""
+}
+
 type UpdateItineraryStopRequest struct {
 	state               protoimpl.MessageState `protogen:"open.v1"`
 	Id                  int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -967,6 +975,7 @@ type UpdateItineraryStopRequest struct {
 	DropoffAddress      string                 `protobuf:"bytes,30,opt,name=dropoff_address,json=dropoffAddress,proto3" json:"dropoff_address,omitempty"`
 	DropoffLatitude     float64                `protobuf:"fixed64,31,opt,name=dropoff_latitude,json=dropoffLatitude,proto3" json:"dropoff_latitude,omitempty"`
 	DropoffLongitude    float64                `protobuf:"fixed64,32,opt,name=dropoff_longitude,json=dropoffLongitude,proto3" json:"dropoff_longitude,omitempty"`
+	TypeParams          string                 `protobuf:"bytes,33,opt,name=type_params,json=typeParams,proto3" json:"type_params,omitempty"` // 节点类型专属参数 JSON
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -1223,6 +1232,13 @@ func (x *UpdateItineraryStopRequest) GetDropoffLongitude() float64 {
 		return x.DropoffLongitude
 	}
 	return 0
+}
+
+func (x *UpdateItineraryStopRequest) GetTypeParams() string {
+	if x != nil {
+		return x.TypeParams
+	}
+	return ""
 }
 
 type DeleteItineraryStopRequest struct {
@@ -4543,6 +4559,7 @@ type ItineraryStop struct {
 	DropoffAddress      string                 `protobuf:"bytes,30,opt,name=dropoff_address,json=dropoffAddress,proto3" json:"dropoff_address,omitempty"`
 	DropoffLatitude     float64                `protobuf:"fixed64,31,opt,name=dropoff_latitude,json=dropoffLatitude,proto3" json:"dropoff_latitude,omitempty"`
 	DropoffLongitude    float64                `protobuf:"fixed64,32,opt,name=dropoff_longitude,json=dropoffLongitude,proto3" json:"dropoff_longitude,omitempty"`
+	TypeParams          string                 `protobuf:"bytes,33,opt,name=type_params,json=typeParams,proto3" json:"type_params,omitempty"` // 节点类型专属参数 JSON
 	unknownFields       protoimpl.UnknownFields
 	sizeCache           protoimpl.SizeCache
 }
@@ -4799,6 +4816,13 @@ func (x *ItineraryStop) GetDropoffLongitude() float64 {
 		return x.DropoffLongitude
 	}
 	return 0
+}
+
+func (x *ItineraryStop) GetTypeParams() string {
+	if x != nil {
+		return x.TypeParams
+	}
+	return ""
 }
 
 type Review struct {
@@ -5366,7 +5390,7 @@ const file_travel_proto_rawDesc = "" +
 	" \x01(\tR\x06images\x12\x1b\n" +
 	"\tvideo_url\x18\v \x01(\tR\bvideoUrl\x12!\n" +
 	"\frich_content\x18\f \x01(\tR\vrichContent\x12%\n" +
-	"\x0ebooking_notice\x18\r \x01(\tR\rbookingNotice\"\xf0\b\n" +
+	"\x0ebooking_notice\x18\r \x01(\tR\rbookingNotice\"\x91\t\n" +
 	"\x1aCreateItineraryStopRequest\x12\x1d\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\x03R\tproductId\x12\x1b\n" +
@@ -5403,7 +5427,9 @@ const file_travel_proto_rawDesc = "" +
 	"\x10dropoff_location\x18\x1c \x01(\tR\x0fdropoffLocation\x12'\n" +
 	"\x0fdropoff_address\x18\x1d \x01(\tR\x0edropoffAddress\x12)\n" +
 	"\x10dropoff_latitude\x18\x1e \x01(\x01R\x0fdropoffLatitude\x12+\n" +
-	"\x11dropoff_longitude\x18\x1f \x01(\x01R\x10dropoffLongitude\"\x80\t\n" +
+	"\x11dropoff_longitude\x18\x1f \x01(\x01R\x10dropoffLongitude\x12\x1f\n" +
+	"\vtype_params\x18  \x01(\tR\n" +
+	"typeParams\"\xa1\t\n" +
 	"\x1aUpdateItineraryStopRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
@@ -5441,7 +5467,9 @@ const file_travel_proto_rawDesc = "" +
 	"\x10dropoff_location\x18\x1d \x01(\tR\x0fdropoffLocation\x12'\n" +
 	"\x0fdropoff_address\x18\x1e \x01(\tR\x0edropoffAddress\x12)\n" +
 	"\x10dropoff_latitude\x18\x1f \x01(\x01R\x0fdropoffLatitude\x12+\n" +
-	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude\"K\n" +
+	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude\x12\x1f\n" +
+	"\vtype_params\x18! \x01(\tR\n" +
+	"typeParams\"K\n" +
 	"\x1aDeleteItineraryStopRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
@@ -5743,7 +5771,7 @@ const file_travel_proto_rawDesc = "" +
 	"\rUserIdRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\"-\n" +
 	"\x0fUsernameRequest\x12\x1a\n" +
-	"\busername\x18\x01 \x01(\tR\busername\"\xf3\b\n" +
+	"\busername\x18\x01 \x01(\tR\busername\"\x94\t\n" +
 	"\rItineraryStop\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1d\n" +
 	"\n" +
@@ -5781,7 +5809,9 @@ const file_travel_proto_rawDesc = "" +
 	"\x10dropoff_location\x18\x1d \x01(\tR\x0fdropoffLocation\x12'\n" +
 	"\x0fdropoff_address\x18\x1e \x01(\tR\x0edropoffAddress\x12)\n" +
 	"\x10dropoff_latitude\x18\x1f \x01(\x01R\x0fdropoffLatitude\x12+\n" +
-	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude\"\x94\x04\n" +
+	"\x11dropoff_longitude\x18  \x01(\x01R\x10dropoffLongitude\x12\x1f\n" +
+	"\vtype_params\x18! \x01(\tR\n" +
+	"typeParams\"\x94\x04\n" +
 	"\x06Review\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x1b\n" +
 	"\ttenant_id\x18\x02 \x01(\x03R\btenantId\x12\x1f\n" +

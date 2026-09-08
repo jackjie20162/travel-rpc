@@ -43,11 +43,13 @@ The `ItineraryStop` schema represents a segment/stop in a product's itinerary. E
 
 ### Stop types
 
-- `MEETING` — 集合点
-- `ACTIVITY` — 活动景点
-- `TRANSPORT` — 交通路段
-- `MEAL` — 餐饮安排
-- `RETURN` — 返程
+- `MEETING` — 集合点（唯一，必须为第一个节点；分上门接/集合点两种模式）
+- `ACTIVITY` — 活动景点（地点和活动）
+- `TRANSPORT` — 交通路段（行中交通）
+- `MEAL` — 餐饮安排（行中餐食）
+- `RETURN` — 返程（唯一，必须为最后一个节点；送回服务/解散点/自由解散）
+
+结构约束由商户后台编辑器保证：首节点 MEETING、尾节点 RETURN 各只有一个，中间节点仅允许 ACTIVITY/TRANSPORT/MEAL 插入。
 
 ### Fields
 
@@ -86,6 +88,14 @@ The `ItineraryStop` schema represents a segment/stop in a product's itinerary. E
 | is_dropoff | bool | Has dropoff service |
 | agreement_no_shopping | bool | No shopping commitment |
 | agreement_adjustable | bool | Itinerary adjustable |
+| type_params | text? | 节点类型专属参数 JSON（集合方式/集合点/餐型/送回行/解散点等） |
+
+### type_params JSON 结构
+
+- MEETING: `{meetingMode: PICKUP|POINT, meetingTime, meetingCity, meetingPoint, meetingDesc, meetingImages, meetingLat, meetingLng, pickupTime, pickupCity, pickupDistrict, pickupRangeMode, pickupPolygon[], pickupRangeOptions{}, pickupNote}`
+- MEAL: `{mealType: BREAKFAST|LUNCH|DINNER|AFTERNOON_TEA|LATE_NIGHT|MORNING_TEA}`
+- RETURN: `{dropoffService, dropoffPoints[{city,time,rangeMode,polygon[],rangeOptions{},note}], dispersalService, dispersalPoints[{time,city,pointName,lat,lng,images,desc}], freeDispersal}`
+- ACTIVITY/TRANSPORT: 复用公共列（poi/duration/transport_type/activity_features），type_params 为空对象
 
 ### Indexes
 

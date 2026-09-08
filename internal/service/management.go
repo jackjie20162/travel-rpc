@@ -477,6 +477,7 @@ func itineraryStopMessage(s *ent.ItineraryStop) *travel.ItineraryStop {
 		PickupLatitude: s.PickupLatitude, PickupLongitude: s.PickupLongitude,
 		DropoffLocation: s.DropoffLocation, DropoffAddress: s.DropoffAddress,
 		DropoffLatitude: s.DropoffLatitude, DropoffLongitude: s.DropoffLongitude,
+		TypeParams: s.TypeParams,
 	}
 }
 
@@ -584,6 +585,9 @@ func (s *ManagementService) CreateItineraryStop(ctx context.Context, req *travel
 	}
 	if req.GetDropoffLongitude() != 0 {
 		create = create.SetDropoffLongitude(req.GetDropoffLongitude())
+	}
+	if req.GetTypeParams() != "" {
+		create = create.SetTypeParams(req.GetTypeParams())
 	}
 	stop, err := create.Save(ctx)
 	if err != nil {
@@ -735,6 +739,7 @@ func (s *ManagementService) UpdateItineraryStop(ctx context.Context, req *travel
 	} else {
 		update = update.ClearDropoffLongitude()
 	}
+	update = update.SetTypeParams(req.GetTypeParams())
 	stop, err = update.Save(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

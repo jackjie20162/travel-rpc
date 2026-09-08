@@ -15,6 +15,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
 	"gitee.com/meinongyihe/travel-rpc/ent/merchant"
+	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
@@ -41,6 +42,7 @@ const (
 	TypeInventoryReservation = "InventoryReservation"
 	TypeItineraryStop        = "ItineraryStop"
 	TypeMerchant             = "Merchant"
+	TypeMerchantConfig       = "MerchantConfig"
 	TypeOrder                = "Order"
 	TypeOrderItem            = "OrderItem"
 	TypePayment              = "Payment"
@@ -2353,10 +2355,18 @@ type ItineraryStopMutation struct {
 	adddropoff_latitude   *float64
 	dropoff_longitude     *float64
 	adddropoff_longitude  *float64
+	pickup_time           *string
+	pickup_city           *string
+	pickup_district       *string
+	pickup_range_mode     *string
+	pickup_polygon        *string
+	pickup_range_options  *string
+	pickup_note           *string
 	is_pickup             *bool
 	is_dropoff            *bool
 	agreement_no_shopping *bool
 	agreement_adjustable  *bool
+	type_params           *string
 	clearedFields         map[string]struct{}
 	done                  bool
 	oldValue              func(context.Context) (*ItineraryStop, error)
@@ -4039,6 +4049,349 @@ func (m *ItineraryStopMutation) ResetDropoffLongitude() {
 	delete(m.clearedFields, itinerarystop.FieldDropoffLongitude)
 }
 
+// SetPickupTime sets the "pickup_time" field.
+func (m *ItineraryStopMutation) SetPickupTime(s string) {
+	m.pickup_time = &s
+}
+
+// PickupTime returns the value of the "pickup_time" field in the mutation.
+func (m *ItineraryStopMutation) PickupTime() (r string, exists bool) {
+	v := m.pickup_time
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupTime returns the old "pickup_time" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupTime(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupTime is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupTime requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupTime: %w", err)
+	}
+	return oldValue.PickupTime, nil
+}
+
+// ClearPickupTime clears the value of the "pickup_time" field.
+func (m *ItineraryStopMutation) ClearPickupTime() {
+	m.pickup_time = nil
+	m.clearedFields[itinerarystop.FieldPickupTime] = struct{}{}
+}
+
+// PickupTimeCleared returns if the "pickup_time" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupTimeCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupTime]
+	return ok
+}
+
+// ResetPickupTime resets all changes to the "pickup_time" field.
+func (m *ItineraryStopMutation) ResetPickupTime() {
+	m.pickup_time = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupTime)
+}
+
+// SetPickupCity sets the "pickup_city" field.
+func (m *ItineraryStopMutation) SetPickupCity(s string) {
+	m.pickup_city = &s
+}
+
+// PickupCity returns the value of the "pickup_city" field in the mutation.
+func (m *ItineraryStopMutation) PickupCity() (r string, exists bool) {
+	v := m.pickup_city
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupCity returns the old "pickup_city" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupCity(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupCity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupCity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupCity: %w", err)
+	}
+	return oldValue.PickupCity, nil
+}
+
+// ClearPickupCity clears the value of the "pickup_city" field.
+func (m *ItineraryStopMutation) ClearPickupCity() {
+	m.pickup_city = nil
+	m.clearedFields[itinerarystop.FieldPickupCity] = struct{}{}
+}
+
+// PickupCityCleared returns if the "pickup_city" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupCityCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupCity]
+	return ok
+}
+
+// ResetPickupCity resets all changes to the "pickup_city" field.
+func (m *ItineraryStopMutation) ResetPickupCity() {
+	m.pickup_city = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupCity)
+}
+
+// SetPickupDistrict sets the "pickup_district" field.
+func (m *ItineraryStopMutation) SetPickupDistrict(s string) {
+	m.pickup_district = &s
+}
+
+// PickupDistrict returns the value of the "pickup_district" field in the mutation.
+func (m *ItineraryStopMutation) PickupDistrict() (r string, exists bool) {
+	v := m.pickup_district
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupDistrict returns the old "pickup_district" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupDistrict(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupDistrict is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupDistrict requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupDistrict: %w", err)
+	}
+	return oldValue.PickupDistrict, nil
+}
+
+// ClearPickupDistrict clears the value of the "pickup_district" field.
+func (m *ItineraryStopMutation) ClearPickupDistrict() {
+	m.pickup_district = nil
+	m.clearedFields[itinerarystop.FieldPickupDistrict] = struct{}{}
+}
+
+// PickupDistrictCleared returns if the "pickup_district" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupDistrictCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupDistrict]
+	return ok
+}
+
+// ResetPickupDistrict resets all changes to the "pickup_district" field.
+func (m *ItineraryStopMutation) ResetPickupDistrict() {
+	m.pickup_district = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupDistrict)
+}
+
+// SetPickupRangeMode sets the "pickup_range_mode" field.
+func (m *ItineraryStopMutation) SetPickupRangeMode(s string) {
+	m.pickup_range_mode = &s
+}
+
+// PickupRangeMode returns the value of the "pickup_range_mode" field in the mutation.
+func (m *ItineraryStopMutation) PickupRangeMode() (r string, exists bool) {
+	v := m.pickup_range_mode
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupRangeMode returns the old "pickup_range_mode" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupRangeMode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupRangeMode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupRangeMode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupRangeMode: %w", err)
+	}
+	return oldValue.PickupRangeMode, nil
+}
+
+// ClearPickupRangeMode clears the value of the "pickup_range_mode" field.
+func (m *ItineraryStopMutation) ClearPickupRangeMode() {
+	m.pickup_range_mode = nil
+	m.clearedFields[itinerarystop.FieldPickupRangeMode] = struct{}{}
+}
+
+// PickupRangeModeCleared returns if the "pickup_range_mode" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupRangeModeCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupRangeMode]
+	return ok
+}
+
+// ResetPickupRangeMode resets all changes to the "pickup_range_mode" field.
+func (m *ItineraryStopMutation) ResetPickupRangeMode() {
+	m.pickup_range_mode = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupRangeMode)
+}
+
+// SetPickupPolygon sets the "pickup_polygon" field.
+func (m *ItineraryStopMutation) SetPickupPolygon(s string) {
+	m.pickup_polygon = &s
+}
+
+// PickupPolygon returns the value of the "pickup_polygon" field in the mutation.
+func (m *ItineraryStopMutation) PickupPolygon() (r string, exists bool) {
+	v := m.pickup_polygon
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupPolygon returns the old "pickup_polygon" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupPolygon(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupPolygon is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupPolygon requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupPolygon: %w", err)
+	}
+	return oldValue.PickupPolygon, nil
+}
+
+// ClearPickupPolygon clears the value of the "pickup_polygon" field.
+func (m *ItineraryStopMutation) ClearPickupPolygon() {
+	m.pickup_polygon = nil
+	m.clearedFields[itinerarystop.FieldPickupPolygon] = struct{}{}
+}
+
+// PickupPolygonCleared returns if the "pickup_polygon" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupPolygonCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupPolygon]
+	return ok
+}
+
+// ResetPickupPolygon resets all changes to the "pickup_polygon" field.
+func (m *ItineraryStopMutation) ResetPickupPolygon() {
+	m.pickup_polygon = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupPolygon)
+}
+
+// SetPickupRangeOptions sets the "pickup_range_options" field.
+func (m *ItineraryStopMutation) SetPickupRangeOptions(s string) {
+	m.pickup_range_options = &s
+}
+
+// PickupRangeOptions returns the value of the "pickup_range_options" field in the mutation.
+func (m *ItineraryStopMutation) PickupRangeOptions() (r string, exists bool) {
+	v := m.pickup_range_options
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupRangeOptions returns the old "pickup_range_options" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupRangeOptions(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupRangeOptions is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupRangeOptions requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupRangeOptions: %w", err)
+	}
+	return oldValue.PickupRangeOptions, nil
+}
+
+// ClearPickupRangeOptions clears the value of the "pickup_range_options" field.
+func (m *ItineraryStopMutation) ClearPickupRangeOptions() {
+	m.pickup_range_options = nil
+	m.clearedFields[itinerarystop.FieldPickupRangeOptions] = struct{}{}
+}
+
+// PickupRangeOptionsCleared returns if the "pickup_range_options" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupRangeOptionsCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupRangeOptions]
+	return ok
+}
+
+// ResetPickupRangeOptions resets all changes to the "pickup_range_options" field.
+func (m *ItineraryStopMutation) ResetPickupRangeOptions() {
+	m.pickup_range_options = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupRangeOptions)
+}
+
+// SetPickupNote sets the "pickup_note" field.
+func (m *ItineraryStopMutation) SetPickupNote(s string) {
+	m.pickup_note = &s
+}
+
+// PickupNote returns the value of the "pickup_note" field in the mutation.
+func (m *ItineraryStopMutation) PickupNote() (r string, exists bool) {
+	v := m.pickup_note
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPickupNote returns the old "pickup_note" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldPickupNote(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPickupNote is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPickupNote requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPickupNote: %w", err)
+	}
+	return oldValue.PickupNote, nil
+}
+
+// ClearPickupNote clears the value of the "pickup_note" field.
+func (m *ItineraryStopMutation) ClearPickupNote() {
+	m.pickup_note = nil
+	m.clearedFields[itinerarystop.FieldPickupNote] = struct{}{}
+}
+
+// PickupNoteCleared returns if the "pickup_note" field was cleared in this mutation.
+func (m *ItineraryStopMutation) PickupNoteCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldPickupNote]
+	return ok
+}
+
+// ResetPickupNote resets all changes to the "pickup_note" field.
+func (m *ItineraryStopMutation) ResetPickupNote() {
+	m.pickup_note = nil
+	delete(m.clearedFields, itinerarystop.FieldPickupNote)
+}
+
 // SetIsPickup sets the "is_pickup" field.
 func (m *ItineraryStopMutation) SetIsPickup(b bool) {
 	m.is_pickup = &b
@@ -4183,6 +4536,55 @@ func (m *ItineraryStopMutation) ResetAgreementAdjustable() {
 	m.agreement_adjustable = nil
 }
 
+// SetTypeParams sets the "type_params" field.
+func (m *ItineraryStopMutation) SetTypeParams(s string) {
+	m.type_params = &s
+}
+
+// TypeParams returns the value of the "type_params" field in the mutation.
+func (m *ItineraryStopMutation) TypeParams() (r string, exists bool) {
+	v := m.type_params
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTypeParams returns the old "type_params" field's value of the ItineraryStop entity.
+// If the ItineraryStop object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ItineraryStopMutation) OldTypeParams(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTypeParams is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTypeParams requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTypeParams: %w", err)
+	}
+	return oldValue.TypeParams, nil
+}
+
+// ClearTypeParams clears the value of the "type_params" field.
+func (m *ItineraryStopMutation) ClearTypeParams() {
+	m.type_params = nil
+	m.clearedFields[itinerarystop.FieldTypeParams] = struct{}{}
+}
+
+// TypeParamsCleared returns if the "type_params" field was cleared in this mutation.
+func (m *ItineraryStopMutation) TypeParamsCleared() bool {
+	_, ok := m.clearedFields[itinerarystop.FieldTypeParams]
+	return ok
+}
+
+// ResetTypeParams resets all changes to the "type_params" field.
+func (m *ItineraryStopMutation) ResetTypeParams() {
+	m.type_params = nil
+	delete(m.clearedFields, itinerarystop.FieldTypeParams)
+}
+
 // Where appends a list predicates to the ItineraryStopMutation builder.
 func (m *ItineraryStopMutation) Where(ps ...predicate.ItineraryStop) {
 	m.predicates = append(m.predicates, ps...)
@@ -4217,7 +4619,7 @@ func (m *ItineraryStopMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ItineraryStopMutation) Fields() []string {
-	fields := make([]string, 0, 33)
+	fields := make([]string, 0, 41)
 	if m.tenant_id != nil {
 		fields = append(fields, itinerarystop.FieldTenantID)
 	}
@@ -4305,6 +4707,27 @@ func (m *ItineraryStopMutation) Fields() []string {
 	if m.dropoff_longitude != nil {
 		fields = append(fields, itinerarystop.FieldDropoffLongitude)
 	}
+	if m.pickup_time != nil {
+		fields = append(fields, itinerarystop.FieldPickupTime)
+	}
+	if m.pickup_city != nil {
+		fields = append(fields, itinerarystop.FieldPickupCity)
+	}
+	if m.pickup_district != nil {
+		fields = append(fields, itinerarystop.FieldPickupDistrict)
+	}
+	if m.pickup_range_mode != nil {
+		fields = append(fields, itinerarystop.FieldPickupRangeMode)
+	}
+	if m.pickup_polygon != nil {
+		fields = append(fields, itinerarystop.FieldPickupPolygon)
+	}
+	if m.pickup_range_options != nil {
+		fields = append(fields, itinerarystop.FieldPickupRangeOptions)
+	}
+	if m.pickup_note != nil {
+		fields = append(fields, itinerarystop.FieldPickupNote)
+	}
 	if m.is_pickup != nil {
 		fields = append(fields, itinerarystop.FieldIsPickup)
 	}
@@ -4316,6 +4739,9 @@ func (m *ItineraryStopMutation) Fields() []string {
 	}
 	if m.agreement_adjustable != nil {
 		fields = append(fields, itinerarystop.FieldAgreementAdjustable)
+	}
+	if m.type_params != nil {
+		fields = append(fields, itinerarystop.FieldTypeParams)
 	}
 	return fields
 }
@@ -4383,6 +4809,20 @@ func (m *ItineraryStopMutation) Field(name string) (ent.Value, bool) {
 		return m.DropoffLatitude()
 	case itinerarystop.FieldDropoffLongitude:
 		return m.DropoffLongitude()
+	case itinerarystop.FieldPickupTime:
+		return m.PickupTime()
+	case itinerarystop.FieldPickupCity:
+		return m.PickupCity()
+	case itinerarystop.FieldPickupDistrict:
+		return m.PickupDistrict()
+	case itinerarystop.FieldPickupRangeMode:
+		return m.PickupRangeMode()
+	case itinerarystop.FieldPickupPolygon:
+		return m.PickupPolygon()
+	case itinerarystop.FieldPickupRangeOptions:
+		return m.PickupRangeOptions()
+	case itinerarystop.FieldPickupNote:
+		return m.PickupNote()
 	case itinerarystop.FieldIsPickup:
 		return m.IsPickup()
 	case itinerarystop.FieldIsDropoff:
@@ -4391,6 +4831,8 @@ func (m *ItineraryStopMutation) Field(name string) (ent.Value, bool) {
 		return m.AgreementNoShopping()
 	case itinerarystop.FieldAgreementAdjustable:
 		return m.AgreementAdjustable()
+	case itinerarystop.FieldTypeParams:
+		return m.TypeParams()
 	}
 	return nil, false
 }
@@ -4458,6 +4900,20 @@ func (m *ItineraryStopMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldDropoffLatitude(ctx)
 	case itinerarystop.FieldDropoffLongitude:
 		return m.OldDropoffLongitude(ctx)
+	case itinerarystop.FieldPickupTime:
+		return m.OldPickupTime(ctx)
+	case itinerarystop.FieldPickupCity:
+		return m.OldPickupCity(ctx)
+	case itinerarystop.FieldPickupDistrict:
+		return m.OldPickupDistrict(ctx)
+	case itinerarystop.FieldPickupRangeMode:
+		return m.OldPickupRangeMode(ctx)
+	case itinerarystop.FieldPickupPolygon:
+		return m.OldPickupPolygon(ctx)
+	case itinerarystop.FieldPickupRangeOptions:
+		return m.OldPickupRangeOptions(ctx)
+	case itinerarystop.FieldPickupNote:
+		return m.OldPickupNote(ctx)
 	case itinerarystop.FieldIsPickup:
 		return m.OldIsPickup(ctx)
 	case itinerarystop.FieldIsDropoff:
@@ -4466,6 +4922,8 @@ func (m *ItineraryStopMutation) OldField(ctx context.Context, name string) (ent.
 		return m.OldAgreementNoShopping(ctx)
 	case itinerarystop.FieldAgreementAdjustable:
 		return m.OldAgreementAdjustable(ctx)
+	case itinerarystop.FieldTypeParams:
+		return m.OldTypeParams(ctx)
 	}
 	return nil, fmt.Errorf("unknown ItineraryStop field %s", name)
 }
@@ -4678,6 +5136,55 @@ func (m *ItineraryStopMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDropoffLongitude(v)
 		return nil
+	case itinerarystop.FieldPickupTime:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupTime(v)
+		return nil
+	case itinerarystop.FieldPickupCity:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupCity(v)
+		return nil
+	case itinerarystop.FieldPickupDistrict:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupDistrict(v)
+		return nil
+	case itinerarystop.FieldPickupRangeMode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupRangeMode(v)
+		return nil
+	case itinerarystop.FieldPickupPolygon:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupPolygon(v)
+		return nil
+	case itinerarystop.FieldPickupRangeOptions:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupRangeOptions(v)
+		return nil
+	case itinerarystop.FieldPickupNote:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPickupNote(v)
+		return nil
 	case itinerarystop.FieldIsPickup:
 		v, ok := value.(bool)
 		if !ok {
@@ -4705,6 +5212,13 @@ func (m *ItineraryStopMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAgreementAdjustable(v)
+		return nil
+	case itinerarystop.FieldTypeParams:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTypeParams(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ItineraryStop field %s", name)
@@ -4949,6 +5463,30 @@ func (m *ItineraryStopMutation) ClearedFields() []string {
 	if m.FieldCleared(itinerarystop.FieldDropoffLongitude) {
 		fields = append(fields, itinerarystop.FieldDropoffLongitude)
 	}
+	if m.FieldCleared(itinerarystop.FieldPickupTime) {
+		fields = append(fields, itinerarystop.FieldPickupTime)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupCity) {
+		fields = append(fields, itinerarystop.FieldPickupCity)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupDistrict) {
+		fields = append(fields, itinerarystop.FieldPickupDistrict)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupRangeMode) {
+		fields = append(fields, itinerarystop.FieldPickupRangeMode)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupPolygon) {
+		fields = append(fields, itinerarystop.FieldPickupPolygon)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupRangeOptions) {
+		fields = append(fields, itinerarystop.FieldPickupRangeOptions)
+	}
+	if m.FieldCleared(itinerarystop.FieldPickupNote) {
+		fields = append(fields, itinerarystop.FieldPickupNote)
+	}
+	if m.FieldCleared(itinerarystop.FieldTypeParams) {
+		fields = append(fields, itinerarystop.FieldTypeParams)
+	}
 	return fields
 }
 
@@ -5028,6 +5566,30 @@ func (m *ItineraryStopMutation) ClearField(name string) error {
 		return nil
 	case itinerarystop.FieldDropoffLongitude:
 		m.ClearDropoffLongitude()
+		return nil
+	case itinerarystop.FieldPickupTime:
+		m.ClearPickupTime()
+		return nil
+	case itinerarystop.FieldPickupCity:
+		m.ClearPickupCity()
+		return nil
+	case itinerarystop.FieldPickupDistrict:
+		m.ClearPickupDistrict()
+		return nil
+	case itinerarystop.FieldPickupRangeMode:
+		m.ClearPickupRangeMode()
+		return nil
+	case itinerarystop.FieldPickupPolygon:
+		m.ClearPickupPolygon()
+		return nil
+	case itinerarystop.FieldPickupRangeOptions:
+		m.ClearPickupRangeOptions()
+		return nil
+	case itinerarystop.FieldPickupNote:
+		m.ClearPickupNote()
+		return nil
+	case itinerarystop.FieldTypeParams:
+		m.ClearTypeParams()
 		return nil
 	}
 	return fmt.Errorf("unknown ItineraryStop nullable field %s", name)
@@ -5124,6 +5686,27 @@ func (m *ItineraryStopMutation) ResetField(name string) error {
 	case itinerarystop.FieldDropoffLongitude:
 		m.ResetDropoffLongitude()
 		return nil
+	case itinerarystop.FieldPickupTime:
+		m.ResetPickupTime()
+		return nil
+	case itinerarystop.FieldPickupCity:
+		m.ResetPickupCity()
+		return nil
+	case itinerarystop.FieldPickupDistrict:
+		m.ResetPickupDistrict()
+		return nil
+	case itinerarystop.FieldPickupRangeMode:
+		m.ResetPickupRangeMode()
+		return nil
+	case itinerarystop.FieldPickupPolygon:
+		m.ResetPickupPolygon()
+		return nil
+	case itinerarystop.FieldPickupRangeOptions:
+		m.ResetPickupRangeOptions()
+		return nil
+	case itinerarystop.FieldPickupNote:
+		m.ResetPickupNote()
+		return nil
 	case itinerarystop.FieldIsPickup:
 		m.ResetIsPickup()
 		return nil
@@ -5135,6 +5718,9 @@ func (m *ItineraryStopMutation) ResetField(name string) error {
 		return nil
 	case itinerarystop.FieldAgreementAdjustable:
 		m.ResetAgreementAdjustable()
+		return nil
+	case itinerarystop.FieldTypeParams:
+		m.ResetTypeParams()
 		return nil
 	}
 	return fmt.Errorf("unknown ItineraryStop field %s", name)
@@ -5710,6 +6296,712 @@ func (m *MerchantMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *MerchantMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown Merchant edge %s", name)
+}
+
+// MerchantConfigMutation represents an operation that mutates the MerchantConfig nodes in the graph.
+type MerchantConfigMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *int
+	tenant_id      *int64
+	addtenant_id   *int64
+	merchant_id    *int64
+	addmerchant_id *int64
+	config_type    *string
+	config_key     *string
+	config_value   *string
+	description    *string
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*MerchantConfig, error)
+	predicates     []predicate.MerchantConfig
+}
+
+var _ ent.Mutation = (*MerchantConfigMutation)(nil)
+
+// merchantconfigOption allows management of the mutation configuration using functional options.
+type merchantconfigOption func(*MerchantConfigMutation)
+
+// newMerchantConfigMutation creates new mutation for the MerchantConfig entity.
+func newMerchantConfigMutation(c config, op Op, opts ...merchantconfigOption) *MerchantConfigMutation {
+	m := &MerchantConfigMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeMerchantConfig,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withMerchantConfigID sets the ID field of the mutation.
+func withMerchantConfigID(id int) merchantconfigOption {
+	return func(m *MerchantConfigMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *MerchantConfig
+		)
+		m.oldValue = func(ctx context.Context) (*MerchantConfig, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().MerchantConfig.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withMerchantConfig sets the old MerchantConfig of the mutation.
+func withMerchantConfig(node *MerchantConfig) merchantconfigOption {
+	return func(m *MerchantConfigMutation) {
+		m.oldValue = func(context.Context) (*MerchantConfig, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m MerchantConfigMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m MerchantConfigMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *MerchantConfigMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *MerchantConfigMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().MerchantConfig.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetTenantID sets the "tenant_id" field.
+func (m *MerchantConfigMutation) SetTenantID(i int64) {
+	m.tenant_id = &i
+	m.addtenant_id = nil
+}
+
+// TenantID returns the value of the "tenant_id" field in the mutation.
+func (m *MerchantConfigMutation) TenantID() (r int64, exists bool) {
+	v := m.tenant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTenantID returns the old "tenant_id" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldTenantID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTenantID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTenantID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTenantID: %w", err)
+	}
+	return oldValue.TenantID, nil
+}
+
+// AddTenantID adds i to the "tenant_id" field.
+func (m *MerchantConfigMutation) AddTenantID(i int64) {
+	if m.addtenant_id != nil {
+		*m.addtenant_id += i
+	} else {
+		m.addtenant_id = &i
+	}
+}
+
+// AddedTenantID returns the value that was added to the "tenant_id" field in this mutation.
+func (m *MerchantConfigMutation) AddedTenantID() (r int64, exists bool) {
+	v := m.addtenant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetTenantID resets all changes to the "tenant_id" field.
+func (m *MerchantConfigMutation) ResetTenantID() {
+	m.tenant_id = nil
+	m.addtenant_id = nil
+}
+
+// SetMerchantID sets the "merchant_id" field.
+func (m *MerchantConfigMutation) SetMerchantID(i int64) {
+	m.merchant_id = &i
+	m.addmerchant_id = nil
+}
+
+// MerchantID returns the value of the "merchant_id" field in the mutation.
+func (m *MerchantConfigMutation) MerchantID() (r int64, exists bool) {
+	v := m.merchant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMerchantID returns the old "merchant_id" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldMerchantID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMerchantID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMerchantID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMerchantID: %w", err)
+	}
+	return oldValue.MerchantID, nil
+}
+
+// AddMerchantID adds i to the "merchant_id" field.
+func (m *MerchantConfigMutation) AddMerchantID(i int64) {
+	if m.addmerchant_id != nil {
+		*m.addmerchant_id += i
+	} else {
+		m.addmerchant_id = &i
+	}
+}
+
+// AddedMerchantID returns the value that was added to the "merchant_id" field in this mutation.
+func (m *MerchantConfigMutation) AddedMerchantID() (r int64, exists bool) {
+	v := m.addmerchant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMerchantID resets all changes to the "merchant_id" field.
+func (m *MerchantConfigMutation) ResetMerchantID() {
+	m.merchant_id = nil
+	m.addmerchant_id = nil
+}
+
+// SetConfigType sets the "config_type" field.
+func (m *MerchantConfigMutation) SetConfigType(s string) {
+	m.config_type = &s
+}
+
+// ConfigType returns the value of the "config_type" field in the mutation.
+func (m *MerchantConfigMutation) ConfigType() (r string, exists bool) {
+	v := m.config_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConfigType returns the old "config_type" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldConfigType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConfigType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConfigType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConfigType: %w", err)
+	}
+	return oldValue.ConfigType, nil
+}
+
+// ResetConfigType resets all changes to the "config_type" field.
+func (m *MerchantConfigMutation) ResetConfigType() {
+	m.config_type = nil
+}
+
+// SetConfigKey sets the "config_key" field.
+func (m *MerchantConfigMutation) SetConfigKey(s string) {
+	m.config_key = &s
+}
+
+// ConfigKey returns the value of the "config_key" field in the mutation.
+func (m *MerchantConfigMutation) ConfigKey() (r string, exists bool) {
+	v := m.config_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConfigKey returns the old "config_key" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldConfigKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConfigKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConfigKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConfigKey: %w", err)
+	}
+	return oldValue.ConfigKey, nil
+}
+
+// ResetConfigKey resets all changes to the "config_key" field.
+func (m *MerchantConfigMutation) ResetConfigKey() {
+	m.config_key = nil
+}
+
+// SetConfigValue sets the "config_value" field.
+func (m *MerchantConfigMutation) SetConfigValue(s string) {
+	m.config_value = &s
+}
+
+// ConfigValue returns the value of the "config_value" field in the mutation.
+func (m *MerchantConfigMutation) ConfigValue() (r string, exists bool) {
+	v := m.config_value
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldConfigValue returns the old "config_value" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldConfigValue(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldConfigValue is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldConfigValue requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldConfigValue: %w", err)
+	}
+	return oldValue.ConfigValue, nil
+}
+
+// ClearConfigValue clears the value of the "config_value" field.
+func (m *MerchantConfigMutation) ClearConfigValue() {
+	m.config_value = nil
+	m.clearedFields[merchantconfig.FieldConfigValue] = struct{}{}
+}
+
+// ConfigValueCleared returns if the "config_value" field was cleared in this mutation.
+func (m *MerchantConfigMutation) ConfigValueCleared() bool {
+	_, ok := m.clearedFields[merchantconfig.FieldConfigValue]
+	return ok
+}
+
+// ResetConfigValue resets all changes to the "config_value" field.
+func (m *MerchantConfigMutation) ResetConfigValue() {
+	m.config_value = nil
+	delete(m.clearedFields, merchantconfig.FieldConfigValue)
+}
+
+// SetDescription sets the "description" field.
+func (m *MerchantConfigMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *MerchantConfigMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the MerchantConfig entity.
+// If the MerchantConfig object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MerchantConfigMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ClearDescription clears the value of the "description" field.
+func (m *MerchantConfigMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[merchantconfig.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *MerchantConfigMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[merchantconfig.FieldDescription]
+	return ok
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *MerchantConfigMutation) ResetDescription() {
+	m.description = nil
+	delete(m.clearedFields, merchantconfig.FieldDescription)
+}
+
+// Where appends a list predicates to the MerchantConfigMutation builder.
+func (m *MerchantConfigMutation) Where(ps ...predicate.MerchantConfig) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the MerchantConfigMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *MerchantConfigMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.MerchantConfig, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *MerchantConfigMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *MerchantConfigMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (MerchantConfig).
+func (m *MerchantConfigMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *MerchantConfigMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.tenant_id != nil {
+		fields = append(fields, merchantconfig.FieldTenantID)
+	}
+	if m.merchant_id != nil {
+		fields = append(fields, merchantconfig.FieldMerchantID)
+	}
+	if m.config_type != nil {
+		fields = append(fields, merchantconfig.FieldConfigType)
+	}
+	if m.config_key != nil {
+		fields = append(fields, merchantconfig.FieldConfigKey)
+	}
+	if m.config_value != nil {
+		fields = append(fields, merchantconfig.FieldConfigValue)
+	}
+	if m.description != nil {
+		fields = append(fields, merchantconfig.FieldDescription)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *MerchantConfigMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		return m.TenantID()
+	case merchantconfig.FieldMerchantID:
+		return m.MerchantID()
+	case merchantconfig.FieldConfigType:
+		return m.ConfigType()
+	case merchantconfig.FieldConfigKey:
+		return m.ConfigKey()
+	case merchantconfig.FieldConfigValue:
+		return m.ConfigValue()
+	case merchantconfig.FieldDescription:
+		return m.Description()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *MerchantConfigMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		return m.OldTenantID(ctx)
+	case merchantconfig.FieldMerchantID:
+		return m.OldMerchantID(ctx)
+	case merchantconfig.FieldConfigType:
+		return m.OldConfigType(ctx)
+	case merchantconfig.FieldConfigKey:
+		return m.OldConfigKey(ctx)
+	case merchantconfig.FieldConfigValue:
+		return m.OldConfigValue(ctx)
+	case merchantconfig.FieldDescription:
+		return m.OldDescription(ctx)
+	}
+	return nil, fmt.Errorf("unknown MerchantConfig field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *MerchantConfigMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTenantID(v)
+		return nil
+	case merchantconfig.FieldMerchantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMerchantID(v)
+		return nil
+	case merchantconfig.FieldConfigType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConfigType(v)
+		return nil
+	case merchantconfig.FieldConfigKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConfigKey(v)
+		return nil
+	case merchantconfig.FieldConfigValue:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetConfigValue(v)
+		return nil
+	case merchantconfig.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	}
+	return fmt.Errorf("unknown MerchantConfig field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *MerchantConfigMutation) AddedFields() []string {
+	var fields []string
+	if m.addtenant_id != nil {
+		fields = append(fields, merchantconfig.FieldTenantID)
+	}
+	if m.addmerchant_id != nil {
+		fields = append(fields, merchantconfig.FieldMerchantID)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *MerchantConfigMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		return m.AddedTenantID()
+	case merchantconfig.FieldMerchantID:
+		return m.AddedMerchantID()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *MerchantConfigMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTenantID(v)
+		return nil
+	case merchantconfig.FieldMerchantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMerchantID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown MerchantConfig numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *MerchantConfigMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(merchantconfig.FieldConfigValue) {
+		fields = append(fields, merchantconfig.FieldConfigValue)
+	}
+	if m.FieldCleared(merchantconfig.FieldDescription) {
+		fields = append(fields, merchantconfig.FieldDescription)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *MerchantConfigMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *MerchantConfigMutation) ClearField(name string) error {
+	switch name {
+	case merchantconfig.FieldConfigValue:
+		m.ClearConfigValue()
+		return nil
+	case merchantconfig.FieldDescription:
+		m.ClearDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown MerchantConfig nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *MerchantConfigMutation) ResetField(name string) error {
+	switch name {
+	case merchantconfig.FieldTenantID:
+		m.ResetTenantID()
+		return nil
+	case merchantconfig.FieldMerchantID:
+		m.ResetMerchantID()
+		return nil
+	case merchantconfig.FieldConfigType:
+		m.ResetConfigType()
+		return nil
+	case merchantconfig.FieldConfigKey:
+		m.ResetConfigKey()
+		return nil
+	case merchantconfig.FieldConfigValue:
+		m.ResetConfigValue()
+		return nil
+	case merchantconfig.FieldDescription:
+		m.ResetDescription()
+		return nil
+	}
+	return fmt.Errorf("unknown MerchantConfig field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *MerchantConfigMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *MerchantConfigMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *MerchantConfigMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *MerchantConfigMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *MerchantConfigMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *MerchantConfigMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *MerchantConfigMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown MerchantConfig unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *MerchantConfigMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown MerchantConfig edge %s", name)
 }
 
 // OrderMutation represents an operation that mutates the Order nodes in the graph.

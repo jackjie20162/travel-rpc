@@ -74,6 +74,20 @@ type ItineraryStop struct {
 	DropoffLatitude float64 `json:"dropoff_latitude,omitempty"`
 	// DropoffLongitude holds the value of the "dropoff_longitude" field.
 	DropoffLongitude float64 `json:"dropoff_longitude,omitempty"`
+	// PickupTime holds the value of the "pickup_time" field.
+	PickupTime string `json:"pickup_time,omitempty"`
+	// PickupCity holds the value of the "pickup_city" field.
+	PickupCity string `json:"pickup_city,omitempty"`
+	// PickupDistrict holds the value of the "pickup_district" field.
+	PickupDistrict string `json:"pickup_district,omitempty"`
+	// PickupRangeMode holds the value of the "pickup_range_mode" field.
+	PickupRangeMode string `json:"pickup_range_mode,omitempty"`
+	// PickupPolygon holds the value of the "pickup_polygon" field.
+	PickupPolygon string `json:"pickup_polygon,omitempty"`
+	// PickupRangeOptions holds the value of the "pickup_range_options" field.
+	PickupRangeOptions string `json:"pickup_range_options,omitempty"`
+	// PickupNote holds the value of the "pickup_note" field.
+	PickupNote string `json:"pickup_note,omitempty"`
 	// IsPickup holds the value of the "is_pickup" field.
 	IsPickup bool `json:"is_pickup,omitempty"`
 	// IsDropoff holds the value of the "is_dropoff" field.
@@ -82,7 +96,9 @@ type ItineraryStop struct {
 	AgreementNoShopping bool `json:"agreement_no_shopping,omitempty"`
 	// AgreementAdjustable holds the value of the "agreement_adjustable" field.
 	AgreementAdjustable bool `json:"agreement_adjustable,omitempty"`
-	selectValues        sql.SelectValues
+	// TypeParams holds the value of the "type_params" field.
+	TypeParams   string `json:"type_params,omitempty"`
+	selectValues sql.SelectValues
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -96,7 +112,7 @@ func (*ItineraryStop) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case itinerarystop.FieldID, itinerarystop.FieldTenantID, itinerarystop.FieldMerchantID, itinerarystop.FieldProductID, itinerarystop.FieldSequence, itinerarystop.FieldDurationHours, itinerarystop.FieldDurationMinutes:
 			values[i] = new(sql.NullInt64)
-		case itinerarystop.FieldStopType, itinerarystop.FieldTitle, itinerarystop.FieldDescription, itinerarystop.FieldLocationName, itinerarystop.FieldAddress, itinerarystop.FieldPoiID, itinerarystop.FieldPoiName, itinerarystop.FieldDurationMode, itinerarystop.FieldActivityFeatures, itinerarystop.FieldTransportType, itinerarystop.FieldStartTime, itinerarystop.FieldEndTime, itinerarystop.FieldPickupLocation, itinerarystop.FieldPickupAddress, itinerarystop.FieldDropoffLocation, itinerarystop.FieldDropoffAddress:
+		case itinerarystop.FieldStopType, itinerarystop.FieldTitle, itinerarystop.FieldDescription, itinerarystop.FieldLocationName, itinerarystop.FieldAddress, itinerarystop.FieldPoiID, itinerarystop.FieldPoiName, itinerarystop.FieldDurationMode, itinerarystop.FieldActivityFeatures, itinerarystop.FieldTransportType, itinerarystop.FieldStartTime, itinerarystop.FieldEndTime, itinerarystop.FieldPickupLocation, itinerarystop.FieldPickupAddress, itinerarystop.FieldDropoffLocation, itinerarystop.FieldDropoffAddress, itinerarystop.FieldPickupTime, itinerarystop.FieldPickupCity, itinerarystop.FieldPickupDistrict, itinerarystop.FieldPickupRangeMode, itinerarystop.FieldPickupPolygon, itinerarystop.FieldPickupRangeOptions, itinerarystop.FieldPickupNote, itinerarystop.FieldTypeParams:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -293,6 +309,48 @@ func (_m *ItineraryStop) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.DropoffLongitude = value.Float64
 			}
+		case itinerarystop.FieldPickupTime:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_time", values[i])
+			} else if value.Valid {
+				_m.PickupTime = value.String
+			}
+		case itinerarystop.FieldPickupCity:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_city", values[i])
+			} else if value.Valid {
+				_m.PickupCity = value.String
+			}
+		case itinerarystop.FieldPickupDistrict:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_district", values[i])
+			} else if value.Valid {
+				_m.PickupDistrict = value.String
+			}
+		case itinerarystop.FieldPickupRangeMode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_range_mode", values[i])
+			} else if value.Valid {
+				_m.PickupRangeMode = value.String
+			}
+		case itinerarystop.FieldPickupPolygon:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_polygon", values[i])
+			} else if value.Valid {
+				_m.PickupPolygon = value.String
+			}
+		case itinerarystop.FieldPickupRangeOptions:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_range_options", values[i])
+			} else if value.Valid {
+				_m.PickupRangeOptions = value.String
+			}
+		case itinerarystop.FieldPickupNote:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field pickup_note", values[i])
+			} else if value.Valid {
+				_m.PickupNote = value.String
+			}
 		case itinerarystop.FieldIsPickup:
 			if value, ok := values[i].(*sql.NullBool); !ok {
 				return fmt.Errorf("unexpected type %T for field is_pickup", values[i])
@@ -316,6 +374,12 @@ func (_m *ItineraryStop) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field agreement_adjustable", values[i])
 			} else if value.Valid {
 				_m.AgreementAdjustable = value.Bool
+			}
+		case itinerarystop.FieldTypeParams:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field type_params", values[i])
+			} else if value.Valid {
+				_m.TypeParams = value.String
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -440,6 +504,27 @@ func (_m *ItineraryStop) String() string {
 	builder.WriteString("dropoff_longitude=")
 	builder.WriteString(fmt.Sprintf("%v", _m.DropoffLongitude))
 	builder.WriteString(", ")
+	builder.WriteString("pickup_time=")
+	builder.WriteString(_m.PickupTime)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_city=")
+	builder.WriteString(_m.PickupCity)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_district=")
+	builder.WriteString(_m.PickupDistrict)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_range_mode=")
+	builder.WriteString(_m.PickupRangeMode)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_polygon=")
+	builder.WriteString(_m.PickupPolygon)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_range_options=")
+	builder.WriteString(_m.PickupRangeOptions)
+	builder.WriteString(", ")
+	builder.WriteString("pickup_note=")
+	builder.WriteString(_m.PickupNote)
+	builder.WriteString(", ")
 	builder.WriteString("is_pickup=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsPickup))
 	builder.WriteString(", ")
@@ -451,6 +536,9 @@ func (_m *ItineraryStop) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("agreement_adjustable=")
 	builder.WriteString(fmt.Sprintf("%v", _m.AgreementAdjustable))
+	builder.WriteString(", ")
+	builder.WriteString("type_params=")
+	builder.WriteString(_m.TypeParams)
 	builder.WriteByte(')')
 	return builder.String()
 }

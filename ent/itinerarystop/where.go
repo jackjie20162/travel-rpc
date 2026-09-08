@@ -197,6 +197,41 @@ func DropoffLongitude(v float64) predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldEQ(FieldDropoffLongitude, v))
 }
 
+// PickupTime applies equality check predicate on the "pickup_time" field. It's identical to PickupTimeEQ.
+func PickupTime(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupTime, v))
+}
+
+// PickupCity applies equality check predicate on the "pickup_city" field. It's identical to PickupCityEQ.
+func PickupCity(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupCity, v))
+}
+
+// PickupDistrict applies equality check predicate on the "pickup_district" field. It's identical to PickupDistrictEQ.
+func PickupDistrict(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupDistrict, v))
+}
+
+// PickupRangeMode applies equality check predicate on the "pickup_range_mode" field. It's identical to PickupRangeModeEQ.
+func PickupRangeMode(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupRangeMode, v))
+}
+
+// PickupPolygon applies equality check predicate on the "pickup_polygon" field. It's identical to PickupPolygonEQ.
+func PickupPolygon(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupPolygon, v))
+}
+
+// PickupRangeOptions applies equality check predicate on the "pickup_range_options" field. It's identical to PickupRangeOptionsEQ.
+func PickupRangeOptions(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupRangeOptions, v))
+}
+
+// PickupNote applies equality check predicate on the "pickup_note" field. It's identical to PickupNoteEQ.
+func PickupNote(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupNote, v))
+}
+
 // IsPickup applies equality check predicate on the "is_pickup" field. It's identical to IsPickupEQ.
 func IsPickup(v bool) predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldEQ(FieldIsPickup, v))
@@ -215,6 +250,11 @@ func AgreementNoShopping(v bool) predicate.ItineraryStop {
 // AgreementAdjustable applies equality check predicate on the "agreement_adjustable" field. It's identical to AgreementAdjustableEQ.
 func AgreementAdjustable(v bool) predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldEQ(FieldAgreementAdjustable, v))
+}
+
+// TypeParams applies equality check predicate on the "type_params" field. It's identical to TypeParamsEQ.
+func TypeParams(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldTypeParams, v))
 }
 
 // TenantIDEQ applies the EQ predicate on the "tenant_id" field.
@@ -1967,6 +2007,531 @@ func DropoffLongitudeNotNil() predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldNotNull(FieldDropoffLongitude))
 }
 
+// PickupTimeEQ applies the EQ predicate on the "pickup_time" field.
+func PickupTimeEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupTime, v))
+}
+
+// PickupTimeNEQ applies the NEQ predicate on the "pickup_time" field.
+func PickupTimeNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupTime, v))
+}
+
+// PickupTimeIn applies the In predicate on the "pickup_time" field.
+func PickupTimeIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupTime, vs...))
+}
+
+// PickupTimeNotIn applies the NotIn predicate on the "pickup_time" field.
+func PickupTimeNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupTime, vs...))
+}
+
+// PickupTimeGT applies the GT predicate on the "pickup_time" field.
+func PickupTimeGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupTime, v))
+}
+
+// PickupTimeGTE applies the GTE predicate on the "pickup_time" field.
+func PickupTimeGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupTime, v))
+}
+
+// PickupTimeLT applies the LT predicate on the "pickup_time" field.
+func PickupTimeLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupTime, v))
+}
+
+// PickupTimeLTE applies the LTE predicate on the "pickup_time" field.
+func PickupTimeLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupTime, v))
+}
+
+// PickupTimeContains applies the Contains predicate on the "pickup_time" field.
+func PickupTimeContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupTime, v))
+}
+
+// PickupTimeHasPrefix applies the HasPrefix predicate on the "pickup_time" field.
+func PickupTimeHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupTime, v))
+}
+
+// PickupTimeHasSuffix applies the HasSuffix predicate on the "pickup_time" field.
+func PickupTimeHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupTime, v))
+}
+
+// PickupTimeIsNil applies the IsNil predicate on the "pickup_time" field.
+func PickupTimeIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupTime))
+}
+
+// PickupTimeNotNil applies the NotNil predicate on the "pickup_time" field.
+func PickupTimeNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupTime))
+}
+
+// PickupTimeEqualFold applies the EqualFold predicate on the "pickup_time" field.
+func PickupTimeEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupTime, v))
+}
+
+// PickupTimeContainsFold applies the ContainsFold predicate on the "pickup_time" field.
+func PickupTimeContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupTime, v))
+}
+
+// PickupCityEQ applies the EQ predicate on the "pickup_city" field.
+func PickupCityEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupCity, v))
+}
+
+// PickupCityNEQ applies the NEQ predicate on the "pickup_city" field.
+func PickupCityNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupCity, v))
+}
+
+// PickupCityIn applies the In predicate on the "pickup_city" field.
+func PickupCityIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupCity, vs...))
+}
+
+// PickupCityNotIn applies the NotIn predicate on the "pickup_city" field.
+func PickupCityNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupCity, vs...))
+}
+
+// PickupCityGT applies the GT predicate on the "pickup_city" field.
+func PickupCityGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupCity, v))
+}
+
+// PickupCityGTE applies the GTE predicate on the "pickup_city" field.
+func PickupCityGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupCity, v))
+}
+
+// PickupCityLT applies the LT predicate on the "pickup_city" field.
+func PickupCityLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupCity, v))
+}
+
+// PickupCityLTE applies the LTE predicate on the "pickup_city" field.
+func PickupCityLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupCity, v))
+}
+
+// PickupCityContains applies the Contains predicate on the "pickup_city" field.
+func PickupCityContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupCity, v))
+}
+
+// PickupCityHasPrefix applies the HasPrefix predicate on the "pickup_city" field.
+func PickupCityHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupCity, v))
+}
+
+// PickupCityHasSuffix applies the HasSuffix predicate on the "pickup_city" field.
+func PickupCityHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupCity, v))
+}
+
+// PickupCityIsNil applies the IsNil predicate on the "pickup_city" field.
+func PickupCityIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupCity))
+}
+
+// PickupCityNotNil applies the NotNil predicate on the "pickup_city" field.
+func PickupCityNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupCity))
+}
+
+// PickupCityEqualFold applies the EqualFold predicate on the "pickup_city" field.
+func PickupCityEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupCity, v))
+}
+
+// PickupCityContainsFold applies the ContainsFold predicate on the "pickup_city" field.
+func PickupCityContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupCity, v))
+}
+
+// PickupDistrictEQ applies the EQ predicate on the "pickup_district" field.
+func PickupDistrictEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupDistrict, v))
+}
+
+// PickupDistrictNEQ applies the NEQ predicate on the "pickup_district" field.
+func PickupDistrictNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupDistrict, v))
+}
+
+// PickupDistrictIn applies the In predicate on the "pickup_district" field.
+func PickupDistrictIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupDistrict, vs...))
+}
+
+// PickupDistrictNotIn applies the NotIn predicate on the "pickup_district" field.
+func PickupDistrictNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupDistrict, vs...))
+}
+
+// PickupDistrictGT applies the GT predicate on the "pickup_district" field.
+func PickupDistrictGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupDistrict, v))
+}
+
+// PickupDistrictGTE applies the GTE predicate on the "pickup_district" field.
+func PickupDistrictGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupDistrict, v))
+}
+
+// PickupDistrictLT applies the LT predicate on the "pickup_district" field.
+func PickupDistrictLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupDistrict, v))
+}
+
+// PickupDistrictLTE applies the LTE predicate on the "pickup_district" field.
+func PickupDistrictLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupDistrict, v))
+}
+
+// PickupDistrictContains applies the Contains predicate on the "pickup_district" field.
+func PickupDistrictContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupDistrict, v))
+}
+
+// PickupDistrictHasPrefix applies the HasPrefix predicate on the "pickup_district" field.
+func PickupDistrictHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupDistrict, v))
+}
+
+// PickupDistrictHasSuffix applies the HasSuffix predicate on the "pickup_district" field.
+func PickupDistrictHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupDistrict, v))
+}
+
+// PickupDistrictIsNil applies the IsNil predicate on the "pickup_district" field.
+func PickupDistrictIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupDistrict))
+}
+
+// PickupDistrictNotNil applies the NotNil predicate on the "pickup_district" field.
+func PickupDistrictNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupDistrict))
+}
+
+// PickupDistrictEqualFold applies the EqualFold predicate on the "pickup_district" field.
+func PickupDistrictEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupDistrict, v))
+}
+
+// PickupDistrictContainsFold applies the ContainsFold predicate on the "pickup_district" field.
+func PickupDistrictContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupDistrict, v))
+}
+
+// PickupRangeModeEQ applies the EQ predicate on the "pickup_range_mode" field.
+func PickupRangeModeEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeNEQ applies the NEQ predicate on the "pickup_range_mode" field.
+func PickupRangeModeNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeIn applies the In predicate on the "pickup_range_mode" field.
+func PickupRangeModeIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupRangeMode, vs...))
+}
+
+// PickupRangeModeNotIn applies the NotIn predicate on the "pickup_range_mode" field.
+func PickupRangeModeNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupRangeMode, vs...))
+}
+
+// PickupRangeModeGT applies the GT predicate on the "pickup_range_mode" field.
+func PickupRangeModeGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeGTE applies the GTE predicate on the "pickup_range_mode" field.
+func PickupRangeModeGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeLT applies the LT predicate on the "pickup_range_mode" field.
+func PickupRangeModeLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeLTE applies the LTE predicate on the "pickup_range_mode" field.
+func PickupRangeModeLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeContains applies the Contains predicate on the "pickup_range_mode" field.
+func PickupRangeModeContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeHasPrefix applies the HasPrefix predicate on the "pickup_range_mode" field.
+func PickupRangeModeHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeHasSuffix applies the HasSuffix predicate on the "pickup_range_mode" field.
+func PickupRangeModeHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeIsNil applies the IsNil predicate on the "pickup_range_mode" field.
+func PickupRangeModeIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupRangeMode))
+}
+
+// PickupRangeModeNotNil applies the NotNil predicate on the "pickup_range_mode" field.
+func PickupRangeModeNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupRangeMode))
+}
+
+// PickupRangeModeEqualFold applies the EqualFold predicate on the "pickup_range_mode" field.
+func PickupRangeModeEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupRangeMode, v))
+}
+
+// PickupRangeModeContainsFold applies the ContainsFold predicate on the "pickup_range_mode" field.
+func PickupRangeModeContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupRangeMode, v))
+}
+
+// PickupPolygonEQ applies the EQ predicate on the "pickup_polygon" field.
+func PickupPolygonEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupPolygon, v))
+}
+
+// PickupPolygonNEQ applies the NEQ predicate on the "pickup_polygon" field.
+func PickupPolygonNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupPolygon, v))
+}
+
+// PickupPolygonIn applies the In predicate on the "pickup_polygon" field.
+func PickupPolygonIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupPolygon, vs...))
+}
+
+// PickupPolygonNotIn applies the NotIn predicate on the "pickup_polygon" field.
+func PickupPolygonNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupPolygon, vs...))
+}
+
+// PickupPolygonGT applies the GT predicate on the "pickup_polygon" field.
+func PickupPolygonGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupPolygon, v))
+}
+
+// PickupPolygonGTE applies the GTE predicate on the "pickup_polygon" field.
+func PickupPolygonGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupPolygon, v))
+}
+
+// PickupPolygonLT applies the LT predicate on the "pickup_polygon" field.
+func PickupPolygonLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupPolygon, v))
+}
+
+// PickupPolygonLTE applies the LTE predicate on the "pickup_polygon" field.
+func PickupPolygonLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupPolygon, v))
+}
+
+// PickupPolygonContains applies the Contains predicate on the "pickup_polygon" field.
+func PickupPolygonContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupPolygon, v))
+}
+
+// PickupPolygonHasPrefix applies the HasPrefix predicate on the "pickup_polygon" field.
+func PickupPolygonHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupPolygon, v))
+}
+
+// PickupPolygonHasSuffix applies the HasSuffix predicate on the "pickup_polygon" field.
+func PickupPolygonHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupPolygon, v))
+}
+
+// PickupPolygonIsNil applies the IsNil predicate on the "pickup_polygon" field.
+func PickupPolygonIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupPolygon))
+}
+
+// PickupPolygonNotNil applies the NotNil predicate on the "pickup_polygon" field.
+func PickupPolygonNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupPolygon))
+}
+
+// PickupPolygonEqualFold applies the EqualFold predicate on the "pickup_polygon" field.
+func PickupPolygonEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupPolygon, v))
+}
+
+// PickupPolygonContainsFold applies the ContainsFold predicate on the "pickup_polygon" field.
+func PickupPolygonContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupPolygon, v))
+}
+
+// PickupRangeOptionsEQ applies the EQ predicate on the "pickup_range_options" field.
+func PickupRangeOptionsEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsNEQ applies the NEQ predicate on the "pickup_range_options" field.
+func PickupRangeOptionsNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsIn applies the In predicate on the "pickup_range_options" field.
+func PickupRangeOptionsIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupRangeOptions, vs...))
+}
+
+// PickupRangeOptionsNotIn applies the NotIn predicate on the "pickup_range_options" field.
+func PickupRangeOptionsNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupRangeOptions, vs...))
+}
+
+// PickupRangeOptionsGT applies the GT predicate on the "pickup_range_options" field.
+func PickupRangeOptionsGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsGTE applies the GTE predicate on the "pickup_range_options" field.
+func PickupRangeOptionsGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsLT applies the LT predicate on the "pickup_range_options" field.
+func PickupRangeOptionsLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsLTE applies the LTE predicate on the "pickup_range_options" field.
+func PickupRangeOptionsLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsContains applies the Contains predicate on the "pickup_range_options" field.
+func PickupRangeOptionsContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsHasPrefix applies the HasPrefix predicate on the "pickup_range_options" field.
+func PickupRangeOptionsHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsHasSuffix applies the HasSuffix predicate on the "pickup_range_options" field.
+func PickupRangeOptionsHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsIsNil applies the IsNil predicate on the "pickup_range_options" field.
+func PickupRangeOptionsIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupRangeOptions))
+}
+
+// PickupRangeOptionsNotNil applies the NotNil predicate on the "pickup_range_options" field.
+func PickupRangeOptionsNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupRangeOptions))
+}
+
+// PickupRangeOptionsEqualFold applies the EqualFold predicate on the "pickup_range_options" field.
+func PickupRangeOptionsEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupRangeOptions, v))
+}
+
+// PickupRangeOptionsContainsFold applies the ContainsFold predicate on the "pickup_range_options" field.
+func PickupRangeOptionsContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupRangeOptions, v))
+}
+
+// PickupNoteEQ applies the EQ predicate on the "pickup_note" field.
+func PickupNoteEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldPickupNote, v))
+}
+
+// PickupNoteNEQ applies the NEQ predicate on the "pickup_note" field.
+func PickupNoteNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldPickupNote, v))
+}
+
+// PickupNoteIn applies the In predicate on the "pickup_note" field.
+func PickupNoteIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldPickupNote, vs...))
+}
+
+// PickupNoteNotIn applies the NotIn predicate on the "pickup_note" field.
+func PickupNoteNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldPickupNote, vs...))
+}
+
+// PickupNoteGT applies the GT predicate on the "pickup_note" field.
+func PickupNoteGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldPickupNote, v))
+}
+
+// PickupNoteGTE applies the GTE predicate on the "pickup_note" field.
+func PickupNoteGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldPickupNote, v))
+}
+
+// PickupNoteLT applies the LT predicate on the "pickup_note" field.
+func PickupNoteLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldPickupNote, v))
+}
+
+// PickupNoteLTE applies the LTE predicate on the "pickup_note" field.
+func PickupNoteLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldPickupNote, v))
+}
+
+// PickupNoteContains applies the Contains predicate on the "pickup_note" field.
+func PickupNoteContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldPickupNote, v))
+}
+
+// PickupNoteHasPrefix applies the HasPrefix predicate on the "pickup_note" field.
+func PickupNoteHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldPickupNote, v))
+}
+
+// PickupNoteHasSuffix applies the HasSuffix predicate on the "pickup_note" field.
+func PickupNoteHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldPickupNote, v))
+}
+
+// PickupNoteIsNil applies the IsNil predicate on the "pickup_note" field.
+func PickupNoteIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldPickupNote))
+}
+
+// PickupNoteNotNil applies the NotNil predicate on the "pickup_note" field.
+func PickupNoteNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldPickupNote))
+}
+
+// PickupNoteEqualFold applies the EqualFold predicate on the "pickup_note" field.
+func PickupNoteEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldPickupNote, v))
+}
+
+// PickupNoteContainsFold applies the ContainsFold predicate on the "pickup_note" field.
+func PickupNoteContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldPickupNote, v))
+}
+
 // IsPickupEQ applies the EQ predicate on the "is_pickup" field.
 func IsPickupEQ(v bool) predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldEQ(FieldIsPickup, v))
@@ -2005,6 +2570,81 @@ func AgreementAdjustableEQ(v bool) predicate.ItineraryStop {
 // AgreementAdjustableNEQ applies the NEQ predicate on the "agreement_adjustable" field.
 func AgreementAdjustableNEQ(v bool) predicate.ItineraryStop {
 	return predicate.ItineraryStop(sql.FieldNEQ(FieldAgreementAdjustable, v))
+}
+
+// TypeParamsEQ applies the EQ predicate on the "type_params" field.
+func TypeParamsEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEQ(FieldTypeParams, v))
+}
+
+// TypeParamsNEQ applies the NEQ predicate on the "type_params" field.
+func TypeParamsNEQ(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNEQ(FieldTypeParams, v))
+}
+
+// TypeParamsIn applies the In predicate on the "type_params" field.
+func TypeParamsIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIn(FieldTypeParams, vs...))
+}
+
+// TypeParamsNotIn applies the NotIn predicate on the "type_params" field.
+func TypeParamsNotIn(vs ...string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotIn(FieldTypeParams, vs...))
+}
+
+// TypeParamsGT applies the GT predicate on the "type_params" field.
+func TypeParamsGT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGT(FieldTypeParams, v))
+}
+
+// TypeParamsGTE applies the GTE predicate on the "type_params" field.
+func TypeParamsGTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldGTE(FieldTypeParams, v))
+}
+
+// TypeParamsLT applies the LT predicate on the "type_params" field.
+func TypeParamsLT(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLT(FieldTypeParams, v))
+}
+
+// TypeParamsLTE applies the LTE predicate on the "type_params" field.
+func TypeParamsLTE(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldLTE(FieldTypeParams, v))
+}
+
+// TypeParamsContains applies the Contains predicate on the "type_params" field.
+func TypeParamsContains(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContains(FieldTypeParams, v))
+}
+
+// TypeParamsHasPrefix applies the HasPrefix predicate on the "type_params" field.
+func TypeParamsHasPrefix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasPrefix(FieldTypeParams, v))
+}
+
+// TypeParamsHasSuffix applies the HasSuffix predicate on the "type_params" field.
+func TypeParamsHasSuffix(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldHasSuffix(FieldTypeParams, v))
+}
+
+// TypeParamsIsNil applies the IsNil predicate on the "type_params" field.
+func TypeParamsIsNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldIsNull(FieldTypeParams))
+}
+
+// TypeParamsNotNil applies the NotNil predicate on the "type_params" field.
+func TypeParamsNotNil() predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldNotNull(FieldTypeParams))
+}
+
+// TypeParamsEqualFold applies the EqualFold predicate on the "type_params" field.
+func TypeParamsEqualFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldEqualFold(FieldTypeParams, v))
+}
+
+// TypeParamsContainsFold applies the ContainsFold predicate on the "type_params" field.
+func TypeParamsContainsFold(v string) predicate.ItineraryStop {
+	return predicate.ItineraryStop(sql.FieldContainsFold(FieldTypeParams, v))
 }
 
 // And groups predicates with the AND operator between them.

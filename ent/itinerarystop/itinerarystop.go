@@ -69,6 +69,20 @@ const (
 	FieldDropoffLatitude = "dropoff_latitude"
 	// FieldDropoffLongitude holds the string denoting the dropoff_longitude field in the database.
 	FieldDropoffLongitude = "dropoff_longitude"
+	// FieldPickupTime holds the string denoting the pickup_time field in the database.
+	FieldPickupTime = "pickup_time"
+	// FieldPickupCity holds the string denoting the pickup_city field in the database.
+	FieldPickupCity = "pickup_city"
+	// FieldPickupDistrict holds the string denoting the pickup_district field in the database.
+	FieldPickupDistrict = "pickup_district"
+	// FieldPickupRangeMode holds the string denoting the pickup_range_mode field in the database.
+	FieldPickupRangeMode = "pickup_range_mode"
+	// FieldPickupPolygon holds the string denoting the pickup_polygon field in the database.
+	FieldPickupPolygon = "pickup_polygon"
+	// FieldPickupRangeOptions holds the string denoting the pickup_range_options field in the database.
+	FieldPickupRangeOptions = "pickup_range_options"
+	// FieldPickupNote holds the string denoting the pickup_note field in the database.
+	FieldPickupNote = "pickup_note"
 	// FieldIsPickup holds the string denoting the is_pickup field in the database.
 	FieldIsPickup = "is_pickup"
 	// FieldIsDropoff holds the string denoting the is_dropoff field in the database.
@@ -77,6 +91,8 @@ const (
 	FieldAgreementNoShopping = "agreement_no_shopping"
 	// FieldAgreementAdjustable holds the string denoting the agreement_adjustable field in the database.
 	FieldAgreementAdjustable = "agreement_adjustable"
+	// FieldTypeParams holds the string denoting the type_params field in the database.
+	FieldTypeParams = "type_params"
 	// Table holds the table name of the itinerarystop in the database.
 	Table = "itinerary_stops"
 )
@@ -113,10 +129,18 @@ var Columns = []string{
 	FieldDropoffAddress,
 	FieldDropoffLatitude,
 	FieldDropoffLongitude,
+	FieldPickupTime,
+	FieldPickupCity,
+	FieldPickupDistrict,
+	FieldPickupRangeMode,
+	FieldPickupPolygon,
+	FieldPickupRangeOptions,
+	FieldPickupNote,
 	FieldIsPickup,
 	FieldIsDropoff,
 	FieldAgreementNoShopping,
 	FieldAgreementAdjustable,
+	FieldTypeParams,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -299,6 +323,41 @@ func ByDropoffLongitude(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDropoffLongitude, opts...).ToFunc()
 }
 
+// ByPickupTime orders the results by the pickup_time field.
+func ByPickupTime(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupTime, opts...).ToFunc()
+}
+
+// ByPickupCity orders the results by the pickup_city field.
+func ByPickupCity(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupCity, opts...).ToFunc()
+}
+
+// ByPickupDistrict orders the results by the pickup_district field.
+func ByPickupDistrict(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupDistrict, opts...).ToFunc()
+}
+
+// ByPickupRangeMode orders the results by the pickup_range_mode field.
+func ByPickupRangeMode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupRangeMode, opts...).ToFunc()
+}
+
+// ByPickupPolygon orders the results by the pickup_polygon field.
+func ByPickupPolygon(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupPolygon, opts...).ToFunc()
+}
+
+// ByPickupRangeOptions orders the results by the pickup_range_options field.
+func ByPickupRangeOptions(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupRangeOptions, opts...).ToFunc()
+}
+
+// ByPickupNote orders the results by the pickup_note field.
+func ByPickupNote(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPickupNote, opts...).ToFunc()
+}
+
 // ByIsPickup orders the results by the is_pickup field.
 func ByIsPickup(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsPickup, opts...).ToFunc()
@@ -317,4 +376,9 @@ func ByAgreementNoShopping(opts ...sql.OrderTermOption) OrderOption {
 // ByAgreementAdjustable orders the results by the agreement_adjustable field.
 func ByAgreementAdjustable(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAgreementAdjustable, opts...).ToFunc()
+}
+
+// ByTypeParams orders the results by the type_params field.
+func ByTypeParams(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTypeParams, opts...).ToFunc()
 }

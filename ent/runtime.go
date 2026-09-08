@@ -9,6 +9,7 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
 	"gitee.com/meinongyihe/travel-rpc/ent/merchant"
+	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
@@ -98,19 +99,19 @@ func init() {
 	// itinerarystop.DefaultIsEntering holds the default value on creation for the is_entering field.
 	itinerarystop.DefaultIsEntering = itinerarystopDescIsEntering.Default.(bool)
 	// itinerarystopDescIsPickup is the schema descriptor for is_pickup field.
-	itinerarystopDescIsPickup := itinerarystopFields[29].Descriptor()
+	itinerarystopDescIsPickup := itinerarystopFields[36].Descriptor()
 	// itinerarystop.DefaultIsPickup holds the default value on creation for the is_pickup field.
 	itinerarystop.DefaultIsPickup = itinerarystopDescIsPickup.Default.(bool)
 	// itinerarystopDescIsDropoff is the schema descriptor for is_dropoff field.
-	itinerarystopDescIsDropoff := itinerarystopFields[30].Descriptor()
+	itinerarystopDescIsDropoff := itinerarystopFields[37].Descriptor()
 	// itinerarystop.DefaultIsDropoff holds the default value on creation for the is_dropoff field.
 	itinerarystop.DefaultIsDropoff = itinerarystopDescIsDropoff.Default.(bool)
 	// itinerarystopDescAgreementNoShopping is the schema descriptor for agreement_no_shopping field.
-	itinerarystopDescAgreementNoShopping := itinerarystopFields[31].Descriptor()
+	itinerarystopDescAgreementNoShopping := itinerarystopFields[38].Descriptor()
 	// itinerarystop.DefaultAgreementNoShopping holds the default value on creation for the agreement_no_shopping field.
 	itinerarystop.DefaultAgreementNoShopping = itinerarystopDescAgreementNoShopping.Default.(bool)
 	// itinerarystopDescAgreementAdjustable is the schema descriptor for agreement_adjustable field.
-	itinerarystopDescAgreementAdjustable := itinerarystopFields[32].Descriptor()
+	itinerarystopDescAgreementAdjustable := itinerarystopFields[39].Descriptor()
 	// itinerarystop.DefaultAgreementAdjustable holds the default value on creation for the agreement_adjustable field.
 	itinerarystop.DefaultAgreementAdjustable = itinerarystopDescAgreementAdjustable.Default.(bool)
 	merchantFields := schema.Merchant{}.Fields()
@@ -127,6 +128,24 @@ func init() {
 	merchantDescStatus := merchantFields[3].Descriptor()
 	// merchant.DefaultStatus holds the default value on creation for the status field.
 	merchant.DefaultStatus = merchantDescStatus.Default.(string)
+	merchantconfigFields := schema.MerchantConfig{}.Fields()
+	_ = merchantconfigFields
+	// merchantconfigDescTenantID is the schema descriptor for tenant_id field.
+	merchantconfigDescTenantID := merchantconfigFields[0].Descriptor()
+	// merchantconfig.DefaultTenantID holds the default value on creation for the tenant_id field.
+	merchantconfig.DefaultTenantID = merchantconfigDescTenantID.Default.(int64)
+	// merchantconfigDescMerchantID is the schema descriptor for merchant_id field.
+	merchantconfigDescMerchantID := merchantconfigFields[1].Descriptor()
+	// merchantconfig.DefaultMerchantID holds the default value on creation for the merchant_id field.
+	merchantconfig.DefaultMerchantID = merchantconfigDescMerchantID.Default.(int64)
+	// merchantconfigDescConfigType is the schema descriptor for config_type field.
+	merchantconfigDescConfigType := merchantconfigFields[2].Descriptor()
+	// merchantconfig.ConfigTypeValidator is a validator for the "config_type" field. It is called by the builders before save.
+	merchantconfig.ConfigTypeValidator = merchantconfigDescConfigType.Validators[0].(func(string) error)
+	// merchantconfigDescConfigKey is the schema descriptor for config_key field.
+	merchantconfigDescConfigKey := merchantconfigFields[3].Descriptor()
+	// merchantconfig.ConfigKeyValidator is a validator for the "config_key" field. It is called by the builders before save.
+	merchantconfig.ConfigKeyValidator = merchantconfigDescConfigKey.Validators[0].(func(string) error)
 	orderFields := schema.Order{}.Fields()
 	_ = orderFields
 	// orderDescOrderNo is the schema descriptor for order_no field.
