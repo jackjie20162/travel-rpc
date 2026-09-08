@@ -1,5 +1,19 @@
 # Development Log
 
+## 2026-09-08 — C 端产品详情页行程展示
+
+### 背景
+travel-app 产品详情页（/product/:id）此前无行程信息，商户后台录入的行程节点需要面向消费者展示。
+
+### 实现内容
+- **travel-rpc**: `CatalogService` 新增 `ListItineraryStops(ItineraryStopListRequest)`，租户可选、按 sequence/id 排序，复用 `itineraryStopMessage`；`make gen-rpc` 重新生成。
+- **travel-api**: 新增公开路由 `GET /api/travel/products/:id/itinerary-stops`（`ListProductItineraryStops`），logic 走 `CatalogClient`；handler 补 `SetPathParams`（goctls 生成件默认缺失）。
+- **travel-app**: `api.js` 新增 `getProductItineraryStops`；`ProductDetail.vue` 在套餐与详情之间新增行程时间线：分类型图标/标签/标题/元信息（时间、城市、时长、入内）、特色描述、集合图片、返程送回行/解散点/自由解散列表；typeParams JSON 解析展示。
+
+### 验证
+- ✅ travel-rpc / travel-api `go build ./...` 通过
+- ✅ travel-app `vite build` 通过（752ms）
+
 ## 2026-09-08 — 行程选点回显与坐标持久化修复
 
 ### 背景

@@ -524,6 +524,7 @@ service CatalogService {
   rpc GetProduct(ProductIdRequest) returns (Product);
   rpc ListProducts(ProductListRequest) returns (ProductListResponse);
   rpc ListPackages(PackageListRequest) returns (PackageListResponse);
+  rpc ListItineraryStops(ItineraryStopListRequest) returns (ItineraryStopListResponse);
 }
 
 service InitService {

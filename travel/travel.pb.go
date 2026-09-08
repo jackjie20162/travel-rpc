@@ -5861,12 +5861,13 @@ const file_travel_proto_rawDesc = "" +
 	"\border_no\x18\x01 \x01(\tR\aorderNo\"I\n" +
 	"\x12ReplyReviewRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12#\n" +
-	"\rreply_content\x18\x02 \x01(\tR\freplyContent2\xdb\x01\n" +
+	"\rreply_content\x18\x02 \x01(\tR\freplyContent2\xb6\x02\n" +
 	"\x0eCatalogService\x127\n" +
 	"\n" +
 	"GetProduct\x12\x18.travel.ProductIdRequest\x1a\x0f.travel.Product\x12G\n" +
 	"\fListProducts\x12\x1a.travel.ProductListRequest\x1a\x1b.travel.ProductListResponse\x12G\n" +
-	"\fListPackages\x12\x1a.travel.PackageListRequest\x1a\x1b.travel.PackageListResponse2B\n" +
+	"\fListPackages\x12\x1a.travel.PackageListRequest\x1a\x1b.travel.PackageListResponse\x12Y\n" +
+	"\x12ListItineraryStops\x12 .travel.ItineraryStopListRequest\x1a!.travel.ItineraryStopListResponse2B\n" +
 	"\vInitService\x123\n" +
 	"\fInitDatabase\x12\r.travel.Empty\x1a\x14.travel.InitResponse2\x9e\x01\n" +
 	"\x10InventoryService\x12<\n" +
@@ -6007,89 +6008,91 @@ var file_travel_proto_depIdxs = []int32{
 	35, // 11: travel.CatalogService.GetProduct:input_type -> travel.ProductIdRequest
 	36, // 12: travel.CatalogService.ListProducts:input_type -> travel.ProductListRequest
 	30, // 13: travel.CatalogService.ListPackages:input_type -> travel.PackageListRequest
-	12, // 14: travel.InitService.InitDatabase:input_type -> travel.Empty
-	17, // 15: travel.InventoryService.Check:input_type -> travel.InventoryRequest
-	41, // 16: travel.InventoryService.Reserve:input_type -> travel.ReserveInventoryRequest
-	2,  // 17: travel.OrderService.Create:input_type -> travel.CreateOrderRequest
-	25, // 18: travel.OrderService.Get:input_type -> travel.OrderNoRequest
-	26, // 19: travel.OrderService.ListMerchantOrders:input_type -> travel.MerchantOrderListRequest
-	28, // 20: travel.OrderService.ListCustomerOrders:input_type -> travel.CustomerOrderListRequest
-	48, // 21: travel.OrderService.VerifyOrder:input_type -> travel.VerifyOrderRequest
-	49, // 22: travel.OrderService.AcceptOrder:input_type -> travel.AcceptOrderRequest
-	50, // 23: travel.OrderService.RequestRefund:input_type -> travel.RefundRequest
-	51, // 24: travel.OrderService.HandleRefund:input_type -> travel.HandleRefundRequest
-	25, // 25: travel.OrderService.CancelOrder:input_type -> travel.OrderNoRequest
-	5,  // 26: travel.PaymentService.Create:input_type -> travel.CreatePaymentRequest
-	33, // 27: travel.PaymentService.Get:input_type -> travel.PaymentNoRequest
-	43, // 28: travel.PaymentService.SetProviderID:input_type -> travel.SetPaymentProviderIDRequest
-	21, // 29: travel.PaymentService.MarkPaid:input_type -> travel.MarkPaymentPaidRequest
-	36, // 30: travel.TravelManagementService.ListProducts:input_type -> travel.ProductListRequest
-	6,  // 31: travel.TravelManagementService.CreateProduct:input_type -> travel.CreateProductRequest
-	44, // 32: travel.TravelManagementService.UpdateProduct:input_type -> travel.UpdateProductRequest
-	4,  // 33: travel.TravelManagementService.CreatePackage:input_type -> travel.CreatePackageRequest
-	30, // 34: travel.TravelManagementService.ListPackages:input_type -> travel.PackageListRequest
-	46, // 35: travel.TravelManagementService.UpsertInventory:input_type -> travel.UpsertInventoryRequest
-	15, // 36: travel.TravelManagementService.ListInventory:input_type -> travel.InventoryListRequest
-	39, // 37: travel.TravelManagementService.PublishProduct:input_type -> travel.PublishProductRequest
-	7,  // 38: travel.TravelManagementService.CreateItineraryStop:input_type -> travel.CreateItineraryStopRequest
-	8,  // 39: travel.TravelManagementService.UpdateItineraryStop:input_type -> travel.UpdateItineraryStopRequest
-	9,  // 40: travel.TravelManagementService.DeleteItineraryStop:input_type -> travel.DeleteItineraryStopRequest
-	10, // 41: travel.TravelManagementService.ListItineraryStops:input_type -> travel.ItineraryStopListRequest
-	40, // 42: travel.UserService.Register:input_type -> travel.RegisterRequest
-	20, // 43: travel.UserService.Login:input_type -> travel.LoginRequest
-	19, // 44: travel.UserService.LoginByMobile:input_type -> travel.LoginByMobileRequest
-	52, // 45: travel.UserService.GetProfile:input_type -> travel.UserIdRequest
-	53, // 46: travel.UserService.GetUserByUsername:input_type -> travel.UsernameRequest
-	45, // 47: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
-	1,  // 48: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
-	56, // 49: travel.ReviewService.Create:input_type -> travel.CreateReviewRequest
-	57, // 50: travel.ReviewService.ListByProduct:input_type -> travel.ReviewListRequest
-	59, // 51: travel.ReviewService.GetByOrder:input_type -> travel.OrderNoReviewRequest
-	60, // 52: travel.ReviewService.Reply:input_type -> travel.ReplyReviewRequest
-	34, // 53: travel.CatalogService.GetProduct:output_type -> travel.Product
-	37, // 54: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
-	31, // 55: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
-	13, // 56: travel.InitService.InitDatabase:output_type -> travel.InitResponse
-	18, // 57: travel.InventoryService.Check:output_type -> travel.InventoryResponse
-	42, // 58: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
-	23, // 59: travel.OrderService.Create:output_type -> travel.Order
-	23, // 60: travel.OrderService.Get:output_type -> travel.Order
-	27, // 61: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
-	29, // 62: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
-	23, // 63: travel.OrderService.VerifyOrder:output_type -> travel.Order
-	23, // 64: travel.OrderService.AcceptOrder:output_type -> travel.Order
-	23, // 65: travel.OrderService.RequestRefund:output_type -> travel.Order
-	23, // 66: travel.OrderService.HandleRefund:output_type -> travel.Order
-	23, // 67: travel.OrderService.CancelOrder:output_type -> travel.Order
-	32, // 68: travel.PaymentService.Create:output_type -> travel.Payment
-	32, // 69: travel.PaymentService.Get:output_type -> travel.Payment
-	32, // 70: travel.PaymentService.SetProviderID:output_type -> travel.Payment
-	32, // 71: travel.PaymentService.MarkPaid:output_type -> travel.Payment
-	37, // 72: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
-	34, // 73: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
-	34, // 74: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
-	38, // 75: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
-	31, // 76: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
-	14, // 77: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
-	16, // 78: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
-	34, // 79: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
-	54, // 80: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
-	54, // 81: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
-	12, // 82: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
-	11, // 83: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
-	0,  // 84: travel.UserService.Register:output_type -> travel.AuthToken
-	0,  // 85: travel.UserService.Login:output_type -> travel.AuthToken
-	0,  // 86: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
-	47, // 87: travel.UserService.GetProfile:output_type -> travel.User
-	47, // 88: travel.UserService.GetUserByUsername:output_type -> travel.User
-	47, // 89: travel.UserService.UpdateProfile:output_type -> travel.User
-	22, // 90: travel.UserService.ChangePassword:output_type -> travel.OkResponse
-	55, // 91: travel.ReviewService.Create:output_type -> travel.Review
-	58, // 92: travel.ReviewService.ListByProduct:output_type -> travel.ReviewListResponse
-	55, // 93: travel.ReviewService.GetByOrder:output_type -> travel.Review
-	55, // 94: travel.ReviewService.Reply:output_type -> travel.Review
-	53, // [53:95] is the sub-list for method output_type
-	11, // [11:53] is the sub-list for method input_type
+	10, // 14: travel.CatalogService.ListItineraryStops:input_type -> travel.ItineraryStopListRequest
+	12, // 15: travel.InitService.InitDatabase:input_type -> travel.Empty
+	17, // 16: travel.InventoryService.Check:input_type -> travel.InventoryRequest
+	41, // 17: travel.InventoryService.Reserve:input_type -> travel.ReserveInventoryRequest
+	2,  // 18: travel.OrderService.Create:input_type -> travel.CreateOrderRequest
+	25, // 19: travel.OrderService.Get:input_type -> travel.OrderNoRequest
+	26, // 20: travel.OrderService.ListMerchantOrders:input_type -> travel.MerchantOrderListRequest
+	28, // 21: travel.OrderService.ListCustomerOrders:input_type -> travel.CustomerOrderListRequest
+	48, // 22: travel.OrderService.VerifyOrder:input_type -> travel.VerifyOrderRequest
+	49, // 23: travel.OrderService.AcceptOrder:input_type -> travel.AcceptOrderRequest
+	50, // 24: travel.OrderService.RequestRefund:input_type -> travel.RefundRequest
+	51, // 25: travel.OrderService.HandleRefund:input_type -> travel.HandleRefundRequest
+	25, // 26: travel.OrderService.CancelOrder:input_type -> travel.OrderNoRequest
+	5,  // 27: travel.PaymentService.Create:input_type -> travel.CreatePaymentRequest
+	33, // 28: travel.PaymentService.Get:input_type -> travel.PaymentNoRequest
+	43, // 29: travel.PaymentService.SetProviderID:input_type -> travel.SetPaymentProviderIDRequest
+	21, // 30: travel.PaymentService.MarkPaid:input_type -> travel.MarkPaymentPaidRequest
+	36, // 31: travel.TravelManagementService.ListProducts:input_type -> travel.ProductListRequest
+	6,  // 32: travel.TravelManagementService.CreateProduct:input_type -> travel.CreateProductRequest
+	44, // 33: travel.TravelManagementService.UpdateProduct:input_type -> travel.UpdateProductRequest
+	4,  // 34: travel.TravelManagementService.CreatePackage:input_type -> travel.CreatePackageRequest
+	30, // 35: travel.TravelManagementService.ListPackages:input_type -> travel.PackageListRequest
+	46, // 36: travel.TravelManagementService.UpsertInventory:input_type -> travel.UpsertInventoryRequest
+	15, // 37: travel.TravelManagementService.ListInventory:input_type -> travel.InventoryListRequest
+	39, // 38: travel.TravelManagementService.PublishProduct:input_type -> travel.PublishProductRequest
+	7,  // 39: travel.TravelManagementService.CreateItineraryStop:input_type -> travel.CreateItineraryStopRequest
+	8,  // 40: travel.TravelManagementService.UpdateItineraryStop:input_type -> travel.UpdateItineraryStopRequest
+	9,  // 41: travel.TravelManagementService.DeleteItineraryStop:input_type -> travel.DeleteItineraryStopRequest
+	10, // 42: travel.TravelManagementService.ListItineraryStops:input_type -> travel.ItineraryStopListRequest
+	40, // 43: travel.UserService.Register:input_type -> travel.RegisterRequest
+	20, // 44: travel.UserService.Login:input_type -> travel.LoginRequest
+	19, // 45: travel.UserService.LoginByMobile:input_type -> travel.LoginByMobileRequest
+	52, // 46: travel.UserService.GetProfile:input_type -> travel.UserIdRequest
+	53, // 47: travel.UserService.GetUserByUsername:input_type -> travel.UsernameRequest
+	45, // 48: travel.UserService.UpdateProfile:input_type -> travel.UpdateProfileRequest
+	1,  // 49: travel.UserService.ChangePassword:input_type -> travel.ChangePasswordRequest
+	56, // 50: travel.ReviewService.Create:input_type -> travel.CreateReviewRequest
+	57, // 51: travel.ReviewService.ListByProduct:input_type -> travel.ReviewListRequest
+	59, // 52: travel.ReviewService.GetByOrder:input_type -> travel.OrderNoReviewRequest
+	60, // 53: travel.ReviewService.Reply:input_type -> travel.ReplyReviewRequest
+	34, // 54: travel.CatalogService.GetProduct:output_type -> travel.Product
+	37, // 55: travel.CatalogService.ListProducts:output_type -> travel.ProductListResponse
+	31, // 56: travel.CatalogService.ListPackages:output_type -> travel.PackageListResponse
+	11, // 57: travel.CatalogService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
+	13, // 58: travel.InitService.InitDatabase:output_type -> travel.InitResponse
+	18, // 59: travel.InventoryService.Check:output_type -> travel.InventoryResponse
+	42, // 60: travel.InventoryService.Reserve:output_type -> travel.ReserveInventoryResponse
+	23, // 61: travel.OrderService.Create:output_type -> travel.Order
+	23, // 62: travel.OrderService.Get:output_type -> travel.Order
+	27, // 63: travel.OrderService.ListMerchantOrders:output_type -> travel.MerchantOrderListResponse
+	29, // 64: travel.OrderService.ListCustomerOrders:output_type -> travel.CustomerOrderListResponse
+	23, // 65: travel.OrderService.VerifyOrder:output_type -> travel.Order
+	23, // 66: travel.OrderService.AcceptOrder:output_type -> travel.Order
+	23, // 67: travel.OrderService.RequestRefund:output_type -> travel.Order
+	23, // 68: travel.OrderService.HandleRefund:output_type -> travel.Order
+	23, // 69: travel.OrderService.CancelOrder:output_type -> travel.Order
+	32, // 70: travel.PaymentService.Create:output_type -> travel.Payment
+	32, // 71: travel.PaymentService.Get:output_type -> travel.Payment
+	32, // 72: travel.PaymentService.SetProviderID:output_type -> travel.Payment
+	32, // 73: travel.PaymentService.MarkPaid:output_type -> travel.Payment
+	37, // 74: travel.TravelManagementService.ListProducts:output_type -> travel.ProductListResponse
+	34, // 75: travel.TravelManagementService.CreateProduct:output_type -> travel.Product
+	34, // 76: travel.TravelManagementService.UpdateProduct:output_type -> travel.Product
+	38, // 77: travel.TravelManagementService.CreatePackage:output_type -> travel.ProductPackage
+	31, // 78: travel.TravelManagementService.ListPackages:output_type -> travel.PackageListResponse
+	14, // 79: travel.TravelManagementService.UpsertInventory:output_type -> travel.InventoryItem
+	16, // 80: travel.TravelManagementService.ListInventory:output_type -> travel.InventoryListResponse
+	34, // 81: travel.TravelManagementService.PublishProduct:output_type -> travel.Product
+	54, // 82: travel.TravelManagementService.CreateItineraryStop:output_type -> travel.ItineraryStop
+	54, // 83: travel.TravelManagementService.UpdateItineraryStop:output_type -> travel.ItineraryStop
+	12, // 84: travel.TravelManagementService.DeleteItineraryStop:output_type -> travel.Empty
+	11, // 85: travel.TravelManagementService.ListItineraryStops:output_type -> travel.ItineraryStopListResponse
+	0,  // 86: travel.UserService.Register:output_type -> travel.AuthToken
+	0,  // 87: travel.UserService.Login:output_type -> travel.AuthToken
+	0,  // 88: travel.UserService.LoginByMobile:output_type -> travel.AuthToken
+	47, // 89: travel.UserService.GetProfile:output_type -> travel.User
+	47, // 90: travel.UserService.GetUserByUsername:output_type -> travel.User
+	47, // 91: travel.UserService.UpdateProfile:output_type -> travel.User
+	22, // 92: travel.UserService.ChangePassword:output_type -> travel.OkResponse
+	55, // 93: travel.ReviewService.Create:output_type -> travel.Review
+	58, // 94: travel.ReviewService.ListByProduct:output_type -> travel.ReviewListResponse
+	55, // 95: travel.ReviewService.GetByOrder:output_type -> travel.Review
+	55, // 96: travel.ReviewService.Reply:output_type -> travel.Review
+	54, // [54:97] is the sub-list for method output_type
+	11, // [11:54] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name

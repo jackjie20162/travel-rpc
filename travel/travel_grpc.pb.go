@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CatalogService_GetProduct_FullMethodName   = "/travel.CatalogService/GetProduct"
-	CatalogService_ListProducts_FullMethodName = "/travel.CatalogService/ListProducts"
-	CatalogService_ListPackages_FullMethodName = "/travel.CatalogService/ListPackages"
+	CatalogService_GetProduct_FullMethodName         = "/travel.CatalogService/GetProduct"
+	CatalogService_ListProducts_FullMethodName       = "/travel.CatalogService/ListProducts"
+	CatalogService_ListPackages_FullMethodName       = "/travel.CatalogService/ListPackages"
+	CatalogService_ListItineraryStops_FullMethodName = "/travel.CatalogService/ListItineraryStops"
 )
 
 // CatalogServiceClient is the client API for CatalogService service.
@@ -31,6 +32,7 @@ type CatalogServiceClient interface {
 	GetProduct(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*Product, error)
 	ListProducts(ctx context.Context, in *ProductListRequest, opts ...grpc.CallOption) (*ProductListResponse, error)
 	ListPackages(ctx context.Context, in *PackageListRequest, opts ...grpc.CallOption) (*PackageListResponse, error)
+	ListItineraryStops(ctx context.Context, in *ItineraryStopListRequest, opts ...grpc.CallOption) (*ItineraryStopListResponse, error)
 }
 
 type catalogServiceClient struct {
@@ -71,6 +73,16 @@ func (c *catalogServiceClient) ListPackages(ctx context.Context, in *PackageList
 	return out, nil
 }
 
+func (c *catalogServiceClient) ListItineraryStops(ctx context.Context, in *ItineraryStopListRequest, opts ...grpc.CallOption) (*ItineraryStopListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ItineraryStopListResponse)
+	err := c.cc.Invoke(ctx, CatalogService_ListItineraryStops_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CatalogServiceServer is the server API for CatalogService service.
 // All implementations must embed UnimplementedCatalogServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type CatalogServiceServer interface {
 	GetProduct(context.Context, *ProductIdRequest) (*Product, error)
 	ListProducts(context.Context, *ProductListRequest) (*ProductListResponse, error)
 	ListPackages(context.Context, *PackageListRequest) (*PackageListResponse, error)
+	ListItineraryStops(context.Context, *ItineraryStopListRequest) (*ItineraryStopListResponse, error)
 	mustEmbedUnimplementedCatalogServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedCatalogServiceServer) ListProducts(context.Context, *ProductL
 }
 func (UnimplementedCatalogServiceServer) ListPackages(context.Context, *PackageListRequest) (*PackageListResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListPackages not implemented")
+}
+func (UnimplementedCatalogServiceServer) ListItineraryStops(context.Context, *ItineraryStopListRequest) (*ItineraryStopListResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListItineraryStops not implemented")
 }
 func (UnimplementedCatalogServiceServer) mustEmbedUnimplementedCatalogServiceServer() {}
 func (UnimplementedCatalogServiceServer) testEmbeddedByValue()                        {}
@@ -172,6 +188,24 @@ func _CatalogService_ListPackages_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CatalogService_ListItineraryStops_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ItineraryStopListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).ListItineraryStops(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CatalogService_ListItineraryStops_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).ListItineraryStops(ctx, req.(*ItineraryStopListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CatalogService_ServiceDesc is the grpc.ServiceDesc for CatalogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPackages",
 			Handler:    _CatalogService_ListPackages_Handler,
+		},
+		{
+			MethodName: "ListItineraryStops",
+			Handler:    _CatalogService_ListItineraryStops_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

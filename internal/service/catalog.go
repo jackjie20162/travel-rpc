@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitee.com/meinongyihe/travel-rpc/ent"
+	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
 	"gitee.com/meinongyihe/travel-rpc/internal/auth"
 	"gitee.com/meinongyihe/travel-rpc/internal/repository"
@@ -84,6 +85,27 @@ func (s *CatalogService) ListPackages(ctx context.Context, req *travel.PackageLi
 	out := &travel.PackageListResponse{}
 	for _, item := range items {
 		out.Items = append(out.Items, packageMessage(item))
+	}
+	return out, nil
+}
+
+// ListItineraryStops C 端公开读取产品行程节点（租户可选，按 sequence 排序）
+func (s *CatalogService) ListItineraryStops(ctx context.Context, req *travel.ItineraryStopListRequest) (*travel.ItineraryStopListResponse, error) {
+	if req == nil || req.GetProductId() <= 0 {
+		return nil, status.Error(codes.InvalidArgument, "product_id is required")
+	}
+	tenantID, _ := auth.TenantID(ctx) // optional for public catalog
+	q := s.client.ItineraryStop.Query().Where(itinerarystop.ProductIDEQ(req.GetProductId()))
+	if tenantID > 0 {
+		q = q.Where(itinerarystop.TenantIDEQ(tenantID))
+	}
+	items, err := q.Order(ent.Asc(itinerarystop.FieldSequence), ent.Asc(itinerarystop.FieldID)).All(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	out := &travel.ItineraryStopListResponse{}
+	for _, item := range items {
+		out.Items = append(out.Items, itineraryStopMessage(item))
 	}
 	return out, nil
 }
