@@ -10,9 +10,10 @@
 - 新增 `src/utils/coordTransform.js`：WGS84 → GCJ02 转换（后端存 WGS84，高德国内版需 GCJ02）。
 - 新增 `src/components/PickupRangeMap.vue`：只读地图组件，将 WGS84 多边形转 GCJ02 后用 AMap.Polygon 绘制并 setFitView；加载失败降级为文案提示。
 - `ProductDetail.vue`：集合节点上门接模式下新增「接送范围」块——范围模式标签（自定义接送范围/仅列表部分酒店/地点）+ 覆盖选项标签（所有区域/所有酒店/机场火车站/超范围付费接送）+ 范围地图（顶点≥3 时）。
+- `ProductDetail.vue`：返程「提供送回服务」每个送回行同样展示范围标签 + 范围地图 + 补充说明（note）；范围辅助函数兼容两套字段名（集合 pickupPolygon/pickupRangeMode/pickupRangeOptions，送回行 polygon/rangeMode/rangeOptions）。
 
 ### 验证
-- ✅ travel-app `vite build` 通过（779ms）
+- ✅ travel-app `vite build` 通过（779ms / 333ms）
 
 ## 2026-09-08 — C 端产品详情页行程展示
 
