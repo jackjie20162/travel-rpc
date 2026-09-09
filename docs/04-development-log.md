@@ -1,5 +1,18 @@
 # Development Log
 
+## 2026-09-09 — C 端库存批量查询窗口调整与 RPC 客户端超时
+
+### 背景
+- C 端产品详情页库存批量查询原按「当月 1 号 → 当月最后一天」，业务要求改为「当天 → 当天+30 天」滚动窗口。
+- 商户端产品列表/编辑偶发报错：RPC slowcall 显示 GetProduct/ListProducts 间歇 ~1.8s（同 SQL 热调用仅 12.7ms），为本地 Docker MySQL 间歇停顿；zrpc 客户端默认超时 2000ms，停顿超 2s 时 API 层 DeadlineExceeded，前端表现为接口异常。
+
+### 变更
+- **travel-app** `ProductDetail.vue`：`loadMonthInventory` 改为 `loadInventoryWindow`（startDate=当天、endDate=当天+30）；翻月导航不再重复请求（窗口与展示月份无关），selectPkg/openCalendar 缓存为空时仍触发。
+- **travel-api** `etc/travel-api.yaml`：`TravelRpc` 显式 `Timeout: 10000`，容忍 DB 间歇停顿。
+
+### 验证
+- ✅ travel-app `vite build` 通过（507ms）
+
 ## 2026-09-09 — C 端上门接接送范围展示
 
 ### 背景
