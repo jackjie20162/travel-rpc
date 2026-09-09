@@ -1,5 +1,19 @@
 # Development Log
 
+## 2026-09-09 — C 端上门接接送范围展示
+
+### 背景
+产品详情页行程时间线已上线，但集合节点为「上门接」模式时，商户在后台绘制的接送范围（type_params 中 pickupPolygon/pickupRangeMode/pickupRangeOptions）未面向消费者展示。
+
+### 实现内容（仅 travel-app）
+- 新增 `src/utils/amap.js`：高德 JS API 2.0 动态加载（Key 读 `VITE_AMAP_JS_API_KEY`/`VITE_AMAP_SECURITY_KEY`，.env 已 gitignore）。
+- 新增 `src/utils/coordTransform.js`：WGS84 → GCJ02 转换（后端存 WGS84，高德国内版需 GCJ02）。
+- 新增 `src/components/PickupRangeMap.vue`：只读地图组件，将 WGS84 多边形转 GCJ02 后用 AMap.Polygon 绘制并 setFitView；加载失败降级为文案提示。
+- `ProductDetail.vue`：集合节点上门接模式下新增「接送范围」块——范围模式标签（自定义接送范围/仅列表部分酒店/地点）+ 覆盖选项标签（所有区域/所有酒店/机场火车站/超范围付费接送）+ 范围地图（顶点≥3 时）。
+
+### 验证
+- ✅ travel-app `vite build` 通过（779ms）
+
 ## 2026-09-08 — C 端产品详情页行程展示
 
 ### 背景
