@@ -11,6 +11,8 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"gitee.com/meinongyihe/travel-rpc/ent/currency"
+	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
@@ -38,6 +40,8 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
+	TypeCurrency             = "Currency"
+	TypeExchangeRate         = "ExchangeRate"
 	TypeInventory            = "Inventory"
 	TypeInventoryReservation = "InventoryReservation"
 	TypeItineraryStop        = "ItineraryStop"
@@ -54,6 +58,1485 @@ const (
 	TypeUser                 = "User"
 	TypeVoucher              = "Voucher"
 )
+
+// CurrencyMutation represents an operation that mutates the Currency nodes in the graph.
+type CurrencyMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	code            *string
+	symbol          *string
+	name_key        *string
+	decimals        *int
+	adddecimals     *int
+	symbol_position *string
+	is_base         *bool
+	status          *string
+	sort            *int
+	addsort         *int
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Currency, error)
+	predicates      []predicate.Currency
+}
+
+var _ ent.Mutation = (*CurrencyMutation)(nil)
+
+// currencyOption allows management of the mutation configuration using functional options.
+type currencyOption func(*CurrencyMutation)
+
+// newCurrencyMutation creates new mutation for the Currency entity.
+func newCurrencyMutation(c config, op Op, opts ...currencyOption) *CurrencyMutation {
+	m := &CurrencyMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeCurrency,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withCurrencyID sets the ID field of the mutation.
+func withCurrencyID(id int) currencyOption {
+	return func(m *CurrencyMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Currency
+		)
+		m.oldValue = func(ctx context.Context) (*Currency, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Currency.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withCurrency sets the old Currency of the mutation.
+func withCurrency(node *Currency) currencyOption {
+	return func(m *CurrencyMutation) {
+		m.oldValue = func(context.Context) (*Currency, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m CurrencyMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m CurrencyMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *CurrencyMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *CurrencyMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Currency.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetCode sets the "code" field.
+func (m *CurrencyMutation) SetCode(s string) {
+	m.code = &s
+}
+
+// Code returns the value of the "code" field in the mutation.
+func (m *CurrencyMutation) Code() (r string, exists bool) {
+	v := m.code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCode returns the old "code" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCode: %w", err)
+	}
+	return oldValue.Code, nil
+}
+
+// ResetCode resets all changes to the "code" field.
+func (m *CurrencyMutation) ResetCode() {
+	m.code = nil
+}
+
+// SetSymbol sets the "symbol" field.
+func (m *CurrencyMutation) SetSymbol(s string) {
+	m.symbol = &s
+}
+
+// Symbol returns the value of the "symbol" field in the mutation.
+func (m *CurrencyMutation) Symbol() (r string, exists bool) {
+	v := m.symbol
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSymbol returns the old "symbol" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldSymbol(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSymbol is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSymbol requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSymbol: %w", err)
+	}
+	return oldValue.Symbol, nil
+}
+
+// ClearSymbol clears the value of the "symbol" field.
+func (m *CurrencyMutation) ClearSymbol() {
+	m.symbol = nil
+	m.clearedFields[currency.FieldSymbol] = struct{}{}
+}
+
+// SymbolCleared returns if the "symbol" field was cleared in this mutation.
+func (m *CurrencyMutation) SymbolCleared() bool {
+	_, ok := m.clearedFields[currency.FieldSymbol]
+	return ok
+}
+
+// ResetSymbol resets all changes to the "symbol" field.
+func (m *CurrencyMutation) ResetSymbol() {
+	m.symbol = nil
+	delete(m.clearedFields, currency.FieldSymbol)
+}
+
+// SetNameKey sets the "name_key" field.
+func (m *CurrencyMutation) SetNameKey(s string) {
+	m.name_key = &s
+}
+
+// NameKey returns the value of the "name_key" field in the mutation.
+func (m *CurrencyMutation) NameKey() (r string, exists bool) {
+	v := m.name_key
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNameKey returns the old "name_key" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldNameKey(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNameKey is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNameKey requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNameKey: %w", err)
+	}
+	return oldValue.NameKey, nil
+}
+
+// ClearNameKey clears the value of the "name_key" field.
+func (m *CurrencyMutation) ClearNameKey() {
+	m.name_key = nil
+	m.clearedFields[currency.FieldNameKey] = struct{}{}
+}
+
+// NameKeyCleared returns if the "name_key" field was cleared in this mutation.
+func (m *CurrencyMutation) NameKeyCleared() bool {
+	_, ok := m.clearedFields[currency.FieldNameKey]
+	return ok
+}
+
+// ResetNameKey resets all changes to the "name_key" field.
+func (m *CurrencyMutation) ResetNameKey() {
+	m.name_key = nil
+	delete(m.clearedFields, currency.FieldNameKey)
+}
+
+// SetDecimals sets the "decimals" field.
+func (m *CurrencyMutation) SetDecimals(i int) {
+	m.decimals = &i
+	m.adddecimals = nil
+}
+
+// Decimals returns the value of the "decimals" field in the mutation.
+func (m *CurrencyMutation) Decimals() (r int, exists bool) {
+	v := m.decimals
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDecimals returns the old "decimals" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldDecimals(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDecimals is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDecimals requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDecimals: %w", err)
+	}
+	return oldValue.Decimals, nil
+}
+
+// AddDecimals adds i to the "decimals" field.
+func (m *CurrencyMutation) AddDecimals(i int) {
+	if m.adddecimals != nil {
+		*m.adddecimals += i
+	} else {
+		m.adddecimals = &i
+	}
+}
+
+// AddedDecimals returns the value that was added to the "decimals" field in this mutation.
+func (m *CurrencyMutation) AddedDecimals() (r int, exists bool) {
+	v := m.adddecimals
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDecimals resets all changes to the "decimals" field.
+func (m *CurrencyMutation) ResetDecimals() {
+	m.decimals = nil
+	m.adddecimals = nil
+}
+
+// SetSymbolPosition sets the "symbol_position" field.
+func (m *CurrencyMutation) SetSymbolPosition(s string) {
+	m.symbol_position = &s
+}
+
+// SymbolPosition returns the value of the "symbol_position" field in the mutation.
+func (m *CurrencyMutation) SymbolPosition() (r string, exists bool) {
+	v := m.symbol_position
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSymbolPosition returns the old "symbol_position" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldSymbolPosition(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSymbolPosition is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSymbolPosition requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSymbolPosition: %w", err)
+	}
+	return oldValue.SymbolPosition, nil
+}
+
+// ResetSymbolPosition resets all changes to the "symbol_position" field.
+func (m *CurrencyMutation) ResetSymbolPosition() {
+	m.symbol_position = nil
+}
+
+// SetIsBase sets the "is_base" field.
+func (m *CurrencyMutation) SetIsBase(b bool) {
+	m.is_base = &b
+}
+
+// IsBase returns the value of the "is_base" field in the mutation.
+func (m *CurrencyMutation) IsBase() (r bool, exists bool) {
+	v := m.is_base
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsBase returns the old "is_base" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldIsBase(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsBase is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsBase requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsBase: %w", err)
+	}
+	return oldValue.IsBase, nil
+}
+
+// ResetIsBase resets all changes to the "is_base" field.
+func (m *CurrencyMutation) ResetIsBase() {
+	m.is_base = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *CurrencyMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *CurrencyMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *CurrencyMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetSort sets the "sort" field.
+func (m *CurrencyMutation) SetSort(i int) {
+	m.sort = &i
+	m.addsort = nil
+}
+
+// Sort returns the value of the "sort" field in the mutation.
+func (m *CurrencyMutation) Sort() (r int, exists bool) {
+	v := m.sort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSort returns the old "sort" field's value of the Currency entity.
+// If the Currency object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CurrencyMutation) OldSort(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSort is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSort requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSort: %w", err)
+	}
+	return oldValue.Sort, nil
+}
+
+// AddSort adds i to the "sort" field.
+func (m *CurrencyMutation) AddSort(i int) {
+	if m.addsort != nil {
+		*m.addsort += i
+	} else {
+		m.addsort = &i
+	}
+}
+
+// AddedSort returns the value that was added to the "sort" field in this mutation.
+func (m *CurrencyMutation) AddedSort() (r int, exists bool) {
+	v := m.addsort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSort resets all changes to the "sort" field.
+func (m *CurrencyMutation) ResetSort() {
+	m.sort = nil
+	m.addsort = nil
+}
+
+// Where appends a list predicates to the CurrencyMutation builder.
+func (m *CurrencyMutation) Where(ps ...predicate.Currency) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the CurrencyMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *CurrencyMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Currency, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *CurrencyMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *CurrencyMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Currency).
+func (m *CurrencyMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *CurrencyMutation) Fields() []string {
+	fields := make([]string, 0, 8)
+	if m.code != nil {
+		fields = append(fields, currency.FieldCode)
+	}
+	if m.symbol != nil {
+		fields = append(fields, currency.FieldSymbol)
+	}
+	if m.name_key != nil {
+		fields = append(fields, currency.FieldNameKey)
+	}
+	if m.decimals != nil {
+		fields = append(fields, currency.FieldDecimals)
+	}
+	if m.symbol_position != nil {
+		fields = append(fields, currency.FieldSymbolPosition)
+	}
+	if m.is_base != nil {
+		fields = append(fields, currency.FieldIsBase)
+	}
+	if m.status != nil {
+		fields = append(fields, currency.FieldStatus)
+	}
+	if m.sort != nil {
+		fields = append(fields, currency.FieldSort)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *CurrencyMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case currency.FieldCode:
+		return m.Code()
+	case currency.FieldSymbol:
+		return m.Symbol()
+	case currency.FieldNameKey:
+		return m.NameKey()
+	case currency.FieldDecimals:
+		return m.Decimals()
+	case currency.FieldSymbolPosition:
+		return m.SymbolPosition()
+	case currency.FieldIsBase:
+		return m.IsBase()
+	case currency.FieldStatus:
+		return m.Status()
+	case currency.FieldSort:
+		return m.Sort()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *CurrencyMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case currency.FieldCode:
+		return m.OldCode(ctx)
+	case currency.FieldSymbol:
+		return m.OldSymbol(ctx)
+	case currency.FieldNameKey:
+		return m.OldNameKey(ctx)
+	case currency.FieldDecimals:
+		return m.OldDecimals(ctx)
+	case currency.FieldSymbolPosition:
+		return m.OldSymbolPosition(ctx)
+	case currency.FieldIsBase:
+		return m.OldIsBase(ctx)
+	case currency.FieldStatus:
+		return m.OldStatus(ctx)
+	case currency.FieldSort:
+		return m.OldSort(ctx)
+	}
+	return nil, fmt.Errorf("unknown Currency field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CurrencyMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case currency.FieldCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCode(v)
+		return nil
+	case currency.FieldSymbol:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSymbol(v)
+		return nil
+	case currency.FieldNameKey:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNameKey(v)
+		return nil
+	case currency.FieldDecimals:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDecimals(v)
+		return nil
+	case currency.FieldSymbolPosition:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSymbolPosition(v)
+		return nil
+	case currency.FieldIsBase:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsBase(v)
+		return nil
+	case currency.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case currency.FieldSort:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSort(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Currency field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *CurrencyMutation) AddedFields() []string {
+	var fields []string
+	if m.adddecimals != nil {
+		fields = append(fields, currency.FieldDecimals)
+	}
+	if m.addsort != nil {
+		fields = append(fields, currency.FieldSort)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *CurrencyMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case currency.FieldDecimals:
+		return m.AddedDecimals()
+	case currency.FieldSort:
+		return m.AddedSort()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *CurrencyMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case currency.FieldDecimals:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDecimals(v)
+		return nil
+	case currency.FieldSort:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSort(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Currency numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *CurrencyMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(currency.FieldSymbol) {
+		fields = append(fields, currency.FieldSymbol)
+	}
+	if m.FieldCleared(currency.FieldNameKey) {
+		fields = append(fields, currency.FieldNameKey)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *CurrencyMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *CurrencyMutation) ClearField(name string) error {
+	switch name {
+	case currency.FieldSymbol:
+		m.ClearSymbol()
+		return nil
+	case currency.FieldNameKey:
+		m.ClearNameKey()
+		return nil
+	}
+	return fmt.Errorf("unknown Currency nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *CurrencyMutation) ResetField(name string) error {
+	switch name {
+	case currency.FieldCode:
+		m.ResetCode()
+		return nil
+	case currency.FieldSymbol:
+		m.ResetSymbol()
+		return nil
+	case currency.FieldNameKey:
+		m.ResetNameKey()
+		return nil
+	case currency.FieldDecimals:
+		m.ResetDecimals()
+		return nil
+	case currency.FieldSymbolPosition:
+		m.ResetSymbolPosition()
+		return nil
+	case currency.FieldIsBase:
+		m.ResetIsBase()
+		return nil
+	case currency.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case currency.FieldSort:
+		m.ResetSort()
+		return nil
+	}
+	return fmt.Errorf("unknown Currency field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *CurrencyMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *CurrencyMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *CurrencyMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *CurrencyMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *CurrencyMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *CurrencyMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *CurrencyMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Currency unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *CurrencyMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Currency edge %s", name)
+}
+
+// ExchangeRateMutation represents an operation that mutates the ExchangeRate nodes in the graph.
+type ExchangeRateMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	base_currency   *string
+	target_currency *string
+	rate_micro      *int64
+	addrate_micro   *int64
+	source          *string
+	effective_at    *int64
+	addeffective_at *int64
+	status          *string
+	clearedFields   map[string]struct{}
+	done            bool
+	oldValue        func(context.Context) (*ExchangeRate, error)
+	predicates      []predicate.ExchangeRate
+}
+
+var _ ent.Mutation = (*ExchangeRateMutation)(nil)
+
+// exchangerateOption allows management of the mutation configuration using functional options.
+type exchangerateOption func(*ExchangeRateMutation)
+
+// newExchangeRateMutation creates new mutation for the ExchangeRate entity.
+func newExchangeRateMutation(c config, op Op, opts ...exchangerateOption) *ExchangeRateMutation {
+	m := &ExchangeRateMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeExchangeRate,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withExchangeRateID sets the ID field of the mutation.
+func withExchangeRateID(id int) exchangerateOption {
+	return func(m *ExchangeRateMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ExchangeRate
+		)
+		m.oldValue = func(ctx context.Context) (*ExchangeRate, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ExchangeRate.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withExchangeRate sets the old ExchangeRate of the mutation.
+func withExchangeRate(node *ExchangeRate) exchangerateOption {
+	return func(m *ExchangeRateMutation) {
+		m.oldValue = func(context.Context) (*ExchangeRate, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ExchangeRateMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ExchangeRateMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ExchangeRateMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ExchangeRateMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ExchangeRate.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetBaseCurrency sets the "base_currency" field.
+func (m *ExchangeRateMutation) SetBaseCurrency(s string) {
+	m.base_currency = &s
+}
+
+// BaseCurrency returns the value of the "base_currency" field in the mutation.
+func (m *ExchangeRateMutation) BaseCurrency() (r string, exists bool) {
+	v := m.base_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBaseCurrency returns the old "base_currency" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldBaseCurrency(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBaseCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBaseCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBaseCurrency: %w", err)
+	}
+	return oldValue.BaseCurrency, nil
+}
+
+// ResetBaseCurrency resets all changes to the "base_currency" field.
+func (m *ExchangeRateMutation) ResetBaseCurrency() {
+	m.base_currency = nil
+}
+
+// SetTargetCurrency sets the "target_currency" field.
+func (m *ExchangeRateMutation) SetTargetCurrency(s string) {
+	m.target_currency = &s
+}
+
+// TargetCurrency returns the value of the "target_currency" field in the mutation.
+func (m *ExchangeRateMutation) TargetCurrency() (r string, exists bool) {
+	v := m.target_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTargetCurrency returns the old "target_currency" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldTargetCurrency(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTargetCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTargetCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTargetCurrency: %w", err)
+	}
+	return oldValue.TargetCurrency, nil
+}
+
+// ResetTargetCurrency resets all changes to the "target_currency" field.
+func (m *ExchangeRateMutation) ResetTargetCurrency() {
+	m.target_currency = nil
+}
+
+// SetRateMicro sets the "rate_micro" field.
+func (m *ExchangeRateMutation) SetRateMicro(i int64) {
+	m.rate_micro = &i
+	m.addrate_micro = nil
+}
+
+// RateMicro returns the value of the "rate_micro" field in the mutation.
+func (m *ExchangeRateMutation) RateMicro() (r int64, exists bool) {
+	v := m.rate_micro
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRateMicro returns the old "rate_micro" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldRateMicro(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRateMicro is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRateMicro requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRateMicro: %w", err)
+	}
+	return oldValue.RateMicro, nil
+}
+
+// AddRateMicro adds i to the "rate_micro" field.
+func (m *ExchangeRateMutation) AddRateMicro(i int64) {
+	if m.addrate_micro != nil {
+		*m.addrate_micro += i
+	} else {
+		m.addrate_micro = &i
+	}
+}
+
+// AddedRateMicro returns the value that was added to the "rate_micro" field in this mutation.
+func (m *ExchangeRateMutation) AddedRateMicro() (r int64, exists bool) {
+	v := m.addrate_micro
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRateMicro resets all changes to the "rate_micro" field.
+func (m *ExchangeRateMutation) ResetRateMicro() {
+	m.rate_micro = nil
+	m.addrate_micro = nil
+}
+
+// SetSource sets the "source" field.
+func (m *ExchangeRateMutation) SetSource(s string) {
+	m.source = &s
+}
+
+// Source returns the value of the "source" field in the mutation.
+func (m *ExchangeRateMutation) Source() (r string, exists bool) {
+	v := m.source
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSource returns the old "source" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldSource(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSource is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSource requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSource: %w", err)
+	}
+	return oldValue.Source, nil
+}
+
+// ResetSource resets all changes to the "source" field.
+func (m *ExchangeRateMutation) ResetSource() {
+	m.source = nil
+}
+
+// SetEffectiveAt sets the "effective_at" field.
+func (m *ExchangeRateMutation) SetEffectiveAt(i int64) {
+	m.effective_at = &i
+	m.addeffective_at = nil
+}
+
+// EffectiveAt returns the value of the "effective_at" field in the mutation.
+func (m *ExchangeRateMutation) EffectiveAt() (r int64, exists bool) {
+	v := m.effective_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldEffectiveAt returns the old "effective_at" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldEffectiveAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldEffectiveAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldEffectiveAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldEffectiveAt: %w", err)
+	}
+	return oldValue.EffectiveAt, nil
+}
+
+// AddEffectiveAt adds i to the "effective_at" field.
+func (m *ExchangeRateMutation) AddEffectiveAt(i int64) {
+	if m.addeffective_at != nil {
+		*m.addeffective_at += i
+	} else {
+		m.addeffective_at = &i
+	}
+}
+
+// AddedEffectiveAt returns the value that was added to the "effective_at" field in this mutation.
+func (m *ExchangeRateMutation) AddedEffectiveAt() (r int64, exists bool) {
+	v := m.addeffective_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetEffectiveAt resets all changes to the "effective_at" field.
+func (m *ExchangeRateMutation) ResetEffectiveAt() {
+	m.effective_at = nil
+	m.addeffective_at = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *ExchangeRateMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *ExchangeRateMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the ExchangeRate entity.
+// If the ExchangeRate object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ExchangeRateMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *ExchangeRateMutation) ResetStatus() {
+	m.status = nil
+}
+
+// Where appends a list predicates to the ExchangeRateMutation builder.
+func (m *ExchangeRateMutation) Where(ps ...predicate.ExchangeRate) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ExchangeRateMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ExchangeRateMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ExchangeRate, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ExchangeRateMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ExchangeRateMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ExchangeRate).
+func (m *ExchangeRateMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ExchangeRateMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.base_currency != nil {
+		fields = append(fields, exchangerate.FieldBaseCurrency)
+	}
+	if m.target_currency != nil {
+		fields = append(fields, exchangerate.FieldTargetCurrency)
+	}
+	if m.rate_micro != nil {
+		fields = append(fields, exchangerate.FieldRateMicro)
+	}
+	if m.source != nil {
+		fields = append(fields, exchangerate.FieldSource)
+	}
+	if m.effective_at != nil {
+		fields = append(fields, exchangerate.FieldEffectiveAt)
+	}
+	if m.status != nil {
+		fields = append(fields, exchangerate.FieldStatus)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ExchangeRateMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case exchangerate.FieldBaseCurrency:
+		return m.BaseCurrency()
+	case exchangerate.FieldTargetCurrency:
+		return m.TargetCurrency()
+	case exchangerate.FieldRateMicro:
+		return m.RateMicro()
+	case exchangerate.FieldSource:
+		return m.Source()
+	case exchangerate.FieldEffectiveAt:
+		return m.EffectiveAt()
+	case exchangerate.FieldStatus:
+		return m.Status()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ExchangeRateMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case exchangerate.FieldBaseCurrency:
+		return m.OldBaseCurrency(ctx)
+	case exchangerate.FieldTargetCurrency:
+		return m.OldTargetCurrency(ctx)
+	case exchangerate.FieldRateMicro:
+		return m.OldRateMicro(ctx)
+	case exchangerate.FieldSource:
+		return m.OldSource(ctx)
+	case exchangerate.FieldEffectiveAt:
+		return m.OldEffectiveAt(ctx)
+	case exchangerate.FieldStatus:
+		return m.OldStatus(ctx)
+	}
+	return nil, fmt.Errorf("unknown ExchangeRate field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ExchangeRateMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case exchangerate.FieldBaseCurrency:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBaseCurrency(v)
+		return nil
+	case exchangerate.FieldTargetCurrency:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTargetCurrency(v)
+		return nil
+	case exchangerate.FieldRateMicro:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRateMicro(v)
+		return nil
+	case exchangerate.FieldSource:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSource(v)
+		return nil
+	case exchangerate.FieldEffectiveAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetEffectiveAt(v)
+		return nil
+	case exchangerate.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ExchangeRate field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ExchangeRateMutation) AddedFields() []string {
+	var fields []string
+	if m.addrate_micro != nil {
+		fields = append(fields, exchangerate.FieldRateMicro)
+	}
+	if m.addeffective_at != nil {
+		fields = append(fields, exchangerate.FieldEffectiveAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ExchangeRateMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case exchangerate.FieldRateMicro:
+		return m.AddedRateMicro()
+	case exchangerate.FieldEffectiveAt:
+		return m.AddedEffectiveAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ExchangeRateMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case exchangerate.FieldRateMicro:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRateMicro(v)
+		return nil
+	case exchangerate.FieldEffectiveAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddEffectiveAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ExchangeRate numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ExchangeRateMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ExchangeRateMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ExchangeRateMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown ExchangeRate nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ExchangeRateMutation) ResetField(name string) error {
+	switch name {
+	case exchangerate.FieldBaseCurrency:
+		m.ResetBaseCurrency()
+		return nil
+	case exchangerate.FieldTargetCurrency:
+		m.ResetTargetCurrency()
+		return nil
+	case exchangerate.FieldRateMicro:
+		m.ResetRateMicro()
+		return nil
+	case exchangerate.FieldSource:
+		m.ResetSource()
+		return nil
+	case exchangerate.FieldEffectiveAt:
+		m.ResetEffectiveAt()
+		return nil
+	case exchangerate.FieldStatus:
+		m.ResetStatus()
+		return nil
+	}
+	return fmt.Errorf("unknown ExchangeRate field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ExchangeRateMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ExchangeRateMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ExchangeRateMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ExchangeRateMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ExchangeRateMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ExchangeRateMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ExchangeRateMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown ExchangeRate unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ExchangeRateMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown ExchangeRate edge %s", name)
+}
 
 // InventoryMutation represents an operation that mutates the Inventory nodes in the graph.
 type InventoryMutation struct {
@@ -7007,39 +8490,44 @@ func (m *MerchantConfigMutation) ResetEdge(name string) error {
 // OrderMutation represents an operation that mutates the Order nodes in the graph.
 type OrderMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *int
-	tenant_id       *int64
-	addtenant_id    *int64
-	merchant_id     *int64
-	addmerchant_id  *int64
-	order_no        *string
-	user_id         *int64
-	adduser_id      *int64
-	customer_id     *int64
-	addcustomer_id  *int64
-	customer_email  *string
-	customer_name   *string
-	customer_phone  *string
-	total_amount    *int64
-	addtotal_amount *int64
-	currency        *string
-	status          *string
-	payment_status  *string
-	remark          *string
-	product_name    *string
-	package_name    *string
-	service_date    *string
-	time_slot       *string
-	reject_reason   *string
-	verified_at     *int64
-	addverified_at  *int64
-	prev_status     *string
-	clearedFields   map[string]struct{}
-	done            bool
-	oldValue        func(context.Context) (*Order, error)
-	predicates      []predicate.Order
+	op                      Op
+	typ                     string
+	id                      *int
+	tenant_id               *int64
+	addtenant_id            *int64
+	merchant_id             *int64
+	addmerchant_id          *int64
+	order_no                *string
+	user_id                 *int64
+	adduser_id              *int64
+	customer_id             *int64
+	addcustomer_id          *int64
+	customer_email          *string
+	customer_name           *string
+	customer_phone          *string
+	total_amount            *int64
+	addtotal_amount         *int64
+	currency                *string
+	display_currency        *string
+	exchange_rate_micro     *int64
+	addexchange_rate_micro  *int64
+	display_amount_minor    *int64
+	adddisplay_amount_minor *int64
+	status                  *string
+	payment_status          *string
+	remark                  *string
+	product_name            *string
+	package_name            *string
+	service_date            *string
+	time_slot               *string
+	reject_reason           *string
+	verified_at             *int64
+	addverified_at          *int64
+	prev_status             *string
+	clearedFields           map[string]struct{}
+	done                    bool
+	oldValue                func(context.Context) (*Order, error)
+	predicates              []predicate.Order
 }
 
 var _ ent.Mutation = (*OrderMutation)(nil)
@@ -7667,6 +9155,154 @@ func (m *OrderMutation) ResetCurrency() {
 	m.currency = nil
 }
 
+// SetDisplayCurrency sets the "display_currency" field.
+func (m *OrderMutation) SetDisplayCurrency(s string) {
+	m.display_currency = &s
+}
+
+// DisplayCurrency returns the value of the "display_currency" field in the mutation.
+func (m *OrderMutation) DisplayCurrency() (r string, exists bool) {
+	v := m.display_currency
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayCurrency returns the old "display_currency" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldDisplayCurrency(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayCurrency is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayCurrency requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayCurrency: %w", err)
+	}
+	return oldValue.DisplayCurrency, nil
+}
+
+// ResetDisplayCurrency resets all changes to the "display_currency" field.
+func (m *OrderMutation) ResetDisplayCurrency() {
+	m.display_currency = nil
+}
+
+// SetExchangeRateMicro sets the "exchange_rate_micro" field.
+func (m *OrderMutation) SetExchangeRateMicro(i int64) {
+	m.exchange_rate_micro = &i
+	m.addexchange_rate_micro = nil
+}
+
+// ExchangeRateMicro returns the value of the "exchange_rate_micro" field in the mutation.
+func (m *OrderMutation) ExchangeRateMicro() (r int64, exists bool) {
+	v := m.exchange_rate_micro
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldExchangeRateMicro returns the old "exchange_rate_micro" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldExchangeRateMicro(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldExchangeRateMicro is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldExchangeRateMicro requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldExchangeRateMicro: %w", err)
+	}
+	return oldValue.ExchangeRateMicro, nil
+}
+
+// AddExchangeRateMicro adds i to the "exchange_rate_micro" field.
+func (m *OrderMutation) AddExchangeRateMicro(i int64) {
+	if m.addexchange_rate_micro != nil {
+		*m.addexchange_rate_micro += i
+	} else {
+		m.addexchange_rate_micro = &i
+	}
+}
+
+// AddedExchangeRateMicro returns the value that was added to the "exchange_rate_micro" field in this mutation.
+func (m *OrderMutation) AddedExchangeRateMicro() (r int64, exists bool) {
+	v := m.addexchange_rate_micro
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetExchangeRateMicro resets all changes to the "exchange_rate_micro" field.
+func (m *OrderMutation) ResetExchangeRateMicro() {
+	m.exchange_rate_micro = nil
+	m.addexchange_rate_micro = nil
+}
+
+// SetDisplayAmountMinor sets the "display_amount_minor" field.
+func (m *OrderMutation) SetDisplayAmountMinor(i int64) {
+	m.display_amount_minor = &i
+	m.adddisplay_amount_minor = nil
+}
+
+// DisplayAmountMinor returns the value of the "display_amount_minor" field in the mutation.
+func (m *OrderMutation) DisplayAmountMinor() (r int64, exists bool) {
+	v := m.display_amount_minor
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDisplayAmountMinor returns the old "display_amount_minor" field's value of the Order entity.
+// If the Order object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *OrderMutation) OldDisplayAmountMinor(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDisplayAmountMinor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDisplayAmountMinor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDisplayAmountMinor: %w", err)
+	}
+	return oldValue.DisplayAmountMinor, nil
+}
+
+// AddDisplayAmountMinor adds i to the "display_amount_minor" field.
+func (m *OrderMutation) AddDisplayAmountMinor(i int64) {
+	if m.adddisplay_amount_minor != nil {
+		*m.adddisplay_amount_minor += i
+	} else {
+		m.adddisplay_amount_minor = &i
+	}
+}
+
+// AddedDisplayAmountMinor returns the value that was added to the "display_amount_minor" field in this mutation.
+func (m *OrderMutation) AddedDisplayAmountMinor() (r int64, exists bool) {
+	v := m.adddisplay_amount_minor
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDisplayAmountMinor resets all changes to the "display_amount_minor" field.
+func (m *OrderMutation) ResetDisplayAmountMinor() {
+	m.display_amount_minor = nil
+	m.adddisplay_amount_minor = nil
+}
+
 // SetStatus sets the "status" field.
 func (m *OrderMutation) SetStatus(s string) {
 	m.status = &s
@@ -8186,7 +9822,7 @@ func (m *OrderMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *OrderMutation) Fields() []string {
-	fields := make([]string, 0, 20)
+	fields := make([]string, 0, 23)
 	if m.tenant_id != nil {
 		fields = append(fields, order.FieldTenantID)
 	}
@@ -8216,6 +9852,15 @@ func (m *OrderMutation) Fields() []string {
 	}
 	if m.currency != nil {
 		fields = append(fields, order.FieldCurrency)
+	}
+	if m.display_currency != nil {
+		fields = append(fields, order.FieldDisplayCurrency)
+	}
+	if m.exchange_rate_micro != nil {
+		fields = append(fields, order.FieldExchangeRateMicro)
+	}
+	if m.display_amount_minor != nil {
+		fields = append(fields, order.FieldDisplayAmountMinor)
 	}
 	if m.status != nil {
 		fields = append(fields, order.FieldStatus)
@@ -8275,6 +9920,12 @@ func (m *OrderMutation) Field(name string) (ent.Value, bool) {
 		return m.TotalAmount()
 	case order.FieldCurrency:
 		return m.Currency()
+	case order.FieldDisplayCurrency:
+		return m.DisplayCurrency()
+	case order.FieldExchangeRateMicro:
+		return m.ExchangeRateMicro()
+	case order.FieldDisplayAmountMinor:
+		return m.DisplayAmountMinor()
 	case order.FieldStatus:
 		return m.Status()
 	case order.FieldPaymentStatus:
@@ -8324,6 +9975,12 @@ func (m *OrderMutation) OldField(ctx context.Context, name string) (ent.Value, e
 		return m.OldTotalAmount(ctx)
 	case order.FieldCurrency:
 		return m.OldCurrency(ctx)
+	case order.FieldDisplayCurrency:
+		return m.OldDisplayCurrency(ctx)
+	case order.FieldExchangeRateMicro:
+		return m.OldExchangeRateMicro(ctx)
+	case order.FieldDisplayAmountMinor:
+		return m.OldDisplayAmountMinor(ctx)
 	case order.FieldStatus:
 		return m.OldStatus(ctx)
 	case order.FieldPaymentStatus:
@@ -8423,6 +10080,27 @@ func (m *OrderMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetCurrency(v)
 		return nil
+	case order.FieldDisplayCurrency:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayCurrency(v)
+		return nil
+	case order.FieldExchangeRateMicro:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetExchangeRateMicro(v)
+		return nil
+	case order.FieldDisplayAmountMinor:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDisplayAmountMinor(v)
+		return nil
 	case order.FieldStatus:
 		v, ok := value.(string)
 		if !ok {
@@ -8516,6 +10194,12 @@ func (m *OrderMutation) AddedFields() []string {
 	if m.addtotal_amount != nil {
 		fields = append(fields, order.FieldTotalAmount)
 	}
+	if m.addexchange_rate_micro != nil {
+		fields = append(fields, order.FieldExchangeRateMicro)
+	}
+	if m.adddisplay_amount_minor != nil {
+		fields = append(fields, order.FieldDisplayAmountMinor)
+	}
 	if m.addverified_at != nil {
 		fields = append(fields, order.FieldVerifiedAt)
 	}
@@ -8537,6 +10221,10 @@ func (m *OrderMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedCustomerID()
 	case order.FieldTotalAmount:
 		return m.AddedTotalAmount()
+	case order.FieldExchangeRateMicro:
+		return m.AddedExchangeRateMicro()
+	case order.FieldDisplayAmountMinor:
+		return m.AddedDisplayAmountMinor()
 	case order.FieldVerifiedAt:
 		return m.AddedVerifiedAt()
 	}
@@ -8582,6 +10270,20 @@ func (m *OrderMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddTotalAmount(v)
+		return nil
+	case order.FieldExchangeRateMicro:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddExchangeRateMicro(v)
+		return nil
+	case order.FieldDisplayAmountMinor:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDisplayAmountMinor(v)
 		return nil
 	case order.FieldVerifiedAt:
 		v, ok := value.(int64)
@@ -8727,6 +10429,15 @@ func (m *OrderMutation) ResetField(name string) error {
 		return nil
 	case order.FieldCurrency:
 		m.ResetCurrency()
+		return nil
+	case order.FieldDisplayCurrency:
+		m.ResetDisplayCurrency()
+		return nil
+	case order.FieldExchangeRateMicro:
+		m.ResetExchangeRateMicro()
+		return nil
+	case order.FieldDisplayAmountMinor:
+		m.ResetDisplayAmountMinor()
 		return nil
 	case order.FieldStatus:
 		m.ResetStatus()

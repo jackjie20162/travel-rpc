@@ -8,6 +8,64 @@ import (
 )
 
 var (
+	// CurrenciesColumns holds the columns for the "currencies" table.
+	CurrenciesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "code", Type: field.TypeString},
+		{Name: "symbol", Type: field.TypeString, Nullable: true},
+		{Name: "name_key", Type: field.TypeString, Nullable: true},
+		{Name: "decimals", Type: field.TypeInt, Default: 2},
+		{Name: "symbol_position", Type: field.TypeString, Default: "prefix"},
+		{Name: "is_base", Type: field.TypeBool, Default: false},
+		{Name: "status", Type: field.TypeString, Default: "ACTIVE"},
+		{Name: "sort", Type: field.TypeInt, Default: 0},
+	}
+	// CurrenciesTable holds the schema information for the "currencies" table.
+	CurrenciesTable = &schema.Table{
+		Name:       "currencies",
+		Columns:    CurrenciesColumns,
+		PrimaryKey: []*schema.Column{CurrenciesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "currency_code",
+				Unique:  true,
+				Columns: []*schema.Column{CurrenciesColumns[1]},
+			},
+			{
+				Name:    "currency_status_sort",
+				Unique:  false,
+				Columns: []*schema.Column{CurrenciesColumns[7], CurrenciesColumns[8]},
+			},
+		},
+	}
+	// ExchangeRatesColumns holds the columns for the "exchange_rates" table.
+	ExchangeRatesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "base_currency", Type: field.TypeString, Default: "AED"},
+		{Name: "target_currency", Type: field.TypeString},
+		{Name: "rate_micro", Type: field.TypeInt64, Default: 1000000},
+		{Name: "source", Type: field.TypeString, Default: "MANUAL"},
+		{Name: "effective_at", Type: field.TypeInt64, Default: 0},
+		{Name: "status", Type: field.TypeString, Default: "ACTIVE"},
+	}
+	// ExchangeRatesTable holds the schema information for the "exchange_rates" table.
+	ExchangeRatesTable = &schema.Table{
+		Name:       "exchange_rates",
+		Columns:    ExchangeRatesColumns,
+		PrimaryKey: []*schema.Column{ExchangeRatesColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "exchangerate_base_currency_target_currency_effective_at",
+				Unique:  true,
+				Columns: []*schema.Column{ExchangeRatesColumns[1], ExchangeRatesColumns[2], ExchangeRatesColumns[5]},
+			},
+			{
+				Name:    "exchangerate_base_currency_target_currency_status",
+				Unique:  false,
+				Columns: []*schema.Column{ExchangeRatesColumns[1], ExchangeRatesColumns[2], ExchangeRatesColumns[6]},
+			},
+		},
+	}
 	// InventoriesColumns holds the columns for the "inventories" table.
 	InventoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -220,6 +278,9 @@ var (
 		{Name: "customer_phone", Type: field.TypeString, Nullable: true},
 		{Name: "total_amount", Type: field.TypeInt64},
 		{Name: "currency", Type: field.TypeString, Default: "AED"},
+		{Name: "display_currency", Type: field.TypeString, Default: "AED"},
+		{Name: "exchange_rate_micro", Type: field.TypeInt64, Default: 1000000},
+		{Name: "display_amount_minor", Type: field.TypeInt64, Default: 0},
 		{Name: "status", Type: field.TypeString, Default: "PENDING_PAYMENT"},
 		{Name: "payment_status", Type: field.TypeString, Default: "PENDING"},
 		{Name: "remark", Type: field.TypeString, Nullable: true},
@@ -245,7 +306,7 @@ var (
 			{
 				Name:    "order_tenant_id_merchant_id_status",
 				Unique:  false,
-				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[2], OrdersColumns[11]},
+				Columns: []*schema.Column{OrdersColumns[1], OrdersColumns[2], OrdersColumns[14]},
 			},
 			{
 				Name:    "order_tenant_id_user_id",
@@ -596,6 +657,8 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CurrenciesTable,
+		ExchangeRatesTable,
 		InventoriesTable,
 		InventoryReservationsTable,
 		ItineraryStopsTable,

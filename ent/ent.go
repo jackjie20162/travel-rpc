@@ -12,6 +12,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"gitee.com/meinongyihe/travel-rpc/ent/currency"
+	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
@@ -87,6 +89,8 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
+			currency.Table:             currency.ValidColumn,
+			exchangerate.Table:         exchangerate.ValidColumn,
 			inventory.Table:            inventory.ValidColumn,
 			inventoryreservation.Table: inventoryreservation.ValidColumn,
 			itinerarystop.Table:        itinerarystop.ValidColumn,

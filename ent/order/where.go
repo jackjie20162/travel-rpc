@@ -102,6 +102,21 @@ func Currency(v string) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldCurrency, v))
 }
 
+// DisplayCurrency applies equality check predicate on the "display_currency" field. It's identical to DisplayCurrencyEQ.
+func DisplayCurrency(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldDisplayCurrency, v))
+}
+
+// ExchangeRateMicro applies equality check predicate on the "exchange_rate_micro" field. It's identical to ExchangeRateMicroEQ.
+func ExchangeRateMicro(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldExchangeRateMicro, v))
+}
+
+// DisplayAmountMinor applies equality check predicate on the "display_amount_minor" field. It's identical to DisplayAmountMinorEQ.
+func DisplayAmountMinor(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldDisplayAmountMinor, v))
+}
+
 // Status applies equality check predicate on the "status" field. It's identical to StatusEQ.
 func Status(v string) predicate.Order {
 	return predicate.Order(sql.FieldEQ(FieldStatus, v))
@@ -725,6 +740,151 @@ func CurrencyEqualFold(v string) predicate.Order {
 // CurrencyContainsFold applies the ContainsFold predicate on the "currency" field.
 func CurrencyContainsFold(v string) predicate.Order {
 	return predicate.Order(sql.FieldContainsFold(FieldCurrency, v))
+}
+
+// DisplayCurrencyEQ applies the EQ predicate on the "display_currency" field.
+func DisplayCurrencyEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyNEQ applies the NEQ predicate on the "display_currency" field.
+func DisplayCurrencyNEQ(v string) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyIn applies the In predicate on the "display_currency" field.
+func DisplayCurrencyIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldDisplayCurrency, vs...))
+}
+
+// DisplayCurrencyNotIn applies the NotIn predicate on the "display_currency" field.
+func DisplayCurrencyNotIn(vs ...string) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldDisplayCurrency, vs...))
+}
+
+// DisplayCurrencyGT applies the GT predicate on the "display_currency" field.
+func DisplayCurrencyGT(v string) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyGTE applies the GTE predicate on the "display_currency" field.
+func DisplayCurrencyGTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyLT applies the LT predicate on the "display_currency" field.
+func DisplayCurrencyLT(v string) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyLTE applies the LTE predicate on the "display_currency" field.
+func DisplayCurrencyLTE(v string) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyContains applies the Contains predicate on the "display_currency" field.
+func DisplayCurrencyContains(v string) predicate.Order {
+	return predicate.Order(sql.FieldContains(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyHasPrefix applies the HasPrefix predicate on the "display_currency" field.
+func DisplayCurrencyHasPrefix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasPrefix(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyHasSuffix applies the HasSuffix predicate on the "display_currency" field.
+func DisplayCurrencyHasSuffix(v string) predicate.Order {
+	return predicate.Order(sql.FieldHasSuffix(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyEqualFold applies the EqualFold predicate on the "display_currency" field.
+func DisplayCurrencyEqualFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldEqualFold(FieldDisplayCurrency, v))
+}
+
+// DisplayCurrencyContainsFold applies the ContainsFold predicate on the "display_currency" field.
+func DisplayCurrencyContainsFold(v string) predicate.Order {
+	return predicate.Order(sql.FieldContainsFold(FieldDisplayCurrency, v))
+}
+
+// ExchangeRateMicroEQ applies the EQ predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldExchangeRateMicro, v))
+}
+
+// ExchangeRateMicroNEQ applies the NEQ predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroNEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldExchangeRateMicro, v))
+}
+
+// ExchangeRateMicroIn applies the In predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldExchangeRateMicro, vs...))
+}
+
+// ExchangeRateMicroNotIn applies the NotIn predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroNotIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldExchangeRateMicro, vs...))
+}
+
+// ExchangeRateMicroGT applies the GT predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroGT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldExchangeRateMicro, v))
+}
+
+// ExchangeRateMicroGTE applies the GTE predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroGTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldExchangeRateMicro, v))
+}
+
+// ExchangeRateMicroLT applies the LT predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroLT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldExchangeRateMicro, v))
+}
+
+// ExchangeRateMicroLTE applies the LTE predicate on the "exchange_rate_micro" field.
+func ExchangeRateMicroLTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldExchangeRateMicro, v))
+}
+
+// DisplayAmountMinorEQ applies the EQ predicate on the "display_amount_minor" field.
+func DisplayAmountMinorEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldEQ(FieldDisplayAmountMinor, v))
+}
+
+// DisplayAmountMinorNEQ applies the NEQ predicate on the "display_amount_minor" field.
+func DisplayAmountMinorNEQ(v int64) predicate.Order {
+	return predicate.Order(sql.FieldNEQ(FieldDisplayAmountMinor, v))
+}
+
+// DisplayAmountMinorIn applies the In predicate on the "display_amount_minor" field.
+func DisplayAmountMinorIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldIn(FieldDisplayAmountMinor, vs...))
+}
+
+// DisplayAmountMinorNotIn applies the NotIn predicate on the "display_amount_minor" field.
+func DisplayAmountMinorNotIn(vs ...int64) predicate.Order {
+	return predicate.Order(sql.FieldNotIn(FieldDisplayAmountMinor, vs...))
+}
+
+// DisplayAmountMinorGT applies the GT predicate on the "display_amount_minor" field.
+func DisplayAmountMinorGT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGT(FieldDisplayAmountMinor, v))
+}
+
+// DisplayAmountMinorGTE applies the GTE predicate on the "display_amount_minor" field.
+func DisplayAmountMinorGTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldGTE(FieldDisplayAmountMinor, v))
+}
+
+// DisplayAmountMinorLT applies the LT predicate on the "display_amount_minor" field.
+func DisplayAmountMinorLT(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLT(FieldDisplayAmountMinor, v))
+}
+
+// DisplayAmountMinorLTE applies the LTE predicate on the "display_amount_minor" field.
+func DisplayAmountMinorLTE(v int64) predicate.Order {
+	return predicate.Order(sql.FieldLTE(FieldDisplayAmountMinor, v))
 }
 
 // StatusEQ applies the EQ predicate on the "status" field.

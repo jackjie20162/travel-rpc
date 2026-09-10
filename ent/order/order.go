@@ -31,6 +31,12 @@ const (
 	FieldTotalAmount = "total_amount"
 	// FieldCurrency holds the string denoting the currency field in the database.
 	FieldCurrency = "currency"
+	// FieldDisplayCurrency holds the string denoting the display_currency field in the database.
+	FieldDisplayCurrency = "display_currency"
+	// FieldExchangeRateMicro holds the string denoting the exchange_rate_micro field in the database.
+	FieldExchangeRateMicro = "exchange_rate_micro"
+	// FieldDisplayAmountMinor holds the string denoting the display_amount_minor field in the database.
+	FieldDisplayAmountMinor = "display_amount_minor"
 	// FieldStatus holds the string denoting the status field in the database.
 	FieldStatus = "status"
 	// FieldPaymentStatus holds the string denoting the payment_status field in the database.
@@ -68,6 +74,9 @@ var Columns = []string{
 	FieldCustomerPhone,
 	FieldTotalAmount,
 	FieldCurrency,
+	FieldDisplayCurrency,
+	FieldExchangeRateMicro,
+	FieldDisplayAmountMinor,
 	FieldStatus,
 	FieldPaymentStatus,
 	FieldRemark,
@@ -95,6 +104,12 @@ var (
 	OrderNoValidator func(string) error
 	// DefaultCurrency holds the default value on creation for the "currency" field.
 	DefaultCurrency string
+	// DefaultDisplayCurrency holds the default value on creation for the "display_currency" field.
+	DefaultDisplayCurrency string
+	// DefaultExchangeRateMicro holds the default value on creation for the "exchange_rate_micro" field.
+	DefaultExchangeRateMicro int64
+	// DefaultDisplayAmountMinor holds the default value on creation for the "display_amount_minor" field.
+	DefaultDisplayAmountMinor int64
 	// DefaultStatus holds the default value on creation for the "status" field.
 	DefaultStatus string
 	// DefaultPaymentStatus holds the default value on creation for the "payment_status" field.
@@ -157,6 +172,21 @@ func ByTotalAmount(opts ...sql.OrderTermOption) OrderOption {
 // ByCurrency orders the results by the currency field.
 func ByCurrency(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCurrency, opts...).ToFunc()
+}
+
+// ByDisplayCurrency orders the results by the display_currency field.
+func ByDisplayCurrency(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayCurrency, opts...).ToFunc()
+}
+
+// ByExchangeRateMicro orders the results by the exchange_rate_micro field.
+func ByExchangeRateMicro(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldExchangeRateMicro, opts...).ToFunc()
+}
+
+// ByDisplayAmountMinor orders the results by the display_amount_minor field.
+func ByDisplayAmountMinor(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDisplayAmountMinor, opts...).ToFunc()
 }
 
 // ByStatus orders the results by the status field.

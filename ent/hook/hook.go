@@ -9,6 +9,30 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent"
 )
 
+// The CurrencyFunc type is an adapter to allow the use of ordinary
+// function as Currency mutator.
+type CurrencyFunc func(context.Context, *ent.CurrencyMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CurrencyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CurrencyMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CurrencyMutation", m)
+}
+
+// The ExchangeRateFunc type is an adapter to allow the use of ordinary
+// function as ExchangeRate mutator.
+type ExchangeRateFunc func(context.Context, *ent.ExchangeRateMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ExchangeRateFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.ExchangeRateMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ExchangeRateMutation", m)
+}
+
 // The InventoryFunc type is an adapter to allow the use of ordinary
 // function as Inventory mutator.
 type InventoryFunc func(context.Context, *ent.InventoryMutation) (ent.Value, error)

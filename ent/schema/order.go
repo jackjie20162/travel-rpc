@@ -20,6 +20,10 @@ func (Order) Fields() []ent.Field {
 		field.String("customer_phone").Optional(),
 		field.Int64("total_amount"),
 		field.String("currency").Default("AED"),
+		// --- 下单锁汇字段：结算真值仍为 total_amount(基准币 AED)，以下仅用于用户侧展示 ---
+		field.String("display_currency").Default("AED").Comment("下单时用户选择的展示币种"),
+		field.Int64("exchange_rate_micro").Default(1000000).Comment("下单时锁定的汇率×1e6，基准币为1000000"),
+		field.Int64("display_amount_minor").Default(0).Comment("锁定的展示金额(最小货币单位,×100)"),
 		field.String("status").Default("PENDING_PAYMENT"),
 		field.String("payment_status").Default("PENDING"),
 		field.String("remark").Optional(),

@@ -127,6 +127,48 @@ func (_c *OrderCreate) SetNillableCurrency(v *string) *OrderCreate {
 	return _c
 }
 
+// SetDisplayCurrency sets the "display_currency" field.
+func (_c *OrderCreate) SetDisplayCurrency(v string) *OrderCreate {
+	_c.mutation.SetDisplayCurrency(v)
+	return _c
+}
+
+// SetNillableDisplayCurrency sets the "display_currency" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableDisplayCurrency(v *string) *OrderCreate {
+	if v != nil {
+		_c.SetDisplayCurrency(*v)
+	}
+	return _c
+}
+
+// SetExchangeRateMicro sets the "exchange_rate_micro" field.
+func (_c *OrderCreate) SetExchangeRateMicro(v int64) *OrderCreate {
+	_c.mutation.SetExchangeRateMicro(v)
+	return _c
+}
+
+// SetNillableExchangeRateMicro sets the "exchange_rate_micro" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableExchangeRateMicro(v *int64) *OrderCreate {
+	if v != nil {
+		_c.SetExchangeRateMicro(*v)
+	}
+	return _c
+}
+
+// SetDisplayAmountMinor sets the "display_amount_minor" field.
+func (_c *OrderCreate) SetDisplayAmountMinor(v int64) *OrderCreate {
+	_c.mutation.SetDisplayAmountMinor(v)
+	return _c
+}
+
+// SetNillableDisplayAmountMinor sets the "display_amount_minor" field if the given value is not nil.
+func (_c *OrderCreate) SetNillableDisplayAmountMinor(v *int64) *OrderCreate {
+	if v != nil {
+		_c.SetDisplayAmountMinor(*v)
+	}
+	return _c
+}
+
 // SetStatus sets the "status" field.
 func (_c *OrderCreate) SetStatus(v string) *OrderCreate {
 	_c.mutation.SetStatus(v)
@@ -306,6 +348,18 @@ func (_c *OrderCreate) defaults() {
 		v := order.DefaultCurrency
 		_c.mutation.SetCurrency(v)
 	}
+	if _, ok := _c.mutation.DisplayCurrency(); !ok {
+		v := order.DefaultDisplayCurrency
+		_c.mutation.SetDisplayCurrency(v)
+	}
+	if _, ok := _c.mutation.ExchangeRateMicro(); !ok {
+		v := order.DefaultExchangeRateMicro
+		_c.mutation.SetExchangeRateMicro(v)
+	}
+	if _, ok := _c.mutation.DisplayAmountMinor(); !ok {
+		v := order.DefaultDisplayAmountMinor
+		_c.mutation.SetDisplayAmountMinor(v)
+	}
 	if _, ok := _c.mutation.Status(); !ok {
 		v := order.DefaultStatus
 		_c.mutation.SetStatus(v)
@@ -337,6 +391,15 @@ func (_c *OrderCreate) check() error {
 	}
 	if _, ok := _c.mutation.Currency(); !ok {
 		return &ValidationError{Name: "currency", err: errors.New(`ent: missing required field "Order.currency"`)}
+	}
+	if _, ok := _c.mutation.DisplayCurrency(); !ok {
+		return &ValidationError{Name: "display_currency", err: errors.New(`ent: missing required field "Order.display_currency"`)}
+	}
+	if _, ok := _c.mutation.ExchangeRateMicro(); !ok {
+		return &ValidationError{Name: "exchange_rate_micro", err: errors.New(`ent: missing required field "Order.exchange_rate_micro"`)}
+	}
+	if _, ok := _c.mutation.DisplayAmountMinor(); !ok {
+		return &ValidationError{Name: "display_amount_minor", err: errors.New(`ent: missing required field "Order.display_amount_minor"`)}
 	}
 	if _, ok := _c.mutation.Status(); !ok {
 		return &ValidationError{Name: "status", err: errors.New(`ent: missing required field "Order.status"`)}
@@ -409,6 +472,18 @@ func (_c *OrderCreate) createSpec() (*Order, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Currency(); ok {
 		_spec.SetField(order.FieldCurrency, field.TypeString, value)
 		_node.Currency = value
+	}
+	if value, ok := _c.mutation.DisplayCurrency(); ok {
+		_spec.SetField(order.FieldDisplayCurrency, field.TypeString, value)
+		_node.DisplayCurrency = value
+	}
+	if value, ok := _c.mutation.ExchangeRateMicro(); ok {
+		_spec.SetField(order.FieldExchangeRateMicro, field.TypeInt64, value)
+		_node.ExchangeRateMicro = value
+	}
+	if value, ok := _c.mutation.DisplayAmountMinor(); ok {
+		_spec.SetField(order.FieldDisplayAmountMinor, field.TypeInt64, value)
+		_node.DisplayAmountMinor = value
 	}
 	if value, ok := _c.mutation.Status(); ok {
 		_spec.SetField(order.FieldStatus, field.TypeString, value)

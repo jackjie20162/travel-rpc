@@ -6,6 +6,12 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Currency is the predicate function for currency builders.
+type Currency func(*sql.Selector)
+
+// ExchangeRate is the predicate function for exchangerate builders.
+type ExchangeRate func(*sql.Selector)
+
 // Inventory is the predicate function for inventory builders.
 type Inventory func(*sql.Selector)
 

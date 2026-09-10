@@ -5,6 +5,8 @@ package ent
 import (
 	"time"
 
+	"gitee.com/meinongyihe/travel-rpc/ent/currency"
+	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
@@ -26,6 +28,60 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	currencyFields := schema.Currency{}.Fields()
+	_ = currencyFields
+	// currencyDescCode is the schema descriptor for code field.
+	currencyDescCode := currencyFields[0].Descriptor()
+	// currency.CodeValidator is a validator for the "code" field. It is called by the builders before save.
+	currency.CodeValidator = currencyDescCode.Validators[0].(func(string) error)
+	// currencyDescDecimals is the schema descriptor for decimals field.
+	currencyDescDecimals := currencyFields[3].Descriptor()
+	// currency.DefaultDecimals holds the default value on creation for the decimals field.
+	currency.DefaultDecimals = currencyDescDecimals.Default.(int)
+	// currencyDescSymbolPosition is the schema descriptor for symbol_position field.
+	currencyDescSymbolPosition := currencyFields[4].Descriptor()
+	// currency.DefaultSymbolPosition holds the default value on creation for the symbol_position field.
+	currency.DefaultSymbolPosition = currencyDescSymbolPosition.Default.(string)
+	// currencyDescIsBase is the schema descriptor for is_base field.
+	currencyDescIsBase := currencyFields[5].Descriptor()
+	// currency.DefaultIsBase holds the default value on creation for the is_base field.
+	currency.DefaultIsBase = currencyDescIsBase.Default.(bool)
+	// currencyDescStatus is the schema descriptor for status field.
+	currencyDescStatus := currencyFields[6].Descriptor()
+	// currency.DefaultStatus holds the default value on creation for the status field.
+	currency.DefaultStatus = currencyDescStatus.Default.(string)
+	// currencyDescSort is the schema descriptor for sort field.
+	currencyDescSort := currencyFields[7].Descriptor()
+	// currency.DefaultSort holds the default value on creation for the sort field.
+	currency.DefaultSort = currencyDescSort.Default.(int)
+	exchangerateFields := schema.ExchangeRate{}.Fields()
+	_ = exchangerateFields
+	// exchangerateDescBaseCurrency is the schema descriptor for base_currency field.
+	exchangerateDescBaseCurrency := exchangerateFields[0].Descriptor()
+	// exchangerate.DefaultBaseCurrency holds the default value on creation for the base_currency field.
+	exchangerate.DefaultBaseCurrency = exchangerateDescBaseCurrency.Default.(string)
+	// exchangerate.BaseCurrencyValidator is a validator for the "base_currency" field. It is called by the builders before save.
+	exchangerate.BaseCurrencyValidator = exchangerateDescBaseCurrency.Validators[0].(func(string) error)
+	// exchangerateDescTargetCurrency is the schema descriptor for target_currency field.
+	exchangerateDescTargetCurrency := exchangerateFields[1].Descriptor()
+	// exchangerate.TargetCurrencyValidator is a validator for the "target_currency" field. It is called by the builders before save.
+	exchangerate.TargetCurrencyValidator = exchangerateDescTargetCurrency.Validators[0].(func(string) error)
+	// exchangerateDescRateMicro is the schema descriptor for rate_micro field.
+	exchangerateDescRateMicro := exchangerateFields[2].Descriptor()
+	// exchangerate.DefaultRateMicro holds the default value on creation for the rate_micro field.
+	exchangerate.DefaultRateMicro = exchangerateDescRateMicro.Default.(int64)
+	// exchangerateDescSource is the schema descriptor for source field.
+	exchangerateDescSource := exchangerateFields[3].Descriptor()
+	// exchangerate.DefaultSource holds the default value on creation for the source field.
+	exchangerate.DefaultSource = exchangerateDescSource.Default.(string)
+	// exchangerateDescEffectiveAt is the schema descriptor for effective_at field.
+	exchangerateDescEffectiveAt := exchangerateFields[4].Descriptor()
+	// exchangerate.DefaultEffectiveAt holds the default value on creation for the effective_at field.
+	exchangerate.DefaultEffectiveAt = exchangerateDescEffectiveAt.Default.(int64)
+	// exchangerateDescStatus is the schema descriptor for status field.
+	exchangerateDescStatus := exchangerateFields[5].Descriptor()
+	// exchangerate.DefaultStatus holds the default value on creation for the status field.
+	exchangerate.DefaultStatus = exchangerateDescStatus.Default.(string)
 	inventoryFields := schema.Inventory{}.Fields()
 	_ = inventoryFields
 	// inventoryDescCapacity is the schema descriptor for capacity field.
@@ -156,12 +212,24 @@ func init() {
 	orderDescCurrency := orderFields[9].Descriptor()
 	// order.DefaultCurrency holds the default value on creation for the currency field.
 	order.DefaultCurrency = orderDescCurrency.Default.(string)
+	// orderDescDisplayCurrency is the schema descriptor for display_currency field.
+	orderDescDisplayCurrency := orderFields[10].Descriptor()
+	// order.DefaultDisplayCurrency holds the default value on creation for the display_currency field.
+	order.DefaultDisplayCurrency = orderDescDisplayCurrency.Default.(string)
+	// orderDescExchangeRateMicro is the schema descriptor for exchange_rate_micro field.
+	orderDescExchangeRateMicro := orderFields[11].Descriptor()
+	// order.DefaultExchangeRateMicro holds the default value on creation for the exchange_rate_micro field.
+	order.DefaultExchangeRateMicro = orderDescExchangeRateMicro.Default.(int64)
+	// orderDescDisplayAmountMinor is the schema descriptor for display_amount_minor field.
+	orderDescDisplayAmountMinor := orderFields[12].Descriptor()
+	// order.DefaultDisplayAmountMinor holds the default value on creation for the display_amount_minor field.
+	order.DefaultDisplayAmountMinor = orderDescDisplayAmountMinor.Default.(int64)
 	// orderDescStatus is the schema descriptor for status field.
-	orderDescStatus := orderFields[10].Descriptor()
+	orderDescStatus := orderFields[13].Descriptor()
 	// order.DefaultStatus holds the default value on creation for the status field.
 	order.DefaultStatus = orderDescStatus.Default.(string)
 	// orderDescPaymentStatus is the schema descriptor for payment_status field.
-	orderDescPaymentStatus := orderFields[11].Descriptor()
+	orderDescPaymentStatus := orderFields[14].Descriptor()
 	// order.DefaultPaymentStatus holds the default value on creation for the payment_status field.
 	order.DefaultPaymentStatus = orderDescPaymentStatus.Default.(string)
 	paymentFields := schema.Payment{}.Fields()

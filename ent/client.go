@@ -14,6 +14,8 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"gitee.com/meinongyihe/travel-rpc/ent/currency"
+	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventoryreservation"
 	"gitee.com/meinongyihe/travel-rpc/ent/itinerarystop"
@@ -38,6 +40,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Currency is the client for interacting with the Currency builders.
+	Currency *CurrencyClient
+	// ExchangeRate is the client for interacting with the ExchangeRate builders.
+	ExchangeRate *ExchangeRateClient
 	// Inventory is the client for interacting with the Inventory builders.
 	Inventory *InventoryClient
 	// InventoryReservation is the client for interacting with the InventoryReservation builders.
@@ -79,6 +85,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Currency = NewCurrencyClient(c.config)
+	c.ExchangeRate = NewExchangeRateClient(c.config)
 	c.Inventory = NewInventoryClient(c.config)
 	c.InventoryReservation = NewInventoryReservationClient(c.config)
 	c.ItineraryStop = NewItineraryStopClient(c.config)
@@ -186,6 +194,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Currency:             NewCurrencyClient(cfg),
+		ExchangeRate:         NewExchangeRateClient(cfg),
 		Inventory:            NewInventoryClient(cfg),
 		InventoryReservation: NewInventoryReservationClient(cfg),
 		ItineraryStop:        NewItineraryStopClient(cfg),
@@ -220,6 +230,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Currency:             NewCurrencyClient(cfg),
+		ExchangeRate:         NewExchangeRateClient(cfg),
 		Inventory:            NewInventoryClient(cfg),
 		InventoryReservation: NewInventoryReservationClient(cfg),
 		ItineraryStop:        NewItineraryStopClient(cfg),
@@ -241,7 +253,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Inventory.
+//		Currency.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -264,9 +276,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant,
-		c.MerchantConfig, c.Order, c.OrderItem, c.Payment, c.Product, c.ProductPackage,
-		c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
+		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem, c.Payment,
+		c.Product, c.ProductPackage, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Use(hooks...)
 	}
@@ -276,9 +288,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Inventory, c.InventoryReservation, c.ItineraryStop, c.Merchant,
-		c.MerchantConfig, c.Order, c.OrderItem, c.Payment, c.Product, c.ProductPackage,
-		c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
+		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem, c.Payment,
+		c.Product, c.ProductPackage, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -287,6 +299,10 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *CurrencyMutation:
+		return c.Currency.mutate(ctx, m)
+	case *ExchangeRateMutation:
+		return c.ExchangeRate.mutate(ctx, m)
 	case *InventoryMutation:
 		return c.Inventory.mutate(ctx, m)
 	case *InventoryReservationMutation:
@@ -319,6 +335,272 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Voucher.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// CurrencyClient is a client for the Currency schema.
+type CurrencyClient struct {
+	config
+}
+
+// NewCurrencyClient returns a client for the Currency from the given config.
+func NewCurrencyClient(c config) *CurrencyClient {
+	return &CurrencyClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `currency.Hooks(f(g(h())))`.
+func (c *CurrencyClient) Use(hooks ...Hook) {
+	c.hooks.Currency = append(c.hooks.Currency, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `currency.Intercept(f(g(h())))`.
+func (c *CurrencyClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Currency = append(c.inters.Currency, interceptors...)
+}
+
+// Create returns a builder for creating a Currency entity.
+func (c *CurrencyClient) Create() *CurrencyCreate {
+	mutation := newCurrencyMutation(c.config, OpCreate)
+	return &CurrencyCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Currency entities.
+func (c *CurrencyClient) CreateBulk(builders ...*CurrencyCreate) *CurrencyCreateBulk {
+	return &CurrencyCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *CurrencyClient) MapCreateBulk(slice any, setFunc func(*CurrencyCreate, int)) *CurrencyCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &CurrencyCreateBulk{err: fmt.Errorf("calling to CurrencyClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*CurrencyCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &CurrencyCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Currency.
+func (c *CurrencyClient) Update() *CurrencyUpdate {
+	mutation := newCurrencyMutation(c.config, OpUpdate)
+	return &CurrencyUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CurrencyClient) UpdateOne(_m *Currency) *CurrencyUpdateOne {
+	mutation := newCurrencyMutation(c.config, OpUpdateOne, withCurrency(_m))
+	return &CurrencyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CurrencyClient) UpdateOneID(id int) *CurrencyUpdateOne {
+	mutation := newCurrencyMutation(c.config, OpUpdateOne, withCurrencyID(id))
+	return &CurrencyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Currency.
+func (c *CurrencyClient) Delete() *CurrencyDelete {
+	mutation := newCurrencyMutation(c.config, OpDelete)
+	return &CurrencyDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *CurrencyClient) DeleteOne(_m *Currency) *CurrencyDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *CurrencyClient) DeleteOneID(id int) *CurrencyDeleteOne {
+	builder := c.Delete().Where(currency.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CurrencyDeleteOne{builder}
+}
+
+// Query returns a query builder for Currency.
+func (c *CurrencyClient) Query() *CurrencyQuery {
+	return &CurrencyQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeCurrency},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Currency entity by its id.
+func (c *CurrencyClient) Get(ctx context.Context, id int) (*Currency, error) {
+	return c.Query().Where(currency.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CurrencyClient) GetX(ctx context.Context, id int) *Currency {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *CurrencyClient) Hooks() []Hook {
+	return c.hooks.Currency
+}
+
+// Interceptors returns the client interceptors.
+func (c *CurrencyClient) Interceptors() []Interceptor {
+	return c.inters.Currency
+}
+
+func (c *CurrencyClient) mutate(ctx context.Context, m *CurrencyMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&CurrencyCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&CurrencyUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&CurrencyUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&CurrencyDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Currency mutation op: %q", m.Op())
+	}
+}
+
+// ExchangeRateClient is a client for the ExchangeRate schema.
+type ExchangeRateClient struct {
+	config
+}
+
+// NewExchangeRateClient returns a client for the ExchangeRate from the given config.
+func NewExchangeRateClient(c config) *ExchangeRateClient {
+	return &ExchangeRateClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `exchangerate.Hooks(f(g(h())))`.
+func (c *ExchangeRateClient) Use(hooks ...Hook) {
+	c.hooks.ExchangeRate = append(c.hooks.ExchangeRate, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `exchangerate.Intercept(f(g(h())))`.
+func (c *ExchangeRateClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ExchangeRate = append(c.inters.ExchangeRate, interceptors...)
+}
+
+// Create returns a builder for creating a ExchangeRate entity.
+func (c *ExchangeRateClient) Create() *ExchangeRateCreate {
+	mutation := newExchangeRateMutation(c.config, OpCreate)
+	return &ExchangeRateCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ExchangeRate entities.
+func (c *ExchangeRateClient) CreateBulk(builders ...*ExchangeRateCreate) *ExchangeRateCreateBulk {
+	return &ExchangeRateCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ExchangeRateClient) MapCreateBulk(slice any, setFunc func(*ExchangeRateCreate, int)) *ExchangeRateCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ExchangeRateCreateBulk{err: fmt.Errorf("calling to ExchangeRateClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ExchangeRateCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ExchangeRateCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ExchangeRate.
+func (c *ExchangeRateClient) Update() *ExchangeRateUpdate {
+	mutation := newExchangeRateMutation(c.config, OpUpdate)
+	return &ExchangeRateUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ExchangeRateClient) UpdateOne(_m *ExchangeRate) *ExchangeRateUpdateOne {
+	mutation := newExchangeRateMutation(c.config, OpUpdateOne, withExchangeRate(_m))
+	return &ExchangeRateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ExchangeRateClient) UpdateOneID(id int) *ExchangeRateUpdateOne {
+	mutation := newExchangeRateMutation(c.config, OpUpdateOne, withExchangeRateID(id))
+	return &ExchangeRateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ExchangeRate.
+func (c *ExchangeRateClient) Delete() *ExchangeRateDelete {
+	mutation := newExchangeRateMutation(c.config, OpDelete)
+	return &ExchangeRateDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ExchangeRateClient) DeleteOne(_m *ExchangeRate) *ExchangeRateDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ExchangeRateClient) DeleteOneID(id int) *ExchangeRateDeleteOne {
+	builder := c.Delete().Where(exchangerate.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ExchangeRateDeleteOne{builder}
+}
+
+// Query returns a query builder for ExchangeRate.
+func (c *ExchangeRateClient) Query() *ExchangeRateQuery {
+	return &ExchangeRateQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeExchangeRate},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ExchangeRate entity by its id.
+func (c *ExchangeRateClient) Get(ctx context.Context, id int) (*ExchangeRate, error) {
+	return c.Query().Where(exchangerate.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ExchangeRateClient) GetX(ctx context.Context, id int) *ExchangeRate {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ExchangeRateClient) Hooks() []Hook {
+	return c.hooks.ExchangeRate
+}
+
+// Interceptors returns the client interceptors.
+func (c *ExchangeRateClient) Interceptors() []Interceptor {
+	return c.inters.ExchangeRate
+}
+
+func (c *ExchangeRateClient) mutate(ctx context.Context, m *ExchangeRateMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ExchangeRateCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ExchangeRateUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ExchangeRateUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ExchangeRateDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ExchangeRate mutation op: %q", m.Op())
 	}
 }
 
@@ -2320,14 +2602,14 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Inventory, InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
-		OrderItem, Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
-		Voucher []ent.Hook
+		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
+		Merchant, MerchantConfig, Order, OrderItem, Payment, Product, ProductPackage,
+		Review, Tenant, Traveler, User, Voucher []ent.Hook
 	}
 	inters struct {
-		Inventory, InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
-		OrderItem, Payment, Product, ProductPackage, Review, Tenant, Traveler, User,
-		Voucher []ent.Interceptor
+		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
+		Merchant, MerchantConfig, Order, OrderItem, Payment, Product, ProductPackage,
+		Review, Tenant, Traveler, User, Voucher []ent.Interceptor
 	}
 )
 

@@ -232,6 +232,62 @@ func (_u *OrderUpdate) SetNillableCurrency(v *string) *OrderUpdate {
 	return _u
 }
 
+// SetDisplayCurrency sets the "display_currency" field.
+func (_u *OrderUpdate) SetDisplayCurrency(v string) *OrderUpdate {
+	_u.mutation.SetDisplayCurrency(v)
+	return _u
+}
+
+// SetNillableDisplayCurrency sets the "display_currency" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableDisplayCurrency(v *string) *OrderUpdate {
+	if v != nil {
+		_u.SetDisplayCurrency(*v)
+	}
+	return _u
+}
+
+// SetExchangeRateMicro sets the "exchange_rate_micro" field.
+func (_u *OrderUpdate) SetExchangeRateMicro(v int64) *OrderUpdate {
+	_u.mutation.ResetExchangeRateMicro()
+	_u.mutation.SetExchangeRateMicro(v)
+	return _u
+}
+
+// SetNillableExchangeRateMicro sets the "exchange_rate_micro" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableExchangeRateMicro(v *int64) *OrderUpdate {
+	if v != nil {
+		_u.SetExchangeRateMicro(*v)
+	}
+	return _u
+}
+
+// AddExchangeRateMicro adds value to the "exchange_rate_micro" field.
+func (_u *OrderUpdate) AddExchangeRateMicro(v int64) *OrderUpdate {
+	_u.mutation.AddExchangeRateMicro(v)
+	return _u
+}
+
+// SetDisplayAmountMinor sets the "display_amount_minor" field.
+func (_u *OrderUpdate) SetDisplayAmountMinor(v int64) *OrderUpdate {
+	_u.mutation.ResetDisplayAmountMinor()
+	_u.mutation.SetDisplayAmountMinor(v)
+	return _u
+}
+
+// SetNillableDisplayAmountMinor sets the "display_amount_minor" field if the given value is not nil.
+func (_u *OrderUpdate) SetNillableDisplayAmountMinor(v *int64) *OrderUpdate {
+	if v != nil {
+		_u.SetDisplayAmountMinor(*v)
+	}
+	return _u
+}
+
+// AddDisplayAmountMinor adds value to the "display_amount_minor" field.
+func (_u *OrderUpdate) AddDisplayAmountMinor(v int64) *OrderUpdate {
+	_u.mutation.AddDisplayAmountMinor(v)
+	return _u
+}
+
 // SetStatus sets the "status" field.
 func (_u *OrderUpdate) SetStatus(v string) *OrderUpdate {
 	_u.mutation.SetStatus(v)
@@ -541,6 +597,21 @@ func (_u *OrderUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Currency(); ok {
 		_spec.SetField(order.FieldCurrency, field.TypeString, value)
 	}
+	if value, ok := _u.mutation.DisplayCurrency(); ok {
+		_spec.SetField(order.FieldDisplayCurrency, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.ExchangeRateMicro(); ok {
+		_spec.SetField(order.FieldExchangeRateMicro, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedExchangeRateMicro(); ok {
+		_spec.AddField(order.FieldExchangeRateMicro, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.DisplayAmountMinor(); ok {
+		_spec.SetField(order.FieldDisplayAmountMinor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayAmountMinor(); ok {
+		_spec.AddField(order.FieldDisplayAmountMinor, field.TypeInt64, value)
+	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(order.FieldStatus, field.TypeString, value)
 	}
@@ -820,6 +891,62 @@ func (_u *OrderUpdateOne) SetNillableCurrency(v *string) *OrderUpdateOne {
 	if v != nil {
 		_u.SetCurrency(*v)
 	}
+	return _u
+}
+
+// SetDisplayCurrency sets the "display_currency" field.
+func (_u *OrderUpdateOne) SetDisplayCurrency(v string) *OrderUpdateOne {
+	_u.mutation.SetDisplayCurrency(v)
+	return _u
+}
+
+// SetNillableDisplayCurrency sets the "display_currency" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableDisplayCurrency(v *string) *OrderUpdateOne {
+	if v != nil {
+		_u.SetDisplayCurrency(*v)
+	}
+	return _u
+}
+
+// SetExchangeRateMicro sets the "exchange_rate_micro" field.
+func (_u *OrderUpdateOne) SetExchangeRateMicro(v int64) *OrderUpdateOne {
+	_u.mutation.ResetExchangeRateMicro()
+	_u.mutation.SetExchangeRateMicro(v)
+	return _u
+}
+
+// SetNillableExchangeRateMicro sets the "exchange_rate_micro" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableExchangeRateMicro(v *int64) *OrderUpdateOne {
+	if v != nil {
+		_u.SetExchangeRateMicro(*v)
+	}
+	return _u
+}
+
+// AddExchangeRateMicro adds value to the "exchange_rate_micro" field.
+func (_u *OrderUpdateOne) AddExchangeRateMicro(v int64) *OrderUpdateOne {
+	_u.mutation.AddExchangeRateMicro(v)
+	return _u
+}
+
+// SetDisplayAmountMinor sets the "display_amount_minor" field.
+func (_u *OrderUpdateOne) SetDisplayAmountMinor(v int64) *OrderUpdateOne {
+	_u.mutation.ResetDisplayAmountMinor()
+	_u.mutation.SetDisplayAmountMinor(v)
+	return _u
+}
+
+// SetNillableDisplayAmountMinor sets the "display_amount_minor" field if the given value is not nil.
+func (_u *OrderUpdateOne) SetNillableDisplayAmountMinor(v *int64) *OrderUpdateOne {
+	if v != nil {
+		_u.SetDisplayAmountMinor(*v)
+	}
+	return _u
+}
+
+// AddDisplayAmountMinor adds value to the "display_amount_minor" field.
+func (_u *OrderUpdateOne) AddDisplayAmountMinor(v int64) *OrderUpdateOne {
+	_u.mutation.AddDisplayAmountMinor(v)
 	return _u
 }
 
@@ -1161,6 +1288,21 @@ func (_u *OrderUpdateOne) sqlSave(ctx context.Context) (_node *Order, err error)
 	}
 	if value, ok := _u.mutation.Currency(); ok {
 		_spec.SetField(order.FieldCurrency, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.DisplayCurrency(); ok {
+		_spec.SetField(order.FieldDisplayCurrency, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.ExchangeRateMicro(); ok {
+		_spec.SetField(order.FieldExchangeRateMicro, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedExchangeRateMicro(); ok {
+		_spec.AddField(order.FieldExchangeRateMicro, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.DisplayAmountMinor(); ok {
+		_spec.SetField(order.FieldDisplayAmountMinor, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedDisplayAmountMinor(); ok {
+		_spec.AddField(order.FieldDisplayAmountMinor, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.Status(); ok {
 		_spec.SetField(order.FieldStatus, field.TypeString, value)

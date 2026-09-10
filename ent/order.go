@@ -36,6 +36,12 @@ type Order struct {
 	TotalAmount int64 `json:"total_amount,omitempty"`
 	// Currency holds the value of the "currency" field.
 	Currency string `json:"currency,omitempty"`
+	// 下单时用户选择的展示币种
+	DisplayCurrency string `json:"display_currency,omitempty"`
+	// 下单时锁定的汇率×1e6，基准币为1000000
+	ExchangeRateMicro int64 `json:"exchange_rate_micro,omitempty"`
+	// 锁定的展示金额(最小货币单位,×100)
+	DisplayAmountMinor int64 `json:"display_amount_minor,omitempty"`
 	// Status holds the value of the "status" field.
 	Status string `json:"status,omitempty"`
 	// PaymentStatus holds the value of the "payment_status" field.
@@ -64,9 +70,9 @@ func (*Order) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount, order.FieldVerifiedAt:
+		case order.FieldID, order.FieldTenantID, order.FieldMerchantID, order.FieldUserID, order.FieldCustomerID, order.FieldTotalAmount, order.FieldExchangeRateMicro, order.FieldDisplayAmountMinor, order.FieldVerifiedAt:
 			values[i] = new(sql.NullInt64)
-		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot, order.FieldRejectReason, order.FieldPrevStatus:
+		case order.FieldOrderNo, order.FieldCustomerEmail, order.FieldCustomerName, order.FieldCustomerPhone, order.FieldCurrency, order.FieldDisplayCurrency, order.FieldStatus, order.FieldPaymentStatus, order.FieldRemark, order.FieldProductName, order.FieldPackageName, order.FieldServiceDate, order.FieldTimeSlot, order.FieldRejectReason, order.FieldPrevStatus:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -148,6 +154,24 @@ func (_m *Order) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field currency", values[i])
 			} else if value.Valid {
 				_m.Currency = value.String
+			}
+		case order.FieldDisplayCurrency:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field display_currency", values[i])
+			} else if value.Valid {
+				_m.DisplayCurrency = value.String
+			}
+		case order.FieldExchangeRateMicro:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field exchange_rate_micro", values[i])
+			} else if value.Valid {
+				_m.ExchangeRateMicro = value.Int64
+			}
+		case order.FieldDisplayAmountMinor:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field display_amount_minor", values[i])
+			} else if value.Valid {
+				_m.DisplayAmountMinor = value.Int64
 			}
 		case order.FieldStatus:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -274,6 +298,15 @@ func (_m *Order) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("currency=")
 	builder.WriteString(_m.Currency)
+	builder.WriteString(", ")
+	builder.WriteString("display_currency=")
+	builder.WriteString(_m.DisplayCurrency)
+	builder.WriteString(", ")
+	builder.WriteString("exchange_rate_micro=")
+	builder.WriteString(fmt.Sprintf("%v", _m.ExchangeRateMicro))
+	builder.WriteString(", ")
+	builder.WriteString("display_amount_minor=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DisplayAmountMinor))
 	builder.WriteString(", ")
 	builder.WriteString("status=")
 	builder.WriteString(_m.Status)
