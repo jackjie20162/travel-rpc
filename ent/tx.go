@@ -32,12 +32,16 @@ type Tx struct {
 	Order *OrderClient
 	// OrderItem is the client for interacting with the OrderItem builders.
 	OrderItem *OrderItemClient
+	// PackageTranslation is the client for interacting with the PackageTranslation builders.
+	PackageTranslation *PackageTranslationClient
 	// Payment is the client for interacting with the Payment builders.
 	Payment *PaymentClient
 	// Product is the client for interacting with the Product builders.
 	Product *ProductClient
 	// ProductPackage is the client for interacting with the ProductPackage builders.
 	ProductPackage *ProductPackageClient
+	// ProductTranslation is the client for interacting with the ProductTranslation builders.
+	ProductTranslation *ProductTranslationClient
 	// Review is the client for interacting with the Review builders.
 	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
@@ -188,9 +192,11 @@ func (tx *Tx) init() {
 	tx.MerchantConfig = NewMerchantConfigClient(tx.config)
 	tx.Order = NewOrderClient(tx.config)
 	tx.OrderItem = NewOrderItemClient(tx.config)
+	tx.PackageTranslation = NewPackageTranslationClient(tx.config)
 	tx.Payment = NewPaymentClient(tx.config)
 	tx.Product = NewProductClient(tx.config)
 	tx.ProductPackage = NewProductPackageClient(tx.config)
+	tx.ProductTranslation = NewProductTranslationClient(tx.config)
 	tx.Review = NewReviewClient(tx.config)
 	tx.Tenant = NewTenantClient(tx.config)
 	tx.Traveler = NewTravelerClient(tx.config)

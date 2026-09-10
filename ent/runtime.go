@@ -13,9 +13,11 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/merchant"
 	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
+	"gitee.com/meinongyihe/travel-rpc/ent/packagetranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/schema"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
@@ -232,6 +234,24 @@ func init() {
 	orderDescPaymentStatus := orderFields[14].Descriptor()
 	// order.DefaultPaymentStatus holds the default value on creation for the payment_status field.
 	order.DefaultPaymentStatus = orderDescPaymentStatus.Default.(string)
+	packagetranslationFields := schema.PackageTranslation{}.Fields()
+	_ = packagetranslationFields
+	// packagetranslationDescLocale is the schema descriptor for locale field.
+	packagetranslationDescLocale := packagetranslationFields[1].Descriptor()
+	// packagetranslation.LocaleValidator is a validator for the "locale" field. It is called by the builders before save.
+	packagetranslation.LocaleValidator = packagetranslationDescLocale.Validators[0].(func(string) error)
+	// packagetranslationDescSource is the schema descriptor for source field.
+	packagetranslationDescSource := packagetranslationFields[3].Descriptor()
+	// packagetranslation.DefaultSource holds the default value on creation for the source field.
+	packagetranslation.DefaultSource = packagetranslationDescSource.Default.(string)
+	// packagetranslationDescStatus is the schema descriptor for status field.
+	packagetranslationDescStatus := packagetranslationFields[4].Descriptor()
+	// packagetranslation.DefaultStatus holds the default value on creation for the status field.
+	packagetranslation.DefaultStatus = packagetranslationDescStatus.Default.(string)
+	// packagetranslationDescUpdatedAt is the schema descriptor for updated_at field.
+	packagetranslationDescUpdatedAt := packagetranslationFields[5].Descriptor()
+	// packagetranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	packagetranslation.DefaultUpdatedAt = packagetranslationDescUpdatedAt.Default.(int64)
 	paymentFields := schema.Payment{}.Fields()
 	_ = paymentFields
 	// paymentDescPaymentNo is the schema descriptor for payment_no field.
@@ -310,6 +330,24 @@ func init() {
 	productpackageDescCostCurrency := productpackageFields[10].Descriptor()
 	// productpackage.DefaultCostCurrency holds the default value on creation for the cost_currency field.
 	productpackage.DefaultCostCurrency = productpackageDescCostCurrency.Default.(string)
+	producttranslationFields := schema.ProductTranslation{}.Fields()
+	_ = producttranslationFields
+	// producttranslationDescLocale is the schema descriptor for locale field.
+	producttranslationDescLocale := producttranslationFields[1].Descriptor()
+	// producttranslation.LocaleValidator is a validator for the "locale" field. It is called by the builders before save.
+	producttranslation.LocaleValidator = producttranslationDescLocale.Validators[0].(func(string) error)
+	// producttranslationDescSource is the schema descriptor for source field.
+	producttranslationDescSource := producttranslationFields[7].Descriptor()
+	// producttranslation.DefaultSource holds the default value on creation for the source field.
+	producttranslation.DefaultSource = producttranslationDescSource.Default.(string)
+	// producttranslationDescStatus is the schema descriptor for status field.
+	producttranslationDescStatus := producttranslationFields[8].Descriptor()
+	// producttranslation.DefaultStatus holds the default value on creation for the status field.
+	producttranslation.DefaultStatus = producttranslationDescStatus.Default.(string)
+	// producttranslationDescUpdatedAt is the schema descriptor for updated_at field.
+	producttranslationDescUpdatedAt := producttranslationFields[9].Descriptor()
+	// producttranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	producttranslation.DefaultUpdatedAt = producttranslationDescUpdatedAt.Default.(int64)
 	reviewFields := schema.Review{}.Fields()
 	_ = reviewFields
 	// reviewDescOrderNo is the schema descriptor for order_no field.

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"strings"
+	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -22,11 +23,43 @@ import (
 // Tenant and merchant scope always comes from authenticated RPC metadata.
 type ManagementService struct {
 	travel.UnimplementedTravelManagementServiceServer
-	client *ent.Client
+	client     *ent.Client
+	translator *TranslationService
 }
 
-func NewManagementService(client *ent.Client) *ManagementService {
-	return &ManagementService{client: client}
+func NewManagementService(client *ent.Client, translator *TranslationService) *ManagementService {
+	return &ManagementService{client: client, translator: translator}
+}
+
+// triggerProductTranslation asynchronously re-translates a product into all
+// configured target locales after a create/update. It is a no-op when the
+// translation provider is not configured. A fresh context is used because the
+// request context is cancelled once the RPC returns.
+func (s *ManagementService) triggerProductTranslation(productID int64) {
+	if s.translator == nil || !s.translator.Enabled() {
+		return
+	}
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+		defer cancel()
+		if err := s.translator.TranslateProduct(ctx, productID); err != nil {
+			logx.Errorf("[translation] product %d failed: %v", productID, err)
+		}
+	}()
+}
+
+// triggerPackageTranslation asynchronously re-translates a package name.
+func (s *ManagementService) triggerPackageTranslation(packageID int64) {
+	if s.translator == nil || !s.translator.Enabled() {
+		return
+	}
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		if err := s.translator.TranslatePackage(ctx, packageID); err != nil {
+			logx.Errorf("[translation] package %d failed: %v", packageID, err)
+		}
+	}()
 }
 
 // withTx 在事务中执行 fn，自动处理 Commit/Rollback，避免写漏
@@ -135,6 +168,7 @@ func (s *ManagementService) CreateProduct(ctx context.Context, req *travel.Creat
 	if err != nil {
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
+	s.triggerProductTranslation(int64(p.ID))
 	return productMessage(p), nil
 }
 
@@ -262,6 +296,7 @@ func (s *ManagementService) UpdateProduct(ctx context.Context, req *travel.Updat
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+	s.triggerProductTranslation(req.GetId())
 	return result, nil
 }
 
@@ -314,6 +349,7 @@ func (s *ManagementService) CreatePackage(ctx context.Context, req *travel.Creat
 	if err != nil {
 		return nil, status.Error(codes.AlreadyExists, err.Error())
 	}
+	s.triggerPackageTranslation(int64(pkg.ID))
 	return packageMessage(pkg), nil
 }
 

@@ -9,18 +9,20 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/internal/auth"
 	"gitee.com/meinongyihe/travel-rpc/internal/repository"
 	"gitee.com/meinongyihe/travel-rpc/travel"
+	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type CatalogService struct {
 	travel.UnimplementedCatalogServiceServer
-	repo   repository.ProductRepository
-	client *ent.Client
+	repo         repository.ProductRepository
+	client       *ent.Client
+	translations repository.TranslationRepository
 }
 
-func NewCatalogService(repo repository.ProductRepository, client *ent.Client) *CatalogService {
-	return &CatalogService{repo: repo, client: client}
+func NewCatalogService(repo repository.ProductRepository, client *ent.Client, translations repository.TranslationRepository) *CatalogService {
+	return &CatalogService{repo: repo, client: client, translations: translations}
 }
 
 func (s *CatalogService) GetProduct(ctx context.Context, req *travel.ProductIdRequest) (*travel.Product, error) {
@@ -34,7 +36,9 @@ func (s *CatalogService) GetProduct(ctx context.Context, req *travel.ProductIdRe
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	return toProduct(item), nil
+	p := productMessage(item)
+	s.localizeProducts(ctx, []*travel.Product{p})
+	return p, nil
 }
 
 func (s *CatalogService) ListProducts(ctx context.Context, req *travel.ProductListRequest) (*travel.ProductListResponse, error) {
@@ -59,14 +63,83 @@ func (s *CatalogService) ListProducts(ctx context.Context, req *travel.ProductLi
 	result := &travel.ProductListResponse{Total: int64(total)}
 	for _, item := range items {
 		if item.Status == "PUBLISHED" {
-			result.Items = append(result.Items, toProduct(item))
+			result.Items = append(result.Items, productMessage(item))
 		}
 	}
+	s.localizeProducts(ctx, result.Items)
 	return result, nil
 }
 
-func toProduct(item *ent.Product) *travel.Product {
-	return &travel.Product{Id: int64(item.ID), TenantId: item.TenantID, MerchantId: item.MerchantID, Code: item.Code, Title: item.Title, Slug: item.Slug, Destination: item.Destination, Description: item.Description, Currency: item.Currency, MinPrice: item.MinPrice, Status: item.Status}
+// localizeProducts overrides base-language text with the request-locale
+// translation when a DONE row exists. The lookup is batched for the whole page.
+func (s *CatalogService) localizeProducts(ctx context.Context, products []*travel.Product) {
+	if s.translations == nil || len(products) == 0 {
+		return
+	}
+	locale := auth.Locale(ctx)
+	if locale == "" {
+		return
+	}
+	ids := make([]int64, 0, len(products))
+	for _, p := range products {
+		ids = append(ids, p.GetId())
+	}
+	m, err := s.translations.MapProducts(ctx, ids, locale)
+	if err != nil {
+		logx.Errorf("[catalog] load product translations (locale=%s): %v", locale, err)
+		return
+	}
+	for _, p := range products {
+		applyProductTranslation(p, m[p.GetId()])
+	}
+}
+
+// applyProductTranslation overrides translatable text fields when a translation
+// exists; empty translation fields keep the base-language value.
+func applyProductTranslation(p *travel.Product, t *ent.ProductTranslation) {
+	if p == nil || t == nil {
+		return
+	}
+	if t.Title != "" {
+		p.Title = t.Title
+	}
+	if t.Description != "" {
+		p.Description = t.Description
+	}
+	if t.Highlights != "" {
+		p.Highlights = t.Highlights
+	}
+	if t.RichContent != "" {
+		p.RichContent = t.RichContent
+	}
+	if t.BookingNotice != "" {
+		p.BookingNotice = t.BookingNotice
+	}
+}
+
+// localizePackages overrides package names with the request-locale translation.
+func (s *CatalogService) localizePackages(ctx context.Context, packages []*travel.ProductPackage) {
+	if s.translations == nil || len(packages) == 0 {
+		return
+	}
+	locale := auth.Locale(ctx)
+	if locale == "" {
+		return
+	}
+	ids := make([]int64, 0, len(packages))
+	for _, p := range packages {
+		ids = append(ids, p.GetId())
+	}
+	m, err := s.translations.MapPackages(ctx, ids, locale)
+	if err != nil {
+		logx.Errorf("[catalog] load package translations (locale=%s): %v", locale, err)
+		return
+	}
+	for _, p := range packages {
+		if t := m[p.GetId()]; t != nil && t.Name != "" {
+			p.Name = t.Name
+		}
+	}
 }
 
 func (s *CatalogService) ListPackages(ctx context.Context, req *travel.PackageListRequest) (*travel.PackageListResponse, error) {
@@ -86,6 +159,7 @@ func (s *CatalogService) ListPackages(ctx context.Context, req *travel.PackageLi
 	for _, item := range items {
 		out.Items = append(out.Items, packageMessage(item))
 	}
+	s.localizePackages(ctx, out.Items)
 	return out, nil
 }
 

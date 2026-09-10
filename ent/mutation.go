@@ -20,10 +20,12 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
+	"gitee.com/meinongyihe/travel-rpc/ent/packagetranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/predicate"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
@@ -49,9 +51,11 @@ const (
 	TypeMerchantConfig       = "MerchantConfig"
 	TypeOrder                = "Order"
 	TypeOrderItem            = "OrderItem"
+	TypePackageTranslation   = "PackageTranslation"
 	TypePayment              = "Payment"
 	TypeProduct              = "Product"
 	TypeProductPackage       = "ProductPackage"
+	TypeProductTranslation   = "ProductTranslation"
 	TypeReview               = "Review"
 	TypeTenant               = "Tenant"
 	TypeTraveler             = "Traveler"
@@ -11847,6 +11851,693 @@ func (m *OrderItemMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown OrderItem edge %s", name)
 }
 
+// PackageTranslationMutation represents an operation that mutates the PackageTranslation nodes in the graph.
+type PackageTranslationMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	package_id    *int64
+	addpackage_id *int64
+	locale        *string
+	name          *string
+	source        *string
+	status        *string
+	updated_at    *int64
+	addupdated_at *int64
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*PackageTranslation, error)
+	predicates    []predicate.PackageTranslation
+}
+
+var _ ent.Mutation = (*PackageTranslationMutation)(nil)
+
+// packagetranslationOption allows management of the mutation configuration using functional options.
+type packagetranslationOption func(*PackageTranslationMutation)
+
+// newPackageTranslationMutation creates new mutation for the PackageTranslation entity.
+func newPackageTranslationMutation(c config, op Op, opts ...packagetranslationOption) *PackageTranslationMutation {
+	m := &PackageTranslationMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePackageTranslation,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPackageTranslationID sets the ID field of the mutation.
+func withPackageTranslationID(id int) packagetranslationOption {
+	return func(m *PackageTranslationMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *PackageTranslation
+		)
+		m.oldValue = func(ctx context.Context) (*PackageTranslation, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().PackageTranslation.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPackageTranslation sets the old PackageTranslation of the mutation.
+func withPackageTranslation(node *PackageTranslation) packagetranslationOption {
+	return func(m *PackageTranslationMutation) {
+		m.oldValue = func(context.Context) (*PackageTranslation, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PackageTranslationMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PackageTranslationMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *PackageTranslationMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *PackageTranslationMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().PackageTranslation.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetPackageID sets the "package_id" field.
+func (m *PackageTranslationMutation) SetPackageID(i int64) {
+	m.package_id = &i
+	m.addpackage_id = nil
+}
+
+// PackageID returns the value of the "package_id" field in the mutation.
+func (m *PackageTranslationMutation) PackageID() (r int64, exists bool) {
+	v := m.package_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPackageID returns the old "package_id" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldPackageID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPackageID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPackageID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPackageID: %w", err)
+	}
+	return oldValue.PackageID, nil
+}
+
+// AddPackageID adds i to the "package_id" field.
+func (m *PackageTranslationMutation) AddPackageID(i int64) {
+	if m.addpackage_id != nil {
+		*m.addpackage_id += i
+	} else {
+		m.addpackage_id = &i
+	}
+}
+
+// AddedPackageID returns the value that was added to the "package_id" field in this mutation.
+func (m *PackageTranslationMutation) AddedPackageID() (r int64, exists bool) {
+	v := m.addpackage_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetPackageID resets all changes to the "package_id" field.
+func (m *PackageTranslationMutation) ResetPackageID() {
+	m.package_id = nil
+	m.addpackage_id = nil
+}
+
+// SetLocale sets the "locale" field.
+func (m *PackageTranslationMutation) SetLocale(s string) {
+	m.locale = &s
+}
+
+// Locale returns the value of the "locale" field in the mutation.
+func (m *PackageTranslationMutation) Locale() (r string, exists bool) {
+	v := m.locale
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocale returns the old "locale" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldLocale(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocale is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocale requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocale: %w", err)
+	}
+	return oldValue.Locale, nil
+}
+
+// ResetLocale resets all changes to the "locale" field.
+func (m *PackageTranslationMutation) ResetLocale() {
+	m.locale = nil
+}
+
+// SetName sets the "name" field.
+func (m *PackageTranslationMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *PackageTranslationMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ClearName clears the value of the "name" field.
+func (m *PackageTranslationMutation) ClearName() {
+	m.name = nil
+	m.clearedFields[packagetranslation.FieldName] = struct{}{}
+}
+
+// NameCleared returns if the "name" field was cleared in this mutation.
+func (m *PackageTranslationMutation) NameCleared() bool {
+	_, ok := m.clearedFields[packagetranslation.FieldName]
+	return ok
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *PackageTranslationMutation) ResetName() {
+	m.name = nil
+	delete(m.clearedFields, packagetranslation.FieldName)
+}
+
+// SetSource sets the "source" field.
+func (m *PackageTranslationMutation) SetSource(s string) {
+	m.source = &s
+}
+
+// Source returns the value of the "source" field in the mutation.
+func (m *PackageTranslationMutation) Source() (r string, exists bool) {
+	v := m.source
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSource returns the old "source" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldSource(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSource is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSource requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSource: %w", err)
+	}
+	return oldValue.Source, nil
+}
+
+// ResetSource resets all changes to the "source" field.
+func (m *PackageTranslationMutation) ResetSource() {
+	m.source = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *PackageTranslationMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *PackageTranslationMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *PackageTranslationMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *PackageTranslationMutation) SetUpdatedAt(i int64) {
+	m.updated_at = &i
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *PackageTranslationMutation) UpdatedAt() (r int64, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the PackageTranslation entity.
+// If the PackageTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PackageTranslationMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds i to the "updated_at" field.
+func (m *PackageTranslationMutation) AddUpdatedAt(i int64) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += i
+	} else {
+		m.addupdated_at = &i
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *PackageTranslationMutation) AddedUpdatedAt() (r int64, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *PackageTranslationMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// Where appends a list predicates to the PackageTranslationMutation builder.
+func (m *PackageTranslationMutation) Where(ps ...predicate.PackageTranslation) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the PackageTranslationMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *PackageTranslationMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.PackageTranslation, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *PackageTranslationMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *PackageTranslationMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (PackageTranslation).
+func (m *PackageTranslationMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *PackageTranslationMutation) Fields() []string {
+	fields := make([]string, 0, 6)
+	if m.package_id != nil {
+		fields = append(fields, packagetranslation.FieldPackageID)
+	}
+	if m.locale != nil {
+		fields = append(fields, packagetranslation.FieldLocale)
+	}
+	if m.name != nil {
+		fields = append(fields, packagetranslation.FieldName)
+	}
+	if m.source != nil {
+		fields = append(fields, packagetranslation.FieldSource)
+	}
+	if m.status != nil {
+		fields = append(fields, packagetranslation.FieldStatus)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, packagetranslation.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *PackageTranslationMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		return m.PackageID()
+	case packagetranslation.FieldLocale:
+		return m.Locale()
+	case packagetranslation.FieldName:
+		return m.Name()
+	case packagetranslation.FieldSource:
+		return m.Source()
+	case packagetranslation.FieldStatus:
+		return m.Status()
+	case packagetranslation.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *PackageTranslationMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		return m.OldPackageID(ctx)
+	case packagetranslation.FieldLocale:
+		return m.OldLocale(ctx)
+	case packagetranslation.FieldName:
+		return m.OldName(ctx)
+	case packagetranslation.FieldSource:
+		return m.OldSource(ctx)
+	case packagetranslation.FieldStatus:
+		return m.OldStatus(ctx)
+	case packagetranslation.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown PackageTranslation field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PackageTranslationMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPackageID(v)
+		return nil
+	case packagetranslation.FieldLocale:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocale(v)
+		return nil
+	case packagetranslation.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case packagetranslation.FieldSource:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSource(v)
+		return nil
+	case packagetranslation.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case packagetranslation.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PackageTranslation field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *PackageTranslationMutation) AddedFields() []string {
+	var fields []string
+	if m.addpackage_id != nil {
+		fields = append(fields, packagetranslation.FieldPackageID)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, packagetranslation.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *PackageTranslationMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		return m.AddedPackageID()
+	case packagetranslation.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *PackageTranslationMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddPackageID(v)
+		return nil
+	case packagetranslation.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown PackageTranslation numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *PackageTranslationMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(packagetranslation.FieldName) {
+		fields = append(fields, packagetranslation.FieldName)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *PackageTranslationMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PackageTranslationMutation) ClearField(name string) error {
+	switch name {
+	case packagetranslation.FieldName:
+		m.ClearName()
+		return nil
+	}
+	return fmt.Errorf("unknown PackageTranslation nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *PackageTranslationMutation) ResetField(name string) error {
+	switch name {
+	case packagetranslation.FieldPackageID:
+		m.ResetPackageID()
+		return nil
+	case packagetranslation.FieldLocale:
+		m.ResetLocale()
+		return nil
+	case packagetranslation.FieldName:
+		m.ResetName()
+		return nil
+	case packagetranslation.FieldSource:
+		m.ResetSource()
+		return nil
+	case packagetranslation.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case packagetranslation.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown PackageTranslation field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *PackageTranslationMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *PackageTranslationMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *PackageTranslationMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *PackageTranslationMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *PackageTranslationMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *PackageTranslationMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *PackageTranslationMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown PackageTranslation unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *PackageTranslationMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown PackageTranslation edge %s", name)
+}
+
 // PaymentMutation represents an operation that mutates the Payment nodes in the graph.
 type PaymentMutation struct {
 	config
@@ -15376,6 +16067,985 @@ func (m *ProductPackageMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *ProductPackageMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown ProductPackage edge %s", name)
+}
+
+// ProductTranslationMutation represents an operation that mutates the ProductTranslation nodes in the graph.
+type ProductTranslationMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *int
+	product_id     *int64
+	addproduct_id  *int64
+	locale         *string
+	title          *string
+	description    *string
+	highlights     *string
+	rich_content   *string
+	booking_notice *string
+	source         *string
+	status         *string
+	updated_at     *int64
+	addupdated_at  *int64
+	clearedFields  map[string]struct{}
+	done           bool
+	oldValue       func(context.Context) (*ProductTranslation, error)
+	predicates     []predicate.ProductTranslation
+}
+
+var _ ent.Mutation = (*ProductTranslationMutation)(nil)
+
+// producttranslationOption allows management of the mutation configuration using functional options.
+type producttranslationOption func(*ProductTranslationMutation)
+
+// newProductTranslationMutation creates new mutation for the ProductTranslation entity.
+func newProductTranslationMutation(c config, op Op, opts ...producttranslationOption) *ProductTranslationMutation {
+	m := &ProductTranslationMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeProductTranslation,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withProductTranslationID sets the ID field of the mutation.
+func withProductTranslationID(id int) producttranslationOption {
+	return func(m *ProductTranslationMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *ProductTranslation
+		)
+		m.oldValue = func(ctx context.Context) (*ProductTranslation, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().ProductTranslation.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withProductTranslation sets the old ProductTranslation of the mutation.
+func withProductTranslation(node *ProductTranslation) producttranslationOption {
+	return func(m *ProductTranslationMutation) {
+		m.oldValue = func(context.Context) (*ProductTranslation, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m ProductTranslationMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m ProductTranslationMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *ProductTranslationMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *ProductTranslationMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().ProductTranslation.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetProductID sets the "product_id" field.
+func (m *ProductTranslationMutation) SetProductID(i int64) {
+	m.product_id = &i
+	m.addproduct_id = nil
+}
+
+// ProductID returns the value of the "product_id" field in the mutation.
+func (m *ProductTranslationMutation) ProductID() (r int64, exists bool) {
+	v := m.product_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldProductID returns the old "product_id" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldProductID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldProductID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldProductID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldProductID: %w", err)
+	}
+	return oldValue.ProductID, nil
+}
+
+// AddProductID adds i to the "product_id" field.
+func (m *ProductTranslationMutation) AddProductID(i int64) {
+	if m.addproduct_id != nil {
+		*m.addproduct_id += i
+	} else {
+		m.addproduct_id = &i
+	}
+}
+
+// AddedProductID returns the value that was added to the "product_id" field in this mutation.
+func (m *ProductTranslationMutation) AddedProductID() (r int64, exists bool) {
+	v := m.addproduct_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetProductID resets all changes to the "product_id" field.
+func (m *ProductTranslationMutation) ResetProductID() {
+	m.product_id = nil
+	m.addproduct_id = nil
+}
+
+// SetLocale sets the "locale" field.
+func (m *ProductTranslationMutation) SetLocale(s string) {
+	m.locale = &s
+}
+
+// Locale returns the value of the "locale" field in the mutation.
+func (m *ProductTranslationMutation) Locale() (r string, exists bool) {
+	v := m.locale
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocale returns the old "locale" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldLocale(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLocale is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLocale requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocale: %w", err)
+	}
+	return oldValue.Locale, nil
+}
+
+// ResetLocale resets all changes to the "locale" field.
+func (m *ProductTranslationMutation) ResetLocale() {
+	m.locale = nil
+}
+
+// SetTitle sets the "title" field.
+func (m *ProductTranslationMutation) SetTitle(s string) {
+	m.title = &s
+}
+
+// Title returns the value of the "title" field in the mutation.
+func (m *ProductTranslationMutation) Title() (r string, exists bool) {
+	v := m.title
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTitle returns the old "title" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldTitle(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTitle is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTitle requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTitle: %w", err)
+	}
+	return oldValue.Title, nil
+}
+
+// ClearTitle clears the value of the "title" field.
+func (m *ProductTranslationMutation) ClearTitle() {
+	m.title = nil
+	m.clearedFields[producttranslation.FieldTitle] = struct{}{}
+}
+
+// TitleCleared returns if the "title" field was cleared in this mutation.
+func (m *ProductTranslationMutation) TitleCleared() bool {
+	_, ok := m.clearedFields[producttranslation.FieldTitle]
+	return ok
+}
+
+// ResetTitle resets all changes to the "title" field.
+func (m *ProductTranslationMutation) ResetTitle() {
+	m.title = nil
+	delete(m.clearedFields, producttranslation.FieldTitle)
+}
+
+// SetDescription sets the "description" field.
+func (m *ProductTranslationMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *ProductTranslationMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ClearDescription clears the value of the "description" field.
+func (m *ProductTranslationMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[producttranslation.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *ProductTranslationMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[producttranslation.FieldDescription]
+	return ok
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *ProductTranslationMutation) ResetDescription() {
+	m.description = nil
+	delete(m.clearedFields, producttranslation.FieldDescription)
+}
+
+// SetHighlights sets the "highlights" field.
+func (m *ProductTranslationMutation) SetHighlights(s string) {
+	m.highlights = &s
+}
+
+// Highlights returns the value of the "highlights" field in the mutation.
+func (m *ProductTranslationMutation) Highlights() (r string, exists bool) {
+	v := m.highlights
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHighlights returns the old "highlights" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldHighlights(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHighlights is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHighlights requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHighlights: %w", err)
+	}
+	return oldValue.Highlights, nil
+}
+
+// ClearHighlights clears the value of the "highlights" field.
+func (m *ProductTranslationMutation) ClearHighlights() {
+	m.highlights = nil
+	m.clearedFields[producttranslation.FieldHighlights] = struct{}{}
+}
+
+// HighlightsCleared returns if the "highlights" field was cleared in this mutation.
+func (m *ProductTranslationMutation) HighlightsCleared() bool {
+	_, ok := m.clearedFields[producttranslation.FieldHighlights]
+	return ok
+}
+
+// ResetHighlights resets all changes to the "highlights" field.
+func (m *ProductTranslationMutation) ResetHighlights() {
+	m.highlights = nil
+	delete(m.clearedFields, producttranslation.FieldHighlights)
+}
+
+// SetRichContent sets the "rich_content" field.
+func (m *ProductTranslationMutation) SetRichContent(s string) {
+	m.rich_content = &s
+}
+
+// RichContent returns the value of the "rich_content" field in the mutation.
+func (m *ProductTranslationMutation) RichContent() (r string, exists bool) {
+	v := m.rich_content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRichContent returns the old "rich_content" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldRichContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRichContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRichContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRichContent: %w", err)
+	}
+	return oldValue.RichContent, nil
+}
+
+// ClearRichContent clears the value of the "rich_content" field.
+func (m *ProductTranslationMutation) ClearRichContent() {
+	m.rich_content = nil
+	m.clearedFields[producttranslation.FieldRichContent] = struct{}{}
+}
+
+// RichContentCleared returns if the "rich_content" field was cleared in this mutation.
+func (m *ProductTranslationMutation) RichContentCleared() bool {
+	_, ok := m.clearedFields[producttranslation.FieldRichContent]
+	return ok
+}
+
+// ResetRichContent resets all changes to the "rich_content" field.
+func (m *ProductTranslationMutation) ResetRichContent() {
+	m.rich_content = nil
+	delete(m.clearedFields, producttranslation.FieldRichContent)
+}
+
+// SetBookingNotice sets the "booking_notice" field.
+func (m *ProductTranslationMutation) SetBookingNotice(s string) {
+	m.booking_notice = &s
+}
+
+// BookingNotice returns the value of the "booking_notice" field in the mutation.
+func (m *ProductTranslationMutation) BookingNotice() (r string, exists bool) {
+	v := m.booking_notice
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBookingNotice returns the old "booking_notice" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldBookingNotice(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBookingNotice is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBookingNotice requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBookingNotice: %w", err)
+	}
+	return oldValue.BookingNotice, nil
+}
+
+// ClearBookingNotice clears the value of the "booking_notice" field.
+func (m *ProductTranslationMutation) ClearBookingNotice() {
+	m.booking_notice = nil
+	m.clearedFields[producttranslation.FieldBookingNotice] = struct{}{}
+}
+
+// BookingNoticeCleared returns if the "booking_notice" field was cleared in this mutation.
+func (m *ProductTranslationMutation) BookingNoticeCleared() bool {
+	_, ok := m.clearedFields[producttranslation.FieldBookingNotice]
+	return ok
+}
+
+// ResetBookingNotice resets all changes to the "booking_notice" field.
+func (m *ProductTranslationMutation) ResetBookingNotice() {
+	m.booking_notice = nil
+	delete(m.clearedFields, producttranslation.FieldBookingNotice)
+}
+
+// SetSource sets the "source" field.
+func (m *ProductTranslationMutation) SetSource(s string) {
+	m.source = &s
+}
+
+// Source returns the value of the "source" field in the mutation.
+func (m *ProductTranslationMutation) Source() (r string, exists bool) {
+	v := m.source
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSource returns the old "source" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldSource(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSource is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSource requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSource: %w", err)
+	}
+	return oldValue.Source, nil
+}
+
+// ResetSource resets all changes to the "source" field.
+func (m *ProductTranslationMutation) ResetSource() {
+	m.source = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *ProductTranslationMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *ProductTranslationMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *ProductTranslationMutation) ResetStatus() {
+	m.status = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *ProductTranslationMutation) SetUpdatedAt(i int64) {
+	m.updated_at = &i
+	m.addupdated_at = nil
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *ProductTranslationMutation) UpdatedAt() (r int64, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the ProductTranslation entity.
+// If the ProductTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ProductTranslationMutation) OldUpdatedAt(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// AddUpdatedAt adds i to the "updated_at" field.
+func (m *ProductTranslationMutation) AddUpdatedAt(i int64) {
+	if m.addupdated_at != nil {
+		*m.addupdated_at += i
+	} else {
+		m.addupdated_at = &i
+	}
+}
+
+// AddedUpdatedAt returns the value that was added to the "updated_at" field in this mutation.
+func (m *ProductTranslationMutation) AddedUpdatedAt() (r int64, exists bool) {
+	v := m.addupdated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *ProductTranslationMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	m.addupdated_at = nil
+}
+
+// Where appends a list predicates to the ProductTranslationMutation builder.
+func (m *ProductTranslationMutation) Where(ps ...predicate.ProductTranslation) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the ProductTranslationMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *ProductTranslationMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.ProductTranslation, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *ProductTranslationMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *ProductTranslationMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (ProductTranslation).
+func (m *ProductTranslationMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *ProductTranslationMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.product_id != nil {
+		fields = append(fields, producttranslation.FieldProductID)
+	}
+	if m.locale != nil {
+		fields = append(fields, producttranslation.FieldLocale)
+	}
+	if m.title != nil {
+		fields = append(fields, producttranslation.FieldTitle)
+	}
+	if m.description != nil {
+		fields = append(fields, producttranslation.FieldDescription)
+	}
+	if m.highlights != nil {
+		fields = append(fields, producttranslation.FieldHighlights)
+	}
+	if m.rich_content != nil {
+		fields = append(fields, producttranslation.FieldRichContent)
+	}
+	if m.booking_notice != nil {
+		fields = append(fields, producttranslation.FieldBookingNotice)
+	}
+	if m.source != nil {
+		fields = append(fields, producttranslation.FieldSource)
+	}
+	if m.status != nil {
+		fields = append(fields, producttranslation.FieldStatus)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, producttranslation.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *ProductTranslationMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case producttranslation.FieldProductID:
+		return m.ProductID()
+	case producttranslation.FieldLocale:
+		return m.Locale()
+	case producttranslation.FieldTitle:
+		return m.Title()
+	case producttranslation.FieldDescription:
+		return m.Description()
+	case producttranslation.FieldHighlights:
+		return m.Highlights()
+	case producttranslation.FieldRichContent:
+		return m.RichContent()
+	case producttranslation.FieldBookingNotice:
+		return m.BookingNotice()
+	case producttranslation.FieldSource:
+		return m.Source()
+	case producttranslation.FieldStatus:
+		return m.Status()
+	case producttranslation.FieldUpdatedAt:
+		return m.UpdatedAt()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *ProductTranslationMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case producttranslation.FieldProductID:
+		return m.OldProductID(ctx)
+	case producttranslation.FieldLocale:
+		return m.OldLocale(ctx)
+	case producttranslation.FieldTitle:
+		return m.OldTitle(ctx)
+	case producttranslation.FieldDescription:
+		return m.OldDescription(ctx)
+	case producttranslation.FieldHighlights:
+		return m.OldHighlights(ctx)
+	case producttranslation.FieldRichContent:
+		return m.OldRichContent(ctx)
+	case producttranslation.FieldBookingNotice:
+		return m.OldBookingNotice(ctx)
+	case producttranslation.FieldSource:
+		return m.OldSource(ctx)
+	case producttranslation.FieldStatus:
+		return m.OldStatus(ctx)
+	case producttranslation.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	}
+	return nil, fmt.Errorf("unknown ProductTranslation field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ProductTranslationMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case producttranslation.FieldProductID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetProductID(v)
+		return nil
+	case producttranslation.FieldLocale:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocale(v)
+		return nil
+	case producttranslation.FieldTitle:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTitle(v)
+		return nil
+	case producttranslation.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case producttranslation.FieldHighlights:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHighlights(v)
+		return nil
+	case producttranslation.FieldRichContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRichContent(v)
+		return nil
+	case producttranslation.FieldBookingNotice:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBookingNotice(v)
+		return nil
+	case producttranslation.FieldSource:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSource(v)
+		return nil
+	case producttranslation.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	case producttranslation.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ProductTranslation field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *ProductTranslationMutation) AddedFields() []string {
+	var fields []string
+	if m.addproduct_id != nil {
+		fields = append(fields, producttranslation.FieldProductID)
+	}
+	if m.addupdated_at != nil {
+		fields = append(fields, producttranslation.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *ProductTranslationMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case producttranslation.FieldProductID:
+		return m.AddedProductID()
+	case producttranslation.FieldUpdatedAt:
+		return m.AddedUpdatedAt()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *ProductTranslationMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case producttranslation.FieldProductID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddProductID(v)
+		return nil
+	case producttranslation.FieldUpdatedAt:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddUpdatedAt(v)
+		return nil
+	}
+	return fmt.Errorf("unknown ProductTranslation numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *ProductTranslationMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(producttranslation.FieldTitle) {
+		fields = append(fields, producttranslation.FieldTitle)
+	}
+	if m.FieldCleared(producttranslation.FieldDescription) {
+		fields = append(fields, producttranslation.FieldDescription)
+	}
+	if m.FieldCleared(producttranslation.FieldHighlights) {
+		fields = append(fields, producttranslation.FieldHighlights)
+	}
+	if m.FieldCleared(producttranslation.FieldRichContent) {
+		fields = append(fields, producttranslation.FieldRichContent)
+	}
+	if m.FieldCleared(producttranslation.FieldBookingNotice) {
+		fields = append(fields, producttranslation.FieldBookingNotice)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *ProductTranslationMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *ProductTranslationMutation) ClearField(name string) error {
+	switch name {
+	case producttranslation.FieldTitle:
+		m.ClearTitle()
+		return nil
+	case producttranslation.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case producttranslation.FieldHighlights:
+		m.ClearHighlights()
+		return nil
+	case producttranslation.FieldRichContent:
+		m.ClearRichContent()
+		return nil
+	case producttranslation.FieldBookingNotice:
+		m.ClearBookingNotice()
+		return nil
+	}
+	return fmt.Errorf("unknown ProductTranslation nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *ProductTranslationMutation) ResetField(name string) error {
+	switch name {
+	case producttranslation.FieldProductID:
+		m.ResetProductID()
+		return nil
+	case producttranslation.FieldLocale:
+		m.ResetLocale()
+		return nil
+	case producttranslation.FieldTitle:
+		m.ResetTitle()
+		return nil
+	case producttranslation.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case producttranslation.FieldHighlights:
+		m.ResetHighlights()
+		return nil
+	case producttranslation.FieldRichContent:
+		m.ResetRichContent()
+		return nil
+	case producttranslation.FieldBookingNotice:
+		m.ResetBookingNotice()
+		return nil
+	case producttranslation.FieldSource:
+		m.ResetSource()
+		return nil
+	case producttranslation.FieldStatus:
+		m.ResetStatus()
+		return nil
+	case producttranslation.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown ProductTranslation field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *ProductTranslationMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *ProductTranslationMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *ProductTranslationMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *ProductTranslationMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *ProductTranslationMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *ProductTranslationMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *ProductTranslationMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown ProductTranslation unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *ProductTranslationMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown ProductTranslation edge %s", name)
 }
 
 // ReviewMutation represents an operation that mutates the Review nodes in the graph.

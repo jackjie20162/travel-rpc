@@ -19,3 +19,15 @@ RedisConf:
 
 JWTAccessSecret: wanl-shop-jwt-secret-change-me
 JWTAccessExpire: 604800 # 7 days in seconds
+
+# 机器翻译（P4）：商户录入基准语言后，异步翻译产品/套餐文案填充 translation 表。
+# 未配置 ApiKey（环境变量 TRANSLATE_API_KEY）时自动降级为 no-op，目录返回基准语言。
+TranslateConf:
+  Provider: deepl                                    # 翻译提供方；留空则禁用自动翻译
+  Endpoint: https://api-free.deepl.com/v2/translate  # DeepL 翻译端点
+  # ApiKey 通过环境变量 TRANSLATE_API_KEY 注入，切勿硬编码到本文件
+  SourceLang: auto                                   # 源语言，auto=自动检测
+  TargetLangs:                                       # 目标语言（locale 码）
+    - zh-CN
+    - en-US
+    - ar

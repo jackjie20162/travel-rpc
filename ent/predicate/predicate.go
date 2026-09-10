@@ -33,6 +33,9 @@ type Order func(*sql.Selector)
 // OrderItem is the predicate function for orderitem builders.
 type OrderItem func(*sql.Selector)
 
+// PackageTranslation is the predicate function for packagetranslation builders.
+type PackageTranslation func(*sql.Selector)
+
 // Payment is the predicate function for payment builders.
 type Payment func(*sql.Selector)
 
@@ -41,6 +44,9 @@ type Product func(*sql.Selector)
 
 // ProductPackage is the predicate function for productpackage builders.
 type ProductPackage func(*sql.Selector)
+
+// ProductTranslation is the predicate function for producttranslation builders.
+type ProductTranslation func(*sql.Selector)
 
 // Review is the predicate function for review builders.
 type Review func(*sql.Selector)

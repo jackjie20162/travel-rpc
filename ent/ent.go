@@ -21,9 +21,11 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
+	"gitee.com/meinongyihe/travel-rpc/ent/packagetranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
@@ -98,9 +100,11 @@ func checkColumn(t, c string) error {
 			merchantconfig.Table:       merchantconfig.ValidColumn,
 			order.Table:                order.ValidColumn,
 			orderitem.Table:            orderitem.ValidColumn,
+			packagetranslation.Table:   packagetranslation.ValidColumn,
 			payment.Table:              payment.ValidColumn,
 			product.Table:              product.ValidColumn,
 			productpackage.Table:       productpackage.ValidColumn,
+			producttranslation.Table:   producttranslation.ValidColumn,
 			review.Table:               review.ValidColumn,
 			tenant.Table:               tenant.ValidColumn,
 			traveler.Table:             traveler.ValidColumn,

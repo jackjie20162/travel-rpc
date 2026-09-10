@@ -343,6 +343,34 @@ var (
 		Columns:    OrderItemsColumns,
 		PrimaryKey: []*schema.Column{OrderItemsColumns[0]},
 	}
+	// PackageTranslationsColumns holds the columns for the "package_translations" table.
+	PackageTranslationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "package_id", Type: field.TypeInt64},
+		{Name: "locale", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "source", Type: field.TypeString, Default: "MACHINE"},
+		{Name: "status", Type: field.TypeString, Default: "PENDING"},
+		{Name: "updated_at", Type: field.TypeInt64, Default: 0},
+	}
+	// PackageTranslationsTable holds the schema information for the "package_translations" table.
+	PackageTranslationsTable = &schema.Table{
+		Name:       "package_translations",
+		Columns:    PackageTranslationsColumns,
+		PrimaryKey: []*schema.Column{PackageTranslationsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "packagetranslation_package_id_locale",
+				Unique:  true,
+				Columns: []*schema.Column{PackageTranslationsColumns[1], PackageTranslationsColumns[2]},
+			},
+			{
+				Name:    "packagetranslation_locale_status",
+				Unique:  false,
+				Columns: []*schema.Column{PackageTranslationsColumns[2], PackageTranslationsColumns[5]},
+			},
+		},
+	}
 	// PaymentsColumns holds the columns for the "payments" table.
 	PaymentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -460,6 +488,38 @@ var (
 				Name:    "productpackage_tenant_id_product_id_status",
 				Unique:  false,
 				Columns: []*schema.Column{ProductPackagesColumns[1], ProductPackagesColumns[3], ProductPackagesColumns[6]},
+			},
+		},
+	}
+	// ProductTranslationsColumns holds the columns for the "product_translations" table.
+	ProductTranslationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "product_id", Type: field.TypeInt64},
+		{Name: "locale", Type: field.TypeString},
+		{Name: "title", Type: field.TypeString, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "highlights", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "rich_content", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "booking_notice", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "source", Type: field.TypeString, Default: "MACHINE"},
+		{Name: "status", Type: field.TypeString, Default: "PENDING"},
+		{Name: "updated_at", Type: field.TypeInt64, Default: 0},
+	}
+	// ProductTranslationsTable holds the schema information for the "product_translations" table.
+	ProductTranslationsTable = &schema.Table{
+		Name:       "product_translations",
+		Columns:    ProductTranslationsColumns,
+		PrimaryKey: []*schema.Column{ProductTranslationsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "producttranslation_product_id_locale",
+				Unique:  true,
+				Columns: []*schema.Column{ProductTranslationsColumns[1], ProductTranslationsColumns[2]},
+			},
+			{
+				Name:    "producttranslation_locale_status",
+				Unique:  false,
+				Columns: []*schema.Column{ProductTranslationsColumns[2], ProductTranslationsColumns[9]},
 			},
 		},
 	}
@@ -666,9 +726,11 @@ var (
 		MerchantConfigsTable,
 		OrdersTable,
 		OrderItemsTable,
+		PackageTranslationsTable,
 		PaymentsTable,
 		ProductsTable,
 		ProductPackagesTable,
+		ProductTranslationsTable,
 		ReviewsTable,
 		TenantsTable,
 		TravelersTable,

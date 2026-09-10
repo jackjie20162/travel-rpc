@@ -23,9 +23,11 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/merchantconfig"
 	"gitee.com/meinongyihe/travel-rpc/ent/order"
 	"gitee.com/meinongyihe/travel-rpc/ent/orderitem"
+	"gitee.com/meinongyihe/travel-rpc/ent/packagetranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/payment"
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
+	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
@@ -58,12 +60,16 @@ type Client struct {
 	Order *OrderClient
 	// OrderItem is the client for interacting with the OrderItem builders.
 	OrderItem *OrderItemClient
+	// PackageTranslation is the client for interacting with the PackageTranslation builders.
+	PackageTranslation *PackageTranslationClient
 	// Payment is the client for interacting with the Payment builders.
 	Payment *PaymentClient
 	// Product is the client for interacting with the Product builders.
 	Product *ProductClient
 	// ProductPackage is the client for interacting with the ProductPackage builders.
 	ProductPackage *ProductPackageClient
+	// ProductTranslation is the client for interacting with the ProductTranslation builders.
+	ProductTranslation *ProductTranslationClient
 	// Review is the client for interacting with the Review builders.
 	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
@@ -94,9 +100,11 @@ func (c *Client) init() {
 	c.MerchantConfig = NewMerchantConfigClient(c.config)
 	c.Order = NewOrderClient(c.config)
 	c.OrderItem = NewOrderItemClient(c.config)
+	c.PackageTranslation = NewPackageTranslationClient(c.config)
 	c.Payment = NewPaymentClient(c.config)
 	c.Product = NewProductClient(c.config)
 	c.ProductPackage = NewProductPackageClient(c.config)
+	c.ProductTranslation = NewProductTranslationClient(c.config)
 	c.Review = NewReviewClient(c.config)
 	c.Tenant = NewTenantClient(c.config)
 	c.Traveler = NewTravelerClient(c.config)
@@ -203,9 +211,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		MerchantConfig:       NewMerchantConfigClient(cfg),
 		Order:                NewOrderClient(cfg),
 		OrderItem:            NewOrderItemClient(cfg),
+		PackageTranslation:   NewPackageTranslationClient(cfg),
 		Payment:              NewPaymentClient(cfg),
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
+		ProductTranslation:   NewProductTranslationClient(cfg),
 		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
@@ -239,9 +249,11 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		MerchantConfig:       NewMerchantConfigClient(cfg),
 		Order:                NewOrderClient(cfg),
 		OrderItem:            NewOrderItemClient(cfg),
+		PackageTranslation:   NewPackageTranslationClient(cfg),
 		Payment:              NewPaymentClient(cfg),
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
+		ProductTranslation:   NewProductTranslationClient(cfg),
 		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
@@ -277,8 +289,9 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
 		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
-		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem, c.Payment,
-		c.Product, c.ProductPackage, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
+		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
+		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Use(hooks...)
 	}
@@ -289,8 +302,9 @@ func (c *Client) Use(hooks ...Hook) {
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
 		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
-		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem, c.Payment,
-		c.Product, c.ProductPackage, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
+		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
+		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -317,12 +331,16 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Order.mutate(ctx, m)
 	case *OrderItemMutation:
 		return c.OrderItem.mutate(ctx, m)
+	case *PackageTranslationMutation:
+		return c.PackageTranslation.mutate(ctx, m)
 	case *PaymentMutation:
 		return c.Payment.mutate(ctx, m)
 	case *ProductMutation:
 		return c.Product.mutate(ctx, m)
 	case *ProductPackageMutation:
 		return c.ProductPackage.mutate(ctx, m)
+	case *ProductTranslationMutation:
+		return c.ProductTranslation.mutate(ctx, m)
 	case *ReviewMutation:
 		return c.Review.mutate(ctx, m)
 	case *TenantMutation:
@@ -1535,6 +1553,139 @@ func (c *OrderItemClient) mutate(ctx context.Context, m *OrderItemMutation) (Val
 	}
 }
 
+// PackageTranslationClient is a client for the PackageTranslation schema.
+type PackageTranslationClient struct {
+	config
+}
+
+// NewPackageTranslationClient returns a client for the PackageTranslation from the given config.
+func NewPackageTranslationClient(c config) *PackageTranslationClient {
+	return &PackageTranslationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `packagetranslation.Hooks(f(g(h())))`.
+func (c *PackageTranslationClient) Use(hooks ...Hook) {
+	c.hooks.PackageTranslation = append(c.hooks.PackageTranslation, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `packagetranslation.Intercept(f(g(h())))`.
+func (c *PackageTranslationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.PackageTranslation = append(c.inters.PackageTranslation, interceptors...)
+}
+
+// Create returns a builder for creating a PackageTranslation entity.
+func (c *PackageTranslationClient) Create() *PackageTranslationCreate {
+	mutation := newPackageTranslationMutation(c.config, OpCreate)
+	return &PackageTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of PackageTranslation entities.
+func (c *PackageTranslationClient) CreateBulk(builders ...*PackageTranslationCreate) *PackageTranslationCreateBulk {
+	return &PackageTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *PackageTranslationClient) MapCreateBulk(slice any, setFunc func(*PackageTranslationCreate, int)) *PackageTranslationCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &PackageTranslationCreateBulk{err: fmt.Errorf("calling to PackageTranslationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*PackageTranslationCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &PackageTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for PackageTranslation.
+func (c *PackageTranslationClient) Update() *PackageTranslationUpdate {
+	mutation := newPackageTranslationMutation(c.config, OpUpdate)
+	return &PackageTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PackageTranslationClient) UpdateOne(_m *PackageTranslation) *PackageTranslationUpdateOne {
+	mutation := newPackageTranslationMutation(c.config, OpUpdateOne, withPackageTranslation(_m))
+	return &PackageTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PackageTranslationClient) UpdateOneID(id int) *PackageTranslationUpdateOne {
+	mutation := newPackageTranslationMutation(c.config, OpUpdateOne, withPackageTranslationID(id))
+	return &PackageTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for PackageTranslation.
+func (c *PackageTranslationClient) Delete() *PackageTranslationDelete {
+	mutation := newPackageTranslationMutation(c.config, OpDelete)
+	return &PackageTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PackageTranslationClient) DeleteOne(_m *PackageTranslation) *PackageTranslationDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *PackageTranslationClient) DeleteOneID(id int) *PackageTranslationDeleteOne {
+	builder := c.Delete().Where(packagetranslation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PackageTranslationDeleteOne{builder}
+}
+
+// Query returns a query builder for PackageTranslation.
+func (c *PackageTranslationClient) Query() *PackageTranslationQuery {
+	return &PackageTranslationQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypePackageTranslation},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a PackageTranslation entity by its id.
+func (c *PackageTranslationClient) Get(ctx context.Context, id int) (*PackageTranslation, error) {
+	return c.Query().Where(packagetranslation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PackageTranslationClient) GetX(ctx context.Context, id int) *PackageTranslation {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PackageTranslationClient) Hooks() []Hook {
+	return c.hooks.PackageTranslation
+}
+
+// Interceptors returns the client interceptors.
+func (c *PackageTranslationClient) Interceptors() []Interceptor {
+	return c.inters.PackageTranslation
+}
+
+func (c *PackageTranslationClient) mutate(ctx context.Context, m *PackageTranslationMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PackageTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PackageTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PackageTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PackageTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown PackageTranslation mutation op: %q", m.Op())
+	}
+}
+
 // PaymentClient is a client for the Payment schema.
 type PaymentClient struct {
 	config
@@ -1931,6 +2082,139 @@ func (c *ProductPackageClient) mutate(ctx context.Context, m *ProductPackageMuta
 		return (&ProductPackageDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown ProductPackage mutation op: %q", m.Op())
+	}
+}
+
+// ProductTranslationClient is a client for the ProductTranslation schema.
+type ProductTranslationClient struct {
+	config
+}
+
+// NewProductTranslationClient returns a client for the ProductTranslation from the given config.
+func NewProductTranslationClient(c config) *ProductTranslationClient {
+	return &ProductTranslationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `producttranslation.Hooks(f(g(h())))`.
+func (c *ProductTranslationClient) Use(hooks ...Hook) {
+	c.hooks.ProductTranslation = append(c.hooks.ProductTranslation, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `producttranslation.Intercept(f(g(h())))`.
+func (c *ProductTranslationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.ProductTranslation = append(c.inters.ProductTranslation, interceptors...)
+}
+
+// Create returns a builder for creating a ProductTranslation entity.
+func (c *ProductTranslationClient) Create() *ProductTranslationCreate {
+	mutation := newProductTranslationMutation(c.config, OpCreate)
+	return &ProductTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of ProductTranslation entities.
+func (c *ProductTranslationClient) CreateBulk(builders ...*ProductTranslationCreate) *ProductTranslationCreateBulk {
+	return &ProductTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *ProductTranslationClient) MapCreateBulk(slice any, setFunc func(*ProductTranslationCreate, int)) *ProductTranslationCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &ProductTranslationCreateBulk{err: fmt.Errorf("calling to ProductTranslationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*ProductTranslationCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &ProductTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for ProductTranslation.
+func (c *ProductTranslationClient) Update() *ProductTranslationUpdate {
+	mutation := newProductTranslationMutation(c.config, OpUpdate)
+	return &ProductTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ProductTranslationClient) UpdateOne(_m *ProductTranslation) *ProductTranslationUpdateOne {
+	mutation := newProductTranslationMutation(c.config, OpUpdateOne, withProductTranslation(_m))
+	return &ProductTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ProductTranslationClient) UpdateOneID(id int) *ProductTranslationUpdateOne {
+	mutation := newProductTranslationMutation(c.config, OpUpdateOne, withProductTranslationID(id))
+	return &ProductTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for ProductTranslation.
+func (c *ProductTranslationClient) Delete() *ProductTranslationDelete {
+	mutation := newProductTranslationMutation(c.config, OpDelete)
+	return &ProductTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *ProductTranslationClient) DeleteOne(_m *ProductTranslation) *ProductTranslationDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *ProductTranslationClient) DeleteOneID(id int) *ProductTranslationDeleteOne {
+	builder := c.Delete().Where(producttranslation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ProductTranslationDeleteOne{builder}
+}
+
+// Query returns a query builder for ProductTranslation.
+func (c *ProductTranslationClient) Query() *ProductTranslationQuery {
+	return &ProductTranslationQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeProductTranslation},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a ProductTranslation entity by its id.
+func (c *ProductTranslationClient) Get(ctx context.Context, id int) (*ProductTranslation, error) {
+	return c.Query().Where(producttranslation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ProductTranslationClient) GetX(ctx context.Context, id int) *ProductTranslation {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *ProductTranslationClient) Hooks() []Hook {
+	return c.hooks.ProductTranslation
+}
+
+// Interceptors returns the client interceptors.
+func (c *ProductTranslationClient) Interceptors() []Interceptor {
+	return c.inters.ProductTranslation
+}
+
+func (c *ProductTranslationClient) mutate(ctx context.Context, m *ProductTranslationMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&ProductTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&ProductTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&ProductTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&ProductTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown ProductTranslation mutation op: %q", m.Op())
 	}
 }
 
@@ -2603,13 +2887,15 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 type (
 	hooks struct {
 		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
-		Merchant, MerchantConfig, Order, OrderItem, Payment, Product, ProductPackage,
-		Review, Tenant, Traveler, User, Voucher []ent.Hook
+		Merchant, MerchantConfig, Order, OrderItem, PackageTranslation, Payment,
+		Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler, User,
+		Voucher []ent.Hook
 	}
 	inters struct {
 		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
-		Merchant, MerchantConfig, Order, OrderItem, Payment, Product, ProductPackage,
-		Review, Tenant, Traveler, User, Voucher []ent.Interceptor
+		Merchant, MerchantConfig, Order, OrderItem, PackageTranslation, Payment,
+		Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler, User,
+		Voucher []ent.Interceptor
 	}
 )
 
