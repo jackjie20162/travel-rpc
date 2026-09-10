@@ -2164,3 +2164,143 @@ var ReviewService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "travel.proto",
 }
+
+const (
+	CurrencyService_ListCurrencies_FullMethodName    = "/travel.CurrencyService/ListCurrencies"
+	CurrencyService_ListExchangeRates_FullMethodName = "/travel.CurrencyService/ListExchangeRates"
+)
+
+// CurrencyServiceClient is the client API for CurrencyService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type CurrencyServiceClient interface {
+	ListCurrencies(ctx context.Context, in *ListCurrenciesRequest, opts ...grpc.CallOption) (*ListCurrenciesResponse, error)
+	ListExchangeRates(ctx context.Context, in *ListExchangeRatesRequest, opts ...grpc.CallOption) (*ListExchangeRatesResponse, error)
+}
+
+type currencyServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewCurrencyServiceClient(cc grpc.ClientConnInterface) CurrencyServiceClient {
+	return &currencyServiceClient{cc}
+}
+
+func (c *currencyServiceClient) ListCurrencies(ctx context.Context, in *ListCurrenciesRequest, opts ...grpc.CallOption) (*ListCurrenciesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListCurrenciesResponse)
+	err := c.cc.Invoke(ctx, CurrencyService_ListCurrencies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *currencyServiceClient) ListExchangeRates(ctx context.Context, in *ListExchangeRatesRequest, opts ...grpc.CallOption) (*ListExchangeRatesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListExchangeRatesResponse)
+	err := c.cc.Invoke(ctx, CurrencyService_ListExchangeRates_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// CurrencyServiceServer is the server API for CurrencyService service.
+// All implementations must embed UnimplementedCurrencyServiceServer
+// for forward compatibility.
+type CurrencyServiceServer interface {
+	ListCurrencies(context.Context, *ListCurrenciesRequest) (*ListCurrenciesResponse, error)
+	ListExchangeRates(context.Context, *ListExchangeRatesRequest) (*ListExchangeRatesResponse, error)
+	mustEmbedUnimplementedCurrencyServiceServer()
+}
+
+// UnimplementedCurrencyServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedCurrencyServiceServer struct{}
+
+func (UnimplementedCurrencyServiceServer) ListCurrencies(context.Context, *ListCurrenciesRequest) (*ListCurrenciesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListCurrencies not implemented")
+}
+func (UnimplementedCurrencyServiceServer) ListExchangeRates(context.Context, *ListExchangeRatesRequest) (*ListExchangeRatesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListExchangeRates not implemented")
+}
+func (UnimplementedCurrencyServiceServer) mustEmbedUnimplementedCurrencyServiceServer() {}
+func (UnimplementedCurrencyServiceServer) testEmbeddedByValue()                         {}
+
+// UnsafeCurrencyServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to CurrencyServiceServer will
+// result in compilation errors.
+type UnsafeCurrencyServiceServer interface {
+	mustEmbedUnimplementedCurrencyServiceServer()
+}
+
+func RegisterCurrencyServiceServer(s grpc.ServiceRegistrar, srv CurrencyServiceServer) {
+	// If the following call panics, it indicates UnimplementedCurrencyServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&CurrencyService_ServiceDesc, srv)
+}
+
+func _CurrencyService_ListCurrencies_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCurrenciesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CurrencyServiceServer).ListCurrencies(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CurrencyService_ListCurrencies_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CurrencyServiceServer).ListCurrencies(ctx, req.(*ListCurrenciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CurrencyService_ListExchangeRates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListExchangeRatesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CurrencyServiceServer).ListExchangeRates(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CurrencyService_ListExchangeRates_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CurrencyServiceServer).ListExchangeRates(ctx, req.(*ListExchangeRatesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// CurrencyService_ServiceDesc is the grpc.ServiceDesc for CurrencyService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var CurrencyService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "travel.CurrencyService",
+	HandlerType: (*CurrencyServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListCurrencies",
+			Handler:    _CurrencyService_ListCurrencies_Handler,
+		},
+		{
+			MethodName: "ListExchangeRates",
+			Handler:    _CurrencyService_ListExchangeRates_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "travel.proto",
+}

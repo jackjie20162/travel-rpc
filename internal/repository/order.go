@@ -46,6 +46,11 @@ type CreateOrderInput struct {
 	Currency      string
 	Remark        string
 	Travelers     []TravelerInput
+	// 下单锁汇：展示币种、锁定汇率(×1e6)、锁定展示金额(最小货币单位,×100)。
+	// 结算真值仍为 total_amount(基准币)，以下字段仅用于用户侧展示。
+	DisplayCurrency    string
+	ExchangeRateMicro  int64
+	DisplayAmountMinor int64
 }
 
 // TravelerInput holds the data needed to persist an order traveler.

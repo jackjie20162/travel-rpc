@@ -26,6 +26,7 @@ message CreateOrderRequest {
   string customer_phone = 10;
   repeated Traveler travelers = 11;
   string remark = 12;
+  string display_currency = 13; // 用户下单时选择的展示币种（为空则回退基准币）
 }
 
 message Traveler {
@@ -239,6 +240,9 @@ message Order {
   string time_slot = 19;
   string reject_reason = 20;
   int64 verified_at = 21;
+  string display_currency = 22;      // 下单锁定的展示币种
+  int64 exchange_rate_micro = 23;    // 下单锁定的汇率×1e6（基准币为1000000）
+  int64 display_amount_minor = 24;   // 下单锁定的展示金额（最小货币单位,×100）
 }
 
 message OrderItem {
@@ -640,4 +644,41 @@ service ReviewService {
   rpc ListByProduct(ReviewListRequest) returns (ReviewListResponse);
   rpc GetByOrder(OrderNoReviewRequest) returns (Review);
   rpc Reply(ReplyReviewRequest) returns (Review);
+}
+
+// ── Currency ──
+
+message Currency {
+  string code = 1;
+  string symbol = 2;
+  string name_key = 3;
+  int32 decimals = 4;
+  string symbol_position = 5; // prefix / suffix
+  bool is_base = 6;
+}
+
+message ExchangeRate {
+  string base_currency = 1;
+  string target_currency = 2;
+  int64 rate_micro = 3;     // 实际汇率×1e6
+  int64 effective_at = 4;   // 生效时间戳(unix秒)
+}
+
+message ListCurrenciesRequest {}
+
+message ListCurrenciesResponse {
+  repeated Currency items = 1;
+}
+
+message ListExchangeRatesRequest {
+  string base = 1; // 基准币种，默认 AED
+}
+
+message ListExchangeRatesResponse {
+  repeated ExchangeRate items = 1;
+}
+
+service CurrencyService {
+  rpc ListCurrencies(ListCurrenciesRequest) returns (ListCurrenciesResponse);
+  rpc ListExchangeRates(ListExchangeRatesRequest) returns (ListExchangeRatesResponse);
 }

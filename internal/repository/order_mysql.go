@@ -39,6 +39,16 @@ func (r *mysqlOrderRepository) Create(ctx context.Context, input CreateOrderInpu
 	if input.CustomerEmail != "" {
 		builder.SetCustomerEmail(input.CustomerEmail)
 	}
+	// 下单锁汇字段：结算真值仍为 total(基准币)，以下仅用于用户侧展示。
+	if input.DisplayCurrency != "" {
+		builder.SetDisplayCurrency(input.DisplayCurrency)
+	}
+	if input.ExchangeRateMicro > 0 {
+		builder.SetExchangeRateMicro(input.ExchangeRateMicro)
+	}
+	if input.DisplayAmountMinor > 0 {
+		builder.SetDisplayAmountMinor(input.DisplayAmountMinor)
+	}
 	item, err := builder.Save(ctx)
 	if err != nil {
 		_ = tx.Rollback()
