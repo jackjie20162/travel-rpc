@@ -16,6 +16,7 @@ This repository is the dedicated tourism RPC service. All requirements, architec
 - `08-order-inventory-consistency.md` — order/reservation atomicity
 - `09-merchant-catalog-management.md` — merchant product management flow
 - `10-product-publishing-optimization.md` — 产品发布与行程信息优化（2026-09-04）
+- `11-order-im-notification.md` — 订单事件 IM 推送与订单卡片（2026-09-23）
 
 ## Mandatory rule
 

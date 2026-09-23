@@ -1,5 +1,28 @@
 # Development Log
 
+## 2026-09-23 — 订单事件 IM 推送（配合 travel-pc IM 对接）
+
+### 背景
+travel-pc 缺少 IM 客服对接，且订单关键状态变化无法及时触达交易对方。本期：imGateway 新增内部系统消息接口，travel-rpc 在订单事件点推送「订单卡片 + 文案」，三端（pc/app/merchant-frontend）渲染订单卡片并支持基于订单的咨询。
+
+### 实现内容
+- **imGateway**: 新增 `POST /im/system-msg`（`X-Internal-Token` 鉴权，配置为空时跳过），两端懒注册解析 im_uid 后投递 `im_msg_topic`，完全复用现有入库+实时推送+离线补偿管线。
+- **travel-rpc**: 新增 `internal/imnotify`（`Init` + `NotifyOrder`，异步 3s 超时、panic recover、失败仅记日志）；`config.ImConf{GatewayUrl,Token}` 与 `etc/travel-rpc.yaml` `Im` 段；注入点：支付成功（payment.go MarkPaid 调用点，客户→商户）、AcceptOrder/VerifyOrder/HandleRefund（商户→客户）、RequestRefund（客户→商户）。
+- **前端**: travel-pc 新增 `src/plugin/im/`（右侧抽屉 + 全局单例 store + 未读/订单徽标，入口：产品详情咨询客服、订单详情咨询此订单、顶栏客服）；travel-app `Support.vue` 支持订单卡片与 `?orderNo=` 上下文，订单详情新增「咨询此订单」；merchant-frontend 工作台 `ChatPanel.vue` 渲染订单卡片。
+
+### 决策
+- `content_type` 为 int32 透传，新增「订单卡片=4」不改 im-common，无需发新 tag。
+- IM 卡片金额取订单存储原值（单位：元），不做展示币种换算。
+- 一期仅「客户↔商户」单聊形态，不做群聊/系统广播。
+
+### 验证
+- ✅ imGateway / travel-rpc `go build ./...` 通过
+- ✅ travel-pc / travel-app / merchant-frontend `vite build` 通过
+- ⏳ 端到端联调需用户重启 imGateway(9281) 与 travel-rpc(9205)
+
+### 文档
+- 新增 `11-order-im-notification.md`（推送规则、注入点、卡片结构、部署依赖）
+
 ## 2026-09-09 — C 端库存批量查询窗口调整与 RPC 客户端超时
 
 ### 背景
