@@ -60,11 +60,14 @@ Im:
 
 `POST /im/system-msg`（见 imGateway 仓库）：`X-Internal-Token` 校验 → 两端 `RegisterOrGetImUser` 懒注册解析 `im_uid` → 组装 `model.ImMsg`（单聊）→ 投递 `im_msg_topic`，完整复用既有「入库 + 实时推送 + 离线补偿」管线，因此离线用户上线后仍能收到订单通知。
 
+该路由与 `POST /im/send-msg`（客户端 WebSocket 断开时的发送兜底）均按路由放宽超时到 10s：网关全局 `Timeout: 2000ms` 不足以覆盖「懒注册 RPC + Kafka 投递」。
+
 ## 前端消费
 
 - travel-pc：`src/plugin/im/`（IM 抽屉，`contentType=4` 渲染为订单卡片，点击跳 `#/orders/:orderNo`）。
 - travel-app：`src/plugin/im/Support.vue` 同样渲染订单卡片，订单详情「咨询此订单」带 `?orderNo=` 进入并自动发送卡片。
 - merchant-frontend：IM 工作台 `ChatPanel.vue` 渲染订单卡片，点击进入 travel 商户订单详情。
+- 三端发送均带接口兜底：WebSocket 未连上时改走 `POST /im/send-msg`（身份放 query，与 WS 握手一致），保证「基于订单/商品的咨询卡片」在断线下仍能送达商户。
 
 ## 验证
 
