@@ -9,6 +9,17 @@ type Config struct {
 	zrpc.RpcServerConf
 	DatabaseConf  config.DatabaseConf
 	TranslateConf TranslateConf `json:",optional"`
+	// Im IM 网关系统消息推送配置（订单事件通知，见 internal/imnotify）
+	Im ImConf `json:",optional"`
+}
+
+// ImConf IM 订单事件推送配置。GatewayUrl 为空时禁用推送，
+// 不影响订单主流程（发送失败仅记日志）。
+type ImConf struct {
+	// GatewayUrl imGateway 地址（如 http://localhost:9281），空则不推送
+	GatewayUrl string `json:",optional"`
+	// Token 内部调用令牌，随请求头 X-Internal-Token 发送，与网关 SystemMsg.InternalToken 一致
+	Token string `json:",optional"`
 }
 
 // TranslateConf configures the external machine-translation provider used to

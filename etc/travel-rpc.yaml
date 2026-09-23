@@ -2,6 +2,11 @@ Name: travel-rpc
 ListenOn: 0.0.0.0:9205
 Timeout: 30000
 
+# IM 订单事件推送（imGateway 系统消息接口）；GatewayUrl 为空时禁用，不影响订单主流程
+Im:
+  GatewayUrl: http://localhost:9281
+  Token:
+
 DatabaseConf:
   Type: mysql
   Host: 127.0.0.1

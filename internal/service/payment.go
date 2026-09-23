@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"gitee.com/meinongyihe/travel-rpc/internal/auth"
+	"gitee.com/meinongyihe/travel-rpc/internal/imnotify"
 	"gitee.com/meinongyihe/travel-rpc/internal/repository"
 	"gitee.com/meinongyihe/travel-rpc/travel"
 	"google.golang.org/grpc/codes"
@@ -13,10 +14,11 @@ import (
 type PaymentService struct {
 	travel.UnimplementedPaymentServiceServer
 	payments repository.PaymentRepository
+	orders   repository.OrderRepository
 }
 
-func NewPaymentService(payments repository.PaymentRepository) *PaymentService {
-	return &PaymentService{payments: payments}
+func NewPaymentService(payments repository.PaymentRepository, orders repository.OrderRepository) *PaymentService {
+	return &PaymentService{payments: payments, orders: orders}
 }
 
 func (s *PaymentService) Create(ctx context.Context, req *travel.CreatePaymentRequest) (*travel.Payment, error) {
@@ -91,6 +93,10 @@ func (s *PaymentService) MarkPaid(ctx context.Context, req *travel.MarkPaymentPa
 	p, err := s.payments.MarkPaid(ctx, tenantID, merchantID, req.GetPaymentNo(), req.GetProviderPaymentId())
 	if err != nil {
 		return nil, mapPaymentError(err)
+	}
+	// 支付成功：以客户端身份向商户 IM 推送订单卡片+提醒（异步，失败不影响主流程）
+	if o, oerr := s.orders.GetByOrderNo(ctx, tenantID, merchantID, p.OrderNo); oerr == nil {
+		imnotify.NotifyOrder(ctx, o, false, "新订单已支付，请及时接单")
 	}
 	return toPayment(p), nil
 }

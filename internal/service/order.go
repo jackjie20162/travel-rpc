@@ -7,6 +7,7 @@ import (
 
     "gitee.com/meinongyihe/travel-rpc/ent"
     "gitee.com/meinongyihe/travel-rpc/internal/auth"
+    "gitee.com/meinongyihe/travel-rpc/internal/imnotify"
     "gitee.com/meinongyihe/travel-rpc/internal/repository"
     "gitee.com/meinongyihe/travel-rpc/travel"
     "google.golang.org/grpc/codes"
@@ -195,6 +196,12 @@ func (s *OrderService) VerifyOrder(ctx context.Context, req *travel.VerifyOrderR
     if err != nil {
         return nil, status.Error(codes.Internal, "failed to fetch updated order")
     }
+    // IM 推送核销结果（商户->客户）
+    verifyMsg := "订单已核销，祝您旅途愉快"
+    if action == "REJECT" {
+        verifyMsg = "订单核销未通过，已退款。原因：" + req.GetReason()
+    }
+    imnotify.NotifyOrder(ctx, updated, true, verifyMsg)
     return toOrder(updated), nil
 }
 
@@ -241,6 +248,12 @@ func (s *OrderService) AcceptOrder(ctx context.Context, req *travel.AcceptOrderR
     if err != nil {
         return nil, status.Error(codes.Internal, "failed to fetch updated order")
     }
+    // IM 推送接单结果（商户->客户）
+    acceptMsg := "商家已接单，请等待出行"
+    if action == "REJECT" {
+        acceptMsg = "商家拒绝了订单。原因：" + req.GetReason()
+    }
+    imnotify.NotifyOrder(ctx, updated, true, acceptMsg)
     return toOrder(updated), nil
 }
 
@@ -275,6 +288,8 @@ func (s *OrderService) RequestRefund(ctx context.Context, req *travel.RefundRequ
     if err != nil {
         return nil, status.Error(codes.Internal, "failed to fetch updated order")
     }
+    // IM 推送退款申请（客户->商户，提醒商户及时处理）
+    imnotify.NotifyOrder(ctx, updated, false, "客户申请退款。原因："+req.GetReason())
     return toOrder(updated), nil
 }
 
@@ -310,6 +325,12 @@ func (s *OrderService) HandleRefund(ctx context.Context, req *travel.HandleRefun
     if err != nil {
         return nil, status.Error(codes.Internal, "failed to fetch updated order")
     }
+    // IM 推送退款审批结果（商户->客户）
+    refundMsg := "您的退款申请已通过，款项将退回原支付账户"
+    if !approved {
+        refundMsg = "您的退款申请被驳回。原因：" + req.GetReason()
+    }
+    imnotify.NotifyOrder(ctx, updated, true, refundMsg)
     return toOrder(updated), nil
 }
 

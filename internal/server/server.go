@@ -7,6 +7,7 @@ import (
 
     "gitee.com/meinongyihe/travel-rpc/ent"
     "gitee.com/meinongyihe/travel-rpc/internal/config"
+    "gitee.com/meinongyihe/travel-rpc/internal/imnotify"
     "gitee.com/meinongyihe/travel-rpc/internal/repository"
     "gitee.com/meinongyihe/travel-rpc/internal/service"
     "gitee.com/meinongyihe/travel-rpc/travel"
@@ -16,6 +17,9 @@ import (
 // Register wires the standalone Travel domain services. No merchant-api or
 // merchant-rpc dependency is required in the Travel runtime path.
 func Register(grpcServer *grpc.Server, client *ent.Client, c config.Config) {
+    // IM 订单事件推送初始化（GatewayUrl 未配置时静默禁用）
+    imnotify.Init(c.Im)
+
     products := repository.NewProductRepository(client)
     inventory := repository.NewInventoryRepository(client)
     orders := repository.NewOrderRepository(client)
@@ -35,7 +39,7 @@ func Register(grpcServer *grpc.Server, client *ent.Client, c config.Config) {
     travel.RegisterCatalogServiceServer(grpcServer, service.NewCatalogService(products, client, translations))
     travel.RegisterInventoryServiceServer(grpcServer, service.NewInventoryService(inventory))
     travel.RegisterOrderServiceServer(grpcServer, service.NewOrderService(orders, inventory, booking, currencies))
-    travel.RegisterPaymentServiceServer(grpcServer, service.NewPaymentService(payments))
+    travel.RegisterPaymentServiceServer(grpcServer, service.NewPaymentService(payments, orders))
     travel.RegisterTravelManagementServiceServer(grpcServer, service.NewManagementService(client, translator))
     travel.RegisterUserServiceServer(grpcServer, service.NewUserService(users))
     travel.RegisterReviewServiceServer(grpcServer, service.NewReviewService(reviews, orders))
