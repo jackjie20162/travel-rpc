@@ -11,6 +11,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -42,6 +43,7 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
+	TypeAttraction           = "Attraction"
 	TypeCurrency             = "Currency"
 	TypeExchangeRate         = "ExchangeRate"
 	TypeInventory            = "Inventory"
@@ -62,6 +64,1889 @@ const (
 	TypeUser                 = "User"
 	TypeVoucher              = "Voucher"
 )
+
+// AttractionMutation represents an operation that mutates the Attraction nodes in the graph.
+type AttractionMutation struct {
+	config
+	op                 Op
+	typ                string
+	id                 *int
+	tenant_id          *int64
+	addtenant_id       *int64
+	merchant_id        *int64
+	addmerchant_id     *int64
+	name               *string
+	name_en            *string
+	category           *string
+	tags               *string
+	city               *string
+	address            *string
+	latitude           *float64
+	addlatitude        *float64
+	longitude          *float64
+	addlongitude       *float64
+	poi_id             *string
+	poi_name           *string
+	cover_image        *string
+	images             *string
+	description        *string
+	rich_content       *string
+	opening_hours      *string
+	suggested_duration *string
+	ticket_info        *string
+	sort               *int
+	addsort            *int
+	status             *string
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*Attraction, error)
+	predicates         []predicate.Attraction
+}
+
+var _ ent.Mutation = (*AttractionMutation)(nil)
+
+// attractionOption allows management of the mutation configuration using functional options.
+type attractionOption func(*AttractionMutation)
+
+// newAttractionMutation creates new mutation for the Attraction entity.
+func newAttractionMutation(c config, op Op, opts ...attractionOption) *AttractionMutation {
+	m := &AttractionMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeAttraction,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withAttractionID sets the ID field of the mutation.
+func withAttractionID(id int) attractionOption {
+	return func(m *AttractionMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Attraction
+		)
+		m.oldValue = func(ctx context.Context) (*Attraction, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Attraction.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withAttraction sets the old Attraction of the mutation.
+func withAttraction(node *Attraction) attractionOption {
+	return func(m *AttractionMutation) {
+		m.oldValue = func(context.Context) (*Attraction, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m AttractionMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m AttractionMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *AttractionMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *AttractionMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().Attraction.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetTenantID sets the "tenant_id" field.
+func (m *AttractionMutation) SetTenantID(i int64) {
+	m.tenant_id = &i
+	m.addtenant_id = nil
+}
+
+// TenantID returns the value of the "tenant_id" field in the mutation.
+func (m *AttractionMutation) TenantID() (r int64, exists bool) {
+	v := m.tenant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTenantID returns the old "tenant_id" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldTenantID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTenantID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTenantID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTenantID: %w", err)
+	}
+	return oldValue.TenantID, nil
+}
+
+// AddTenantID adds i to the "tenant_id" field.
+func (m *AttractionMutation) AddTenantID(i int64) {
+	if m.addtenant_id != nil {
+		*m.addtenant_id += i
+	} else {
+		m.addtenant_id = &i
+	}
+}
+
+// AddedTenantID returns the value that was added to the "tenant_id" field in this mutation.
+func (m *AttractionMutation) AddedTenantID() (r int64, exists bool) {
+	v := m.addtenant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetTenantID resets all changes to the "tenant_id" field.
+func (m *AttractionMutation) ResetTenantID() {
+	m.tenant_id = nil
+	m.addtenant_id = nil
+}
+
+// SetMerchantID sets the "merchant_id" field.
+func (m *AttractionMutation) SetMerchantID(i int64) {
+	m.merchant_id = &i
+	m.addmerchant_id = nil
+}
+
+// MerchantID returns the value of the "merchant_id" field in the mutation.
+func (m *AttractionMutation) MerchantID() (r int64, exists bool) {
+	v := m.merchant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldMerchantID returns the old "merchant_id" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldMerchantID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldMerchantID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldMerchantID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldMerchantID: %w", err)
+	}
+	return oldValue.MerchantID, nil
+}
+
+// AddMerchantID adds i to the "merchant_id" field.
+func (m *AttractionMutation) AddMerchantID(i int64) {
+	if m.addmerchant_id != nil {
+		*m.addmerchant_id += i
+	} else {
+		m.addmerchant_id = &i
+	}
+}
+
+// AddedMerchantID returns the value that was added to the "merchant_id" field in this mutation.
+func (m *AttractionMutation) AddedMerchantID() (r int64, exists bool) {
+	v := m.addmerchant_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetMerchantID resets all changes to the "merchant_id" field.
+func (m *AttractionMutation) ResetMerchantID() {
+	m.merchant_id = nil
+	m.addmerchant_id = nil
+}
+
+// SetName sets the "name" field.
+func (m *AttractionMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *AttractionMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *AttractionMutation) ResetName() {
+	m.name = nil
+}
+
+// SetNameEn sets the "name_en" field.
+func (m *AttractionMutation) SetNameEn(s string) {
+	m.name_en = &s
+}
+
+// NameEn returns the value of the "name_en" field in the mutation.
+func (m *AttractionMutation) NameEn() (r string, exists bool) {
+	v := m.name_en
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldNameEn returns the old "name_en" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldNameEn(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldNameEn is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldNameEn requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldNameEn: %w", err)
+	}
+	return oldValue.NameEn, nil
+}
+
+// ClearNameEn clears the value of the "name_en" field.
+func (m *AttractionMutation) ClearNameEn() {
+	m.name_en = nil
+	m.clearedFields[attraction.FieldNameEn] = struct{}{}
+}
+
+// NameEnCleared returns if the "name_en" field was cleared in this mutation.
+func (m *AttractionMutation) NameEnCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldNameEn]
+	return ok
+}
+
+// ResetNameEn resets all changes to the "name_en" field.
+func (m *AttractionMutation) ResetNameEn() {
+	m.name_en = nil
+	delete(m.clearedFields, attraction.FieldNameEn)
+}
+
+// SetCategory sets the "category" field.
+func (m *AttractionMutation) SetCategory(s string) {
+	m.category = &s
+}
+
+// Category returns the value of the "category" field in the mutation.
+func (m *AttractionMutation) Category() (r string, exists bool) {
+	v := m.category
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCategory returns the old "category" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldCategory(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCategory is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCategory requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCategory: %w", err)
+	}
+	return oldValue.Category, nil
+}
+
+// ClearCategory clears the value of the "category" field.
+func (m *AttractionMutation) ClearCategory() {
+	m.category = nil
+	m.clearedFields[attraction.FieldCategory] = struct{}{}
+}
+
+// CategoryCleared returns if the "category" field was cleared in this mutation.
+func (m *AttractionMutation) CategoryCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldCategory]
+	return ok
+}
+
+// ResetCategory resets all changes to the "category" field.
+func (m *AttractionMutation) ResetCategory() {
+	m.category = nil
+	delete(m.clearedFields, attraction.FieldCategory)
+}
+
+// SetTags sets the "tags" field.
+func (m *AttractionMutation) SetTags(s string) {
+	m.tags = &s
+}
+
+// Tags returns the value of the "tags" field in the mutation.
+func (m *AttractionMutation) Tags() (r string, exists bool) {
+	v := m.tags
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTags returns the old "tags" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldTags(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTags is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTags requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTags: %w", err)
+	}
+	return oldValue.Tags, nil
+}
+
+// ClearTags clears the value of the "tags" field.
+func (m *AttractionMutation) ClearTags() {
+	m.tags = nil
+	m.clearedFields[attraction.FieldTags] = struct{}{}
+}
+
+// TagsCleared returns if the "tags" field was cleared in this mutation.
+func (m *AttractionMutation) TagsCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldTags]
+	return ok
+}
+
+// ResetTags resets all changes to the "tags" field.
+func (m *AttractionMutation) ResetTags() {
+	m.tags = nil
+	delete(m.clearedFields, attraction.FieldTags)
+}
+
+// SetCity sets the "city" field.
+func (m *AttractionMutation) SetCity(s string) {
+	m.city = &s
+}
+
+// City returns the value of the "city" field in the mutation.
+func (m *AttractionMutation) City() (r string, exists bool) {
+	v := m.city
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCity returns the old "city" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldCity(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCity: %w", err)
+	}
+	return oldValue.City, nil
+}
+
+// ClearCity clears the value of the "city" field.
+func (m *AttractionMutation) ClearCity() {
+	m.city = nil
+	m.clearedFields[attraction.FieldCity] = struct{}{}
+}
+
+// CityCleared returns if the "city" field was cleared in this mutation.
+func (m *AttractionMutation) CityCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldCity]
+	return ok
+}
+
+// ResetCity resets all changes to the "city" field.
+func (m *AttractionMutation) ResetCity() {
+	m.city = nil
+	delete(m.clearedFields, attraction.FieldCity)
+}
+
+// SetAddress sets the "address" field.
+func (m *AttractionMutation) SetAddress(s string) {
+	m.address = &s
+}
+
+// Address returns the value of the "address" field in the mutation.
+func (m *AttractionMutation) Address() (r string, exists bool) {
+	v := m.address
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddress returns the old "address" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldAddress(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAddress is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAddress requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddress: %w", err)
+	}
+	return oldValue.Address, nil
+}
+
+// ClearAddress clears the value of the "address" field.
+func (m *AttractionMutation) ClearAddress() {
+	m.address = nil
+	m.clearedFields[attraction.FieldAddress] = struct{}{}
+}
+
+// AddressCleared returns if the "address" field was cleared in this mutation.
+func (m *AttractionMutation) AddressCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldAddress]
+	return ok
+}
+
+// ResetAddress resets all changes to the "address" field.
+func (m *AttractionMutation) ResetAddress() {
+	m.address = nil
+	delete(m.clearedFields, attraction.FieldAddress)
+}
+
+// SetLatitude sets the "latitude" field.
+func (m *AttractionMutation) SetLatitude(f float64) {
+	m.latitude = &f
+	m.addlatitude = nil
+}
+
+// Latitude returns the value of the "latitude" field in the mutation.
+func (m *AttractionMutation) Latitude() (r float64, exists bool) {
+	v := m.latitude
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLatitude returns the old "latitude" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldLatitude(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLatitude is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLatitude requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLatitude: %w", err)
+	}
+	return oldValue.Latitude, nil
+}
+
+// AddLatitude adds f to the "latitude" field.
+func (m *AttractionMutation) AddLatitude(f float64) {
+	if m.addlatitude != nil {
+		*m.addlatitude += f
+	} else {
+		m.addlatitude = &f
+	}
+}
+
+// AddedLatitude returns the value that was added to the "latitude" field in this mutation.
+func (m *AttractionMutation) AddedLatitude() (r float64, exists bool) {
+	v := m.addlatitude
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearLatitude clears the value of the "latitude" field.
+func (m *AttractionMutation) ClearLatitude() {
+	m.latitude = nil
+	m.addlatitude = nil
+	m.clearedFields[attraction.FieldLatitude] = struct{}{}
+}
+
+// LatitudeCleared returns if the "latitude" field was cleared in this mutation.
+func (m *AttractionMutation) LatitudeCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldLatitude]
+	return ok
+}
+
+// ResetLatitude resets all changes to the "latitude" field.
+func (m *AttractionMutation) ResetLatitude() {
+	m.latitude = nil
+	m.addlatitude = nil
+	delete(m.clearedFields, attraction.FieldLatitude)
+}
+
+// SetLongitude sets the "longitude" field.
+func (m *AttractionMutation) SetLongitude(f float64) {
+	m.longitude = &f
+	m.addlongitude = nil
+}
+
+// Longitude returns the value of the "longitude" field in the mutation.
+func (m *AttractionMutation) Longitude() (r float64, exists bool) {
+	v := m.longitude
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLongitude returns the old "longitude" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldLongitude(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLongitude is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLongitude requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLongitude: %w", err)
+	}
+	return oldValue.Longitude, nil
+}
+
+// AddLongitude adds f to the "longitude" field.
+func (m *AttractionMutation) AddLongitude(f float64) {
+	if m.addlongitude != nil {
+		*m.addlongitude += f
+	} else {
+		m.addlongitude = &f
+	}
+}
+
+// AddedLongitude returns the value that was added to the "longitude" field in this mutation.
+func (m *AttractionMutation) AddedLongitude() (r float64, exists bool) {
+	v := m.addlongitude
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearLongitude clears the value of the "longitude" field.
+func (m *AttractionMutation) ClearLongitude() {
+	m.longitude = nil
+	m.addlongitude = nil
+	m.clearedFields[attraction.FieldLongitude] = struct{}{}
+}
+
+// LongitudeCleared returns if the "longitude" field was cleared in this mutation.
+func (m *AttractionMutation) LongitudeCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldLongitude]
+	return ok
+}
+
+// ResetLongitude resets all changes to the "longitude" field.
+func (m *AttractionMutation) ResetLongitude() {
+	m.longitude = nil
+	m.addlongitude = nil
+	delete(m.clearedFields, attraction.FieldLongitude)
+}
+
+// SetPoiID sets the "poi_id" field.
+func (m *AttractionMutation) SetPoiID(s string) {
+	m.poi_id = &s
+}
+
+// PoiID returns the value of the "poi_id" field in the mutation.
+func (m *AttractionMutation) PoiID() (r string, exists bool) {
+	v := m.poi_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPoiID returns the old "poi_id" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldPoiID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPoiID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPoiID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPoiID: %w", err)
+	}
+	return oldValue.PoiID, nil
+}
+
+// ClearPoiID clears the value of the "poi_id" field.
+func (m *AttractionMutation) ClearPoiID() {
+	m.poi_id = nil
+	m.clearedFields[attraction.FieldPoiID] = struct{}{}
+}
+
+// PoiIDCleared returns if the "poi_id" field was cleared in this mutation.
+func (m *AttractionMutation) PoiIDCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldPoiID]
+	return ok
+}
+
+// ResetPoiID resets all changes to the "poi_id" field.
+func (m *AttractionMutation) ResetPoiID() {
+	m.poi_id = nil
+	delete(m.clearedFields, attraction.FieldPoiID)
+}
+
+// SetPoiName sets the "poi_name" field.
+func (m *AttractionMutation) SetPoiName(s string) {
+	m.poi_name = &s
+}
+
+// PoiName returns the value of the "poi_name" field in the mutation.
+func (m *AttractionMutation) PoiName() (r string, exists bool) {
+	v := m.poi_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPoiName returns the old "poi_name" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldPoiName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPoiName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPoiName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPoiName: %w", err)
+	}
+	return oldValue.PoiName, nil
+}
+
+// ClearPoiName clears the value of the "poi_name" field.
+func (m *AttractionMutation) ClearPoiName() {
+	m.poi_name = nil
+	m.clearedFields[attraction.FieldPoiName] = struct{}{}
+}
+
+// PoiNameCleared returns if the "poi_name" field was cleared in this mutation.
+func (m *AttractionMutation) PoiNameCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldPoiName]
+	return ok
+}
+
+// ResetPoiName resets all changes to the "poi_name" field.
+func (m *AttractionMutation) ResetPoiName() {
+	m.poi_name = nil
+	delete(m.clearedFields, attraction.FieldPoiName)
+}
+
+// SetCoverImage sets the "cover_image" field.
+func (m *AttractionMutation) SetCoverImage(s string) {
+	m.cover_image = &s
+}
+
+// CoverImage returns the value of the "cover_image" field in the mutation.
+func (m *AttractionMutation) CoverImage() (r string, exists bool) {
+	v := m.cover_image
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCoverImage returns the old "cover_image" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldCoverImage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCoverImage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCoverImage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCoverImage: %w", err)
+	}
+	return oldValue.CoverImage, nil
+}
+
+// ClearCoverImage clears the value of the "cover_image" field.
+func (m *AttractionMutation) ClearCoverImage() {
+	m.cover_image = nil
+	m.clearedFields[attraction.FieldCoverImage] = struct{}{}
+}
+
+// CoverImageCleared returns if the "cover_image" field was cleared in this mutation.
+func (m *AttractionMutation) CoverImageCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldCoverImage]
+	return ok
+}
+
+// ResetCoverImage resets all changes to the "cover_image" field.
+func (m *AttractionMutation) ResetCoverImage() {
+	m.cover_image = nil
+	delete(m.clearedFields, attraction.FieldCoverImage)
+}
+
+// SetImages sets the "images" field.
+func (m *AttractionMutation) SetImages(s string) {
+	m.images = &s
+}
+
+// Images returns the value of the "images" field in the mutation.
+func (m *AttractionMutation) Images() (r string, exists bool) {
+	v := m.images
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldImages returns the old "images" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldImages(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldImages is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldImages requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldImages: %w", err)
+	}
+	return oldValue.Images, nil
+}
+
+// ClearImages clears the value of the "images" field.
+func (m *AttractionMutation) ClearImages() {
+	m.images = nil
+	m.clearedFields[attraction.FieldImages] = struct{}{}
+}
+
+// ImagesCleared returns if the "images" field was cleared in this mutation.
+func (m *AttractionMutation) ImagesCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldImages]
+	return ok
+}
+
+// ResetImages resets all changes to the "images" field.
+func (m *AttractionMutation) ResetImages() {
+	m.images = nil
+	delete(m.clearedFields, attraction.FieldImages)
+}
+
+// SetDescription sets the "description" field.
+func (m *AttractionMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *AttractionMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ClearDescription clears the value of the "description" field.
+func (m *AttractionMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[attraction.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *AttractionMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldDescription]
+	return ok
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *AttractionMutation) ResetDescription() {
+	m.description = nil
+	delete(m.clearedFields, attraction.FieldDescription)
+}
+
+// SetRichContent sets the "rich_content" field.
+func (m *AttractionMutation) SetRichContent(s string) {
+	m.rich_content = &s
+}
+
+// RichContent returns the value of the "rich_content" field in the mutation.
+func (m *AttractionMutation) RichContent() (r string, exists bool) {
+	v := m.rich_content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRichContent returns the old "rich_content" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldRichContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRichContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRichContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRichContent: %w", err)
+	}
+	return oldValue.RichContent, nil
+}
+
+// ClearRichContent clears the value of the "rich_content" field.
+func (m *AttractionMutation) ClearRichContent() {
+	m.rich_content = nil
+	m.clearedFields[attraction.FieldRichContent] = struct{}{}
+}
+
+// RichContentCleared returns if the "rich_content" field was cleared in this mutation.
+func (m *AttractionMutation) RichContentCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldRichContent]
+	return ok
+}
+
+// ResetRichContent resets all changes to the "rich_content" field.
+func (m *AttractionMutation) ResetRichContent() {
+	m.rich_content = nil
+	delete(m.clearedFields, attraction.FieldRichContent)
+}
+
+// SetOpeningHours sets the "opening_hours" field.
+func (m *AttractionMutation) SetOpeningHours(s string) {
+	m.opening_hours = &s
+}
+
+// OpeningHours returns the value of the "opening_hours" field in the mutation.
+func (m *AttractionMutation) OpeningHours() (r string, exists bool) {
+	v := m.opening_hours
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpeningHours returns the old "opening_hours" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldOpeningHours(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpeningHours is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpeningHours requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpeningHours: %w", err)
+	}
+	return oldValue.OpeningHours, nil
+}
+
+// ClearOpeningHours clears the value of the "opening_hours" field.
+func (m *AttractionMutation) ClearOpeningHours() {
+	m.opening_hours = nil
+	m.clearedFields[attraction.FieldOpeningHours] = struct{}{}
+}
+
+// OpeningHoursCleared returns if the "opening_hours" field was cleared in this mutation.
+func (m *AttractionMutation) OpeningHoursCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldOpeningHours]
+	return ok
+}
+
+// ResetOpeningHours resets all changes to the "opening_hours" field.
+func (m *AttractionMutation) ResetOpeningHours() {
+	m.opening_hours = nil
+	delete(m.clearedFields, attraction.FieldOpeningHours)
+}
+
+// SetSuggestedDuration sets the "suggested_duration" field.
+func (m *AttractionMutation) SetSuggestedDuration(s string) {
+	m.suggested_duration = &s
+}
+
+// SuggestedDuration returns the value of the "suggested_duration" field in the mutation.
+func (m *AttractionMutation) SuggestedDuration() (r string, exists bool) {
+	v := m.suggested_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSuggestedDuration returns the old "suggested_duration" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldSuggestedDuration(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSuggestedDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSuggestedDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSuggestedDuration: %w", err)
+	}
+	return oldValue.SuggestedDuration, nil
+}
+
+// ClearSuggestedDuration clears the value of the "suggested_duration" field.
+func (m *AttractionMutation) ClearSuggestedDuration() {
+	m.suggested_duration = nil
+	m.clearedFields[attraction.FieldSuggestedDuration] = struct{}{}
+}
+
+// SuggestedDurationCleared returns if the "suggested_duration" field was cleared in this mutation.
+func (m *AttractionMutation) SuggestedDurationCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldSuggestedDuration]
+	return ok
+}
+
+// ResetSuggestedDuration resets all changes to the "suggested_duration" field.
+func (m *AttractionMutation) ResetSuggestedDuration() {
+	m.suggested_duration = nil
+	delete(m.clearedFields, attraction.FieldSuggestedDuration)
+}
+
+// SetTicketInfo sets the "ticket_info" field.
+func (m *AttractionMutation) SetTicketInfo(s string) {
+	m.ticket_info = &s
+}
+
+// TicketInfo returns the value of the "ticket_info" field in the mutation.
+func (m *AttractionMutation) TicketInfo() (r string, exists bool) {
+	v := m.ticket_info
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTicketInfo returns the old "ticket_info" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldTicketInfo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTicketInfo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTicketInfo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTicketInfo: %w", err)
+	}
+	return oldValue.TicketInfo, nil
+}
+
+// ClearTicketInfo clears the value of the "ticket_info" field.
+func (m *AttractionMutation) ClearTicketInfo() {
+	m.ticket_info = nil
+	m.clearedFields[attraction.FieldTicketInfo] = struct{}{}
+}
+
+// TicketInfoCleared returns if the "ticket_info" field was cleared in this mutation.
+func (m *AttractionMutation) TicketInfoCleared() bool {
+	_, ok := m.clearedFields[attraction.FieldTicketInfo]
+	return ok
+}
+
+// ResetTicketInfo resets all changes to the "ticket_info" field.
+func (m *AttractionMutation) ResetTicketInfo() {
+	m.ticket_info = nil
+	delete(m.clearedFields, attraction.FieldTicketInfo)
+}
+
+// SetSort sets the "sort" field.
+func (m *AttractionMutation) SetSort(i int) {
+	m.sort = &i
+	m.addsort = nil
+}
+
+// Sort returns the value of the "sort" field in the mutation.
+func (m *AttractionMutation) Sort() (r int, exists bool) {
+	v := m.sort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSort returns the old "sort" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldSort(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSort is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSort requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSort: %w", err)
+	}
+	return oldValue.Sort, nil
+}
+
+// AddSort adds i to the "sort" field.
+func (m *AttractionMutation) AddSort(i int) {
+	if m.addsort != nil {
+		*m.addsort += i
+	} else {
+		m.addsort = &i
+	}
+}
+
+// AddedSort returns the value that was added to the "sort" field in this mutation.
+func (m *AttractionMutation) AddedSort() (r int, exists bool) {
+	v := m.addsort
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSort resets all changes to the "sort" field.
+func (m *AttractionMutation) ResetSort() {
+	m.sort = nil
+	m.addsort = nil
+}
+
+// SetStatus sets the "status" field.
+func (m *AttractionMutation) SetStatus(s string) {
+	m.status = &s
+}
+
+// Status returns the value of the "status" field in the mutation.
+func (m *AttractionMutation) Status() (r string, exists bool) {
+	v := m.status
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStatus returns the old "status" field's value of the Attraction entity.
+// If the Attraction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionMutation) OldStatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStatus is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStatus: %w", err)
+	}
+	return oldValue.Status, nil
+}
+
+// ResetStatus resets all changes to the "status" field.
+func (m *AttractionMutation) ResetStatus() {
+	m.status = nil
+}
+
+// Where appends a list predicates to the AttractionMutation builder.
+func (m *AttractionMutation) Where(ps ...predicate.Attraction) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// WhereP appends storage-level predicates to the AttractionMutation builder. Using this method,
+// users can use type-assertion to append predicates that do not depend on any generated package.
+func (m *AttractionMutation) WhereP(ps ...func(*sql.Selector)) {
+	p := make([]predicate.Attraction, len(ps))
+	for i := range ps {
+		p[i] = ps[i]
+	}
+	m.Where(p...)
+}
+
+// Op returns the operation name.
+func (m *AttractionMutation) Op() Op {
+	return m.op
+}
+
+// SetOp allows setting the mutation operation.
+func (m *AttractionMutation) SetOp(op Op) {
+	m.op = op
+}
+
+// Type returns the node type of this mutation (Attraction).
+func (m *AttractionMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *AttractionMutation) Fields() []string {
+	fields := make([]string, 0, 21)
+	if m.tenant_id != nil {
+		fields = append(fields, attraction.FieldTenantID)
+	}
+	if m.merchant_id != nil {
+		fields = append(fields, attraction.FieldMerchantID)
+	}
+	if m.name != nil {
+		fields = append(fields, attraction.FieldName)
+	}
+	if m.name_en != nil {
+		fields = append(fields, attraction.FieldNameEn)
+	}
+	if m.category != nil {
+		fields = append(fields, attraction.FieldCategory)
+	}
+	if m.tags != nil {
+		fields = append(fields, attraction.FieldTags)
+	}
+	if m.city != nil {
+		fields = append(fields, attraction.FieldCity)
+	}
+	if m.address != nil {
+		fields = append(fields, attraction.FieldAddress)
+	}
+	if m.latitude != nil {
+		fields = append(fields, attraction.FieldLatitude)
+	}
+	if m.longitude != nil {
+		fields = append(fields, attraction.FieldLongitude)
+	}
+	if m.poi_id != nil {
+		fields = append(fields, attraction.FieldPoiID)
+	}
+	if m.poi_name != nil {
+		fields = append(fields, attraction.FieldPoiName)
+	}
+	if m.cover_image != nil {
+		fields = append(fields, attraction.FieldCoverImage)
+	}
+	if m.images != nil {
+		fields = append(fields, attraction.FieldImages)
+	}
+	if m.description != nil {
+		fields = append(fields, attraction.FieldDescription)
+	}
+	if m.rich_content != nil {
+		fields = append(fields, attraction.FieldRichContent)
+	}
+	if m.opening_hours != nil {
+		fields = append(fields, attraction.FieldOpeningHours)
+	}
+	if m.suggested_duration != nil {
+		fields = append(fields, attraction.FieldSuggestedDuration)
+	}
+	if m.ticket_info != nil {
+		fields = append(fields, attraction.FieldTicketInfo)
+	}
+	if m.sort != nil {
+		fields = append(fields, attraction.FieldSort)
+	}
+	if m.status != nil {
+		fields = append(fields, attraction.FieldStatus)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *AttractionMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case attraction.FieldTenantID:
+		return m.TenantID()
+	case attraction.FieldMerchantID:
+		return m.MerchantID()
+	case attraction.FieldName:
+		return m.Name()
+	case attraction.FieldNameEn:
+		return m.NameEn()
+	case attraction.FieldCategory:
+		return m.Category()
+	case attraction.FieldTags:
+		return m.Tags()
+	case attraction.FieldCity:
+		return m.City()
+	case attraction.FieldAddress:
+		return m.Address()
+	case attraction.FieldLatitude:
+		return m.Latitude()
+	case attraction.FieldLongitude:
+		return m.Longitude()
+	case attraction.FieldPoiID:
+		return m.PoiID()
+	case attraction.FieldPoiName:
+		return m.PoiName()
+	case attraction.FieldCoverImage:
+		return m.CoverImage()
+	case attraction.FieldImages:
+		return m.Images()
+	case attraction.FieldDescription:
+		return m.Description()
+	case attraction.FieldRichContent:
+		return m.RichContent()
+	case attraction.FieldOpeningHours:
+		return m.OpeningHours()
+	case attraction.FieldSuggestedDuration:
+		return m.SuggestedDuration()
+	case attraction.FieldTicketInfo:
+		return m.TicketInfo()
+	case attraction.FieldSort:
+		return m.Sort()
+	case attraction.FieldStatus:
+		return m.Status()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *AttractionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case attraction.FieldTenantID:
+		return m.OldTenantID(ctx)
+	case attraction.FieldMerchantID:
+		return m.OldMerchantID(ctx)
+	case attraction.FieldName:
+		return m.OldName(ctx)
+	case attraction.FieldNameEn:
+		return m.OldNameEn(ctx)
+	case attraction.FieldCategory:
+		return m.OldCategory(ctx)
+	case attraction.FieldTags:
+		return m.OldTags(ctx)
+	case attraction.FieldCity:
+		return m.OldCity(ctx)
+	case attraction.FieldAddress:
+		return m.OldAddress(ctx)
+	case attraction.FieldLatitude:
+		return m.OldLatitude(ctx)
+	case attraction.FieldLongitude:
+		return m.OldLongitude(ctx)
+	case attraction.FieldPoiID:
+		return m.OldPoiID(ctx)
+	case attraction.FieldPoiName:
+		return m.OldPoiName(ctx)
+	case attraction.FieldCoverImage:
+		return m.OldCoverImage(ctx)
+	case attraction.FieldImages:
+		return m.OldImages(ctx)
+	case attraction.FieldDescription:
+		return m.OldDescription(ctx)
+	case attraction.FieldRichContent:
+		return m.OldRichContent(ctx)
+	case attraction.FieldOpeningHours:
+		return m.OldOpeningHours(ctx)
+	case attraction.FieldSuggestedDuration:
+		return m.OldSuggestedDuration(ctx)
+	case attraction.FieldTicketInfo:
+		return m.OldTicketInfo(ctx)
+	case attraction.FieldSort:
+		return m.OldSort(ctx)
+	case attraction.FieldStatus:
+		return m.OldStatus(ctx)
+	}
+	return nil, fmt.Errorf("unknown Attraction field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AttractionMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case attraction.FieldTenantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTenantID(v)
+		return nil
+	case attraction.FieldMerchantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetMerchantID(v)
+		return nil
+	case attraction.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case attraction.FieldNameEn:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetNameEn(v)
+		return nil
+	case attraction.FieldCategory:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCategory(v)
+		return nil
+	case attraction.FieldTags:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTags(v)
+		return nil
+	case attraction.FieldCity:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCity(v)
+		return nil
+	case attraction.FieldAddress:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddress(v)
+		return nil
+	case attraction.FieldLatitude:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLatitude(v)
+		return nil
+	case attraction.FieldLongitude:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLongitude(v)
+		return nil
+	case attraction.FieldPoiID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPoiID(v)
+		return nil
+	case attraction.FieldPoiName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPoiName(v)
+		return nil
+	case attraction.FieldCoverImage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCoverImage(v)
+		return nil
+	case attraction.FieldImages:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetImages(v)
+		return nil
+	case attraction.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case attraction.FieldRichContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRichContent(v)
+		return nil
+	case attraction.FieldOpeningHours:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpeningHours(v)
+		return nil
+	case attraction.FieldSuggestedDuration:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSuggestedDuration(v)
+		return nil
+	case attraction.FieldTicketInfo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTicketInfo(v)
+		return nil
+	case attraction.FieldSort:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSort(v)
+		return nil
+	case attraction.FieldStatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Attraction field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *AttractionMutation) AddedFields() []string {
+	var fields []string
+	if m.addtenant_id != nil {
+		fields = append(fields, attraction.FieldTenantID)
+	}
+	if m.addmerchant_id != nil {
+		fields = append(fields, attraction.FieldMerchantID)
+	}
+	if m.addlatitude != nil {
+		fields = append(fields, attraction.FieldLatitude)
+	}
+	if m.addlongitude != nil {
+		fields = append(fields, attraction.FieldLongitude)
+	}
+	if m.addsort != nil {
+		fields = append(fields, attraction.FieldSort)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *AttractionMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case attraction.FieldTenantID:
+		return m.AddedTenantID()
+	case attraction.FieldMerchantID:
+		return m.AddedMerchantID()
+	case attraction.FieldLatitude:
+		return m.AddedLatitude()
+	case attraction.FieldLongitude:
+		return m.AddedLongitude()
+	case attraction.FieldSort:
+		return m.AddedSort()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *AttractionMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case attraction.FieldTenantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddTenantID(v)
+		return nil
+	case attraction.FieldMerchantID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddMerchantID(v)
+		return nil
+	case attraction.FieldLatitude:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLatitude(v)
+		return nil
+	case attraction.FieldLongitude:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddLongitude(v)
+		return nil
+	case attraction.FieldSort:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSort(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Attraction numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *AttractionMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(attraction.FieldNameEn) {
+		fields = append(fields, attraction.FieldNameEn)
+	}
+	if m.FieldCleared(attraction.FieldCategory) {
+		fields = append(fields, attraction.FieldCategory)
+	}
+	if m.FieldCleared(attraction.FieldTags) {
+		fields = append(fields, attraction.FieldTags)
+	}
+	if m.FieldCleared(attraction.FieldCity) {
+		fields = append(fields, attraction.FieldCity)
+	}
+	if m.FieldCleared(attraction.FieldAddress) {
+		fields = append(fields, attraction.FieldAddress)
+	}
+	if m.FieldCleared(attraction.FieldLatitude) {
+		fields = append(fields, attraction.FieldLatitude)
+	}
+	if m.FieldCleared(attraction.FieldLongitude) {
+		fields = append(fields, attraction.FieldLongitude)
+	}
+	if m.FieldCleared(attraction.FieldPoiID) {
+		fields = append(fields, attraction.FieldPoiID)
+	}
+	if m.FieldCleared(attraction.FieldPoiName) {
+		fields = append(fields, attraction.FieldPoiName)
+	}
+	if m.FieldCleared(attraction.FieldCoverImage) {
+		fields = append(fields, attraction.FieldCoverImage)
+	}
+	if m.FieldCleared(attraction.FieldImages) {
+		fields = append(fields, attraction.FieldImages)
+	}
+	if m.FieldCleared(attraction.FieldDescription) {
+		fields = append(fields, attraction.FieldDescription)
+	}
+	if m.FieldCleared(attraction.FieldRichContent) {
+		fields = append(fields, attraction.FieldRichContent)
+	}
+	if m.FieldCleared(attraction.FieldOpeningHours) {
+		fields = append(fields, attraction.FieldOpeningHours)
+	}
+	if m.FieldCleared(attraction.FieldSuggestedDuration) {
+		fields = append(fields, attraction.FieldSuggestedDuration)
+	}
+	if m.FieldCleared(attraction.FieldTicketInfo) {
+		fields = append(fields, attraction.FieldTicketInfo)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *AttractionMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *AttractionMutation) ClearField(name string) error {
+	switch name {
+	case attraction.FieldNameEn:
+		m.ClearNameEn()
+		return nil
+	case attraction.FieldCategory:
+		m.ClearCategory()
+		return nil
+	case attraction.FieldTags:
+		m.ClearTags()
+		return nil
+	case attraction.FieldCity:
+		m.ClearCity()
+		return nil
+	case attraction.FieldAddress:
+		m.ClearAddress()
+		return nil
+	case attraction.FieldLatitude:
+		m.ClearLatitude()
+		return nil
+	case attraction.FieldLongitude:
+		m.ClearLongitude()
+		return nil
+	case attraction.FieldPoiID:
+		m.ClearPoiID()
+		return nil
+	case attraction.FieldPoiName:
+		m.ClearPoiName()
+		return nil
+	case attraction.FieldCoverImage:
+		m.ClearCoverImage()
+		return nil
+	case attraction.FieldImages:
+		m.ClearImages()
+		return nil
+	case attraction.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case attraction.FieldRichContent:
+		m.ClearRichContent()
+		return nil
+	case attraction.FieldOpeningHours:
+		m.ClearOpeningHours()
+		return nil
+	case attraction.FieldSuggestedDuration:
+		m.ClearSuggestedDuration()
+		return nil
+	case attraction.FieldTicketInfo:
+		m.ClearTicketInfo()
+		return nil
+	}
+	return fmt.Errorf("unknown Attraction nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *AttractionMutation) ResetField(name string) error {
+	switch name {
+	case attraction.FieldTenantID:
+		m.ResetTenantID()
+		return nil
+	case attraction.FieldMerchantID:
+		m.ResetMerchantID()
+		return nil
+	case attraction.FieldName:
+		m.ResetName()
+		return nil
+	case attraction.FieldNameEn:
+		m.ResetNameEn()
+		return nil
+	case attraction.FieldCategory:
+		m.ResetCategory()
+		return nil
+	case attraction.FieldTags:
+		m.ResetTags()
+		return nil
+	case attraction.FieldCity:
+		m.ResetCity()
+		return nil
+	case attraction.FieldAddress:
+		m.ResetAddress()
+		return nil
+	case attraction.FieldLatitude:
+		m.ResetLatitude()
+		return nil
+	case attraction.FieldLongitude:
+		m.ResetLongitude()
+		return nil
+	case attraction.FieldPoiID:
+		m.ResetPoiID()
+		return nil
+	case attraction.FieldPoiName:
+		m.ResetPoiName()
+		return nil
+	case attraction.FieldCoverImage:
+		m.ResetCoverImage()
+		return nil
+	case attraction.FieldImages:
+		m.ResetImages()
+		return nil
+	case attraction.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case attraction.FieldRichContent:
+		m.ResetRichContent()
+		return nil
+	case attraction.FieldOpeningHours:
+		m.ResetOpeningHours()
+		return nil
+	case attraction.FieldSuggestedDuration:
+		m.ResetSuggestedDuration()
+		return nil
+	case attraction.FieldTicketInfo:
+		m.ResetTicketInfo()
+		return nil
+	case attraction.FieldSort:
+		m.ResetSort()
+		return nil
+	case attraction.FieldStatus:
+		m.ResetStatus()
+		return nil
+	}
+	return fmt.Errorf("unknown Attraction field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *AttractionMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *AttractionMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *AttractionMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *AttractionMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *AttractionMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *AttractionMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *AttractionMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown Attraction unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *AttractionMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown Attraction edge %s", name)
+}
 
 // CurrencyMutation represents an operation that mutates the Currency nodes in the graph.
 type CurrencyMutation struct {

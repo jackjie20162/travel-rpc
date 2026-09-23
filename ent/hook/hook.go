@@ -9,6 +9,18 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent"
 )
 
+// The AttractionFunc type is an adapter to allow the use of ordinary
+// function as Attraction mutator.
+type AttractionFunc func(context.Context, *ent.AttractionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f AttractionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.AttractionMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AttractionMutation", m)
+}
+
 // The CurrencyFunc type is an adapter to allow the use of ordinary
 // function as Currency mutator.
 type CurrencyFunc func(context.Context, *ent.CurrencyMutation) (ent.Value, error)

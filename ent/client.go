@@ -14,6 +14,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -42,6 +43,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Attraction is the client for interacting with the Attraction builders.
+	Attraction *AttractionClient
 	// Currency is the client for interacting with the Currency builders.
 	Currency *CurrencyClient
 	// ExchangeRate is the client for interacting with the ExchangeRate builders.
@@ -91,6 +94,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Attraction = NewAttractionClient(c.config)
 	c.Currency = NewCurrencyClient(c.config)
 	c.ExchangeRate = NewExchangeRateClient(c.config)
 	c.Inventory = NewInventoryClient(c.config)
@@ -202,6 +206,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Attraction:           NewAttractionClient(cfg),
 		Currency:             NewCurrencyClient(cfg),
 		ExchangeRate:         NewExchangeRateClient(cfg),
 		Inventory:            NewInventoryClient(cfg),
@@ -240,6 +245,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:                  ctx,
 		config:               cfg,
+		Attraction:           NewAttractionClient(cfg),
 		Currency:             NewCurrencyClient(cfg),
 		ExchangeRate:         NewExchangeRateClient(cfg),
 		Inventory:            NewInventoryClient(cfg),
@@ -265,7 +271,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Currency.
+//		Attraction.
 //		Query().
 //		Count(ctx)
 func (c *Client) Debug() *Client {
@@ -288,7 +294,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
+		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
 		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
 		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
 		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
@@ -301,7 +307,7 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
+		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
 		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
 		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
 		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
@@ -313,6 +319,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 // Mutate implements the ent.Mutator interface.
 func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
+	case *AttractionMutation:
+		return c.Attraction.mutate(ctx, m)
 	case *CurrencyMutation:
 		return c.Currency.mutate(ctx, m)
 	case *ExchangeRateMutation:
@@ -353,6 +361,139 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Voucher.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
+}
+
+// AttractionClient is a client for the Attraction schema.
+type AttractionClient struct {
+	config
+}
+
+// NewAttractionClient returns a client for the Attraction from the given config.
+func NewAttractionClient(c config) *AttractionClient {
+	return &AttractionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `attraction.Hooks(f(g(h())))`.
+func (c *AttractionClient) Use(hooks ...Hook) {
+	c.hooks.Attraction = append(c.hooks.Attraction, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `attraction.Intercept(f(g(h())))`.
+func (c *AttractionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Attraction = append(c.inters.Attraction, interceptors...)
+}
+
+// Create returns a builder for creating a Attraction entity.
+func (c *AttractionClient) Create() *AttractionCreate {
+	mutation := newAttractionMutation(c.config, OpCreate)
+	return &AttractionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Attraction entities.
+func (c *AttractionClient) CreateBulk(builders ...*AttractionCreate) *AttractionCreateBulk {
+	return &AttractionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *AttractionClient) MapCreateBulk(slice any, setFunc func(*AttractionCreate, int)) *AttractionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &AttractionCreateBulk{err: fmt.Errorf("calling to AttractionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*AttractionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &AttractionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Attraction.
+func (c *AttractionClient) Update() *AttractionUpdate {
+	mutation := newAttractionMutation(c.config, OpUpdate)
+	return &AttractionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AttractionClient) UpdateOne(_m *Attraction) *AttractionUpdateOne {
+	mutation := newAttractionMutation(c.config, OpUpdateOne, withAttraction(_m))
+	return &AttractionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AttractionClient) UpdateOneID(id int) *AttractionUpdateOne {
+	mutation := newAttractionMutation(c.config, OpUpdateOne, withAttractionID(id))
+	return &AttractionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Attraction.
+func (c *AttractionClient) Delete() *AttractionDelete {
+	mutation := newAttractionMutation(c.config, OpDelete)
+	return &AttractionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AttractionClient) DeleteOne(_m *Attraction) *AttractionDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *AttractionClient) DeleteOneID(id int) *AttractionDeleteOne {
+	builder := c.Delete().Where(attraction.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AttractionDeleteOne{builder}
+}
+
+// Query returns a query builder for Attraction.
+func (c *AttractionClient) Query() *AttractionQuery {
+	return &AttractionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAttraction},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Attraction entity by its id.
+func (c *AttractionClient) Get(ctx context.Context, id int) (*Attraction, error) {
+	return c.Query().Where(attraction.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AttractionClient) GetX(ctx context.Context, id int) *Attraction {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AttractionClient) Hooks() []Hook {
+	return c.hooks.Attraction
+}
+
+// Interceptors returns the client interceptors.
+func (c *AttractionClient) Interceptors() []Interceptor {
+	return c.inters.Attraction
+}
+
+func (c *AttractionClient) mutate(ctx context.Context, m *AttractionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&AttractionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&AttractionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&AttractionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&AttractionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Attraction mutation op: %q", m.Op())
 	}
 }
 
@@ -2886,16 +3027,16 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
-		Merchant, MerchantConfig, Order, OrderItem, PackageTranslation, Payment,
-		Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler, User,
-		Voucher []ent.Hook
+		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
+		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
+		Payment, Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler,
+		User, Voucher []ent.Hook
 	}
 	inters struct {
-		Currency, ExchangeRate, Inventory, InventoryReservation, ItineraryStop,
-		Merchant, MerchantConfig, Order, OrderItem, PackageTranslation, Payment,
-		Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler, User,
-		Voucher []ent.Interceptor
+		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
+		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
+		Payment, Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler,
+		User, Voucher []ent.Interceptor
 	}
 )
 

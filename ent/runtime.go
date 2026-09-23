@@ -5,6 +5,7 @@ package ent
 import (
 	"time"
 
+	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -30,6 +31,20 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	attractionFields := schema.Attraction{}.Fields()
+	_ = attractionFields
+	// attractionDescName is the schema descriptor for name field.
+	attractionDescName := attractionFields[2].Descriptor()
+	// attraction.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	attraction.NameValidator = attractionDescName.Validators[0].(func(string) error)
+	// attractionDescSort is the schema descriptor for sort field.
+	attractionDescSort := attractionFields[19].Descriptor()
+	// attraction.DefaultSort holds the default value on creation for the sort field.
+	attraction.DefaultSort = attractionDescSort.Default.(int)
+	// attractionDescStatus is the schema descriptor for status field.
+	attractionDescStatus := attractionFields[20].Descriptor()
+	// attraction.DefaultStatus holds the default value on creation for the status field.
+	attraction.DefaultStatus = attractionDescStatus.Default.(string)
 	currencyFields := schema.Currency{}.Fields()
 	_ = currencyFields
 	// currencyDescCode is the schema descriptor for code field.
