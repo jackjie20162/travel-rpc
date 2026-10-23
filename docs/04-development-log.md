@@ -1,5 +1,29 @@
 # Development Log
 
+## 2026-10-23 — 区域字典（国家→城市，三语）与景点城市绑定
+
+### 背景
+旅游板块缺少统一的「国家 → 城市」字典：景点的 `city` 只是自由文本，无法多语言展示、也没有城市级 POI/中心坐标。需求：新建国家→城市两级区域表，中/英/阿三语，城市含代表 POI 与经纬度，景点城市改为绑定该表 id。
+
+### 实现内容
+- **travel-rpc (Ent)**：新增 `region.go`（单表自关联：`parent_id`/`level`(COUNTRY/CITY)/`code`/`name`基础名/`poi_id`/`poi_name`/`latitude`/`longitude`/`sort`/`status`，唯一索引 `(parent_id,name)`）与 `region_translation.go`（`region_id`/`locale`/`name`/`source`/`status`/`updated_at`，唯一 `(region_id,locale)`）；`attraction.go` 新增 `city_id` int64（保留 `city` 字符串兜底）。`make gen-ent` 重新生成。
+- **travel-api**：`desc/travel.api` 新增 Region 类型与 5 个端点（公开 `GET /api/travel/regions` 按 locale 解析名称；管理端 `GET/POST/PUT/DELETE /api/travel/merchant/regions`）；`goctls api go` 生成 handler/types/routes。新增 `region_helper.go`（映射、译文覆盖式写入、按 locale 解析、列表谓词）与 5 个 region logic，**直用 `svcCtx.DB`（Ent client）操作，不经 gRPC**（与景点一致）。景点 create/update logic 与 `toAttraction` 透传 `city_id`。
+- **merchant-frontend**：新增 `plugin/travel/regions/Index.vue` 区域管理页（层级/国家过滤、中/英/阿三语名称编辑、城市地图选点复用 `PointPickMap`、增删改）；注册路由 `TravelRegions` 与「旅游业务」菜单项；`api/travel.js` 与 `plugin/travel/api.js` 新增区域接口封装；景点编辑页「城市」由文本框改为国家→城市级联选择器，选中绑定 `cityId` 并同步 `city` 展示名，地图选点逆地理城市名命中字典时自动绑定。
+
+### 决策
+- 单表自关联 + 独立译文表（沿用 product/package translation 模式），而非 countries+cities 两表。
+- 基础名 `zh-CN` 存 `regions.name`，`en-US`/`ar` 存译文表；C 端按 locale 解析、缺失回退基础名。
+- 保留 `attractions.city` 字符串做冗余展示与历史兜底，不做破坏性迁移。
+- 删除保护：城市被景点绑定则拒删，国家下有城市则拒删。
+
+### 验证
+- ✅ travel-rpc / travel-api `go build ./...` 通过
+- ✅ merchant-frontend `vite build` 通过
+- ⏳ 需用户重启 travel-rpc(9205) 触发建表迁移；区域数据需在后台录入
+
+### 文档
+- 更新 `05-data-model.md`：新增 Region / RegionTranslation 模型、唯一性、景点绑定与接口说明
+
 ## 2026-09-23 — 订单事件 IM 推送（配合 travel-pc IM 对接）
 
 ### 背景

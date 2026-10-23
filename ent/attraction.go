@@ -28,8 +28,10 @@ type Attraction struct {
 	Category string `json:"category,omitempty"`
 	// 标签 JSON 数组: ["亲子","网红打卡"]
 	Tags string `json:"tags,omitempty"`
-	// 所在城市
+	// 所在城市（冗余展示名，历史兜底）
 	City string `json:"city,omitempty"`
+	// 关联城市 region.id，指向 regions 表 level=CITY 的行
+	CityID int64 `json:"city_id,omitempty"`
 	// 详细地址
 	Address string `json:"address,omitempty"`
 	// 纬度 WGS84
@@ -68,7 +70,7 @@ func (*Attraction) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case attraction.FieldLatitude, attraction.FieldLongitude:
 			values[i] = new(sql.NullFloat64)
-		case attraction.FieldID, attraction.FieldTenantID, attraction.FieldMerchantID, attraction.FieldSort:
+		case attraction.FieldID, attraction.FieldTenantID, attraction.FieldMerchantID, attraction.FieldCityID, attraction.FieldSort:
 			values[i] = new(sql.NullInt64)
 		case attraction.FieldName, attraction.FieldNameEn, attraction.FieldCategory, attraction.FieldTags, attraction.FieldCity, attraction.FieldAddress, attraction.FieldPoiID, attraction.FieldPoiName, attraction.FieldCoverImage, attraction.FieldImages, attraction.FieldDescription, attraction.FieldRichContent, attraction.FieldOpeningHours, attraction.FieldSuggestedDuration, attraction.FieldTicketInfo, attraction.FieldStatus:
 			values[i] = new(sql.NullString)
@@ -134,6 +136,12 @@ func (_m *Attraction) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field city", values[i])
 			} else if value.Valid {
 				_m.City = value.String
+			}
+		case attraction.FieldCityID:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field city_id", values[i])
+			} else if value.Valid {
+				_m.CityID = value.Int64
 			}
 		case attraction.FieldAddress:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -275,6 +283,9 @@ func (_m *Attraction) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("city=")
 	builder.WriteString(_m.City)
+	builder.WriteString(", ")
+	builder.WriteString("city_id=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CityID))
 	builder.WriteString(", ")
 	builder.WriteString("address=")
 	builder.WriteString(_m.Address)

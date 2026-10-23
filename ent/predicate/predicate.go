@@ -51,6 +51,12 @@ type ProductPackage func(*sql.Selector)
 // ProductTranslation is the predicate function for producttranslation builders.
 type ProductTranslation func(*sql.Selector)
 
+// Region is the predicate function for region builders.
+type Region func(*sql.Selector)
+
+// RegionTranslation is the predicate function for regiontranslation builders.
+type RegionTranslation func(*sql.Selector)
+
 // Review is the predicate function for review builders.
 type Review func(*sql.Selector)
 

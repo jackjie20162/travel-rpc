@@ -18,7 +18,8 @@ func (Attraction) Fields() []ent.Field {
 		field.String("name_en").Optional().Comment("景点英文名称"),
 		field.String("category").Optional().Comment("分类: NATURE/HISTORY/THEME_PARK/MUSEUM/RELIGION/SHOPPING/OTHER"),
 		field.Text("tags").Optional().Comment("标签 JSON 数组: [\"亲子\",\"网红打卡\"]"),
-		field.String("city").Optional().Comment("所在城市"),
+		field.String("city").Optional().Comment("所在城市（冗余展示名，历史兜底）"),
+		field.Int64("city_id").Default(0).Comment("关联城市 region.id，指向 regions 表 level=CITY 的行"),
 		field.String("address").Optional().Comment("详细地址"),
 
 		// 地图坐标（WGS84）
@@ -38,7 +39,7 @@ func (Attraction) Fields() []ent.Field {
 		// 开放与游玩信息
 		field.String("opening_hours").Optional().Comment("开放时间描述"),
 		field.String("suggested_duration").Optional().Comment("建议游玩时长，如 2-3小时"),
-		field.String("ticket_info").Optional().Comment("门票参考信息"),
+		field.Text("ticket_info").Optional().Comment("门票参考信息"),
 
 		field.Int("sort").Default(0).Comment("排序，越小越靠前"),
 		field.String("status").Default("ACTIVE").Comment("状态: ACTIVE/INACTIVE"),

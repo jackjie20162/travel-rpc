@@ -36,6 +36,18 @@ func Register(grpcServer *grpc.Server, client *ent.Client, c config.Config) {
         logx.Errorf("failed to seed default currencies: %v", err)
     }
 
+    // 启动时幂等写入常用国家/城市区域字典(中/英/阿三语)；失败不阻断服务启动。
+    if err := repository.SeedDefaultRegions(context.Background(), client); err != nil {
+        logx.Errorf("failed to seed default regions: %v", err)
+    }
+
+    // 启动时按城市名幂等回填存量景点的 city_id（仅处理尚未归属的）；失败不阻断服务启动。
+    if n, err := repository.BackfillAttractionCityIDs(context.Background(), client); err != nil {
+        logx.Errorf("failed to backfill attraction city ids: %v", err)
+    } else if n > 0 {
+        logx.Infof("backfilled city_id for %d attractions", n)
+    }
+
     travel.RegisterCatalogServiceServer(grpcServer, service.NewCatalogService(products, client, translations))
     travel.RegisterInventoryServiceServer(grpcServer, service.NewInventoryService(inventory))
     travel.RegisterOrderServiceServer(grpcServer, service.NewOrderService(orders, inventory, booking, currencies))

@@ -163,6 +163,27 @@ func (_u *AttractionUpdate) ClearCity() *AttractionUpdate {
 	return _u
 }
 
+// SetCityID sets the "city_id" field.
+func (_u *AttractionUpdate) SetCityID(v int64) *AttractionUpdate {
+	_u.mutation.ResetCityID()
+	_u.mutation.SetCityID(v)
+	return _u
+}
+
+// SetNillableCityID sets the "city_id" field if the given value is not nil.
+func (_u *AttractionUpdate) SetNillableCityID(v *int64) *AttractionUpdate {
+	if v != nil {
+		_u.SetCityID(*v)
+	}
+	return _u
+}
+
+// AddCityID adds value to the "city_id" field.
+func (_u *AttractionUpdate) AddCityID(v int64) *AttractionUpdate {
+	_u.mutation.AddCityID(v)
+	return _u
+}
+
 // SetAddress sets the "address" field.
 func (_u *AttractionUpdate) SetAddress(v string) *AttractionUpdate {
 	_u.mutation.SetAddress(v)
@@ -545,6 +566,12 @@ func (_u *AttractionUpdate) sqlSave(ctx context.Context) (_node int, err error) 
 	if _u.mutation.CityCleared() {
 		_spec.ClearField(attraction.FieldCity, field.TypeString)
 	}
+	if value, ok := _u.mutation.CityID(); ok {
+		_spec.SetField(attraction.FieldCityID, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCityID(); ok {
+		_spec.AddField(attraction.FieldCityID, field.TypeInt64, value)
+	}
 	if value, ok := _u.mutation.Address(); ok {
 		_spec.SetField(attraction.FieldAddress, field.TypeString, value)
 	}
@@ -785,6 +812,27 @@ func (_u *AttractionUpdateOne) SetNillableCity(v *string) *AttractionUpdateOne {
 // ClearCity clears the value of the "city" field.
 func (_u *AttractionUpdateOne) ClearCity() *AttractionUpdateOne {
 	_u.mutation.ClearCity()
+	return _u
+}
+
+// SetCityID sets the "city_id" field.
+func (_u *AttractionUpdateOne) SetCityID(v int64) *AttractionUpdateOne {
+	_u.mutation.ResetCityID()
+	_u.mutation.SetCityID(v)
+	return _u
+}
+
+// SetNillableCityID sets the "city_id" field if the given value is not nil.
+func (_u *AttractionUpdateOne) SetNillableCityID(v *int64) *AttractionUpdateOne {
+	if v != nil {
+		_u.SetCityID(*v)
+	}
+	return _u
+}
+
+// AddCityID adds value to the "city_id" field.
+func (_u *AttractionUpdateOne) AddCityID(v int64) *AttractionUpdateOne {
+	_u.mutation.AddCityID(v)
 	return _u
 }
 
@@ -1199,6 +1247,12 @@ func (_u *AttractionUpdateOne) sqlSave(ctx context.Context) (_node *Attraction, 
 	}
 	if _u.mutation.CityCleared() {
 		_spec.ClearField(attraction.FieldCity, field.TypeString)
+	}
+	if value, ok := _u.mutation.CityID(); ok {
+		_spec.SetField(attraction.FieldCityID, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCityID(); ok {
+		_spec.AddField(attraction.FieldCityID, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.Address(); ok {
 		_spec.SetField(attraction.FieldAddress, field.TypeString, value)

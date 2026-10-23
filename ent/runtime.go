@@ -19,6 +19,8 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
 	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
+	"gitee.com/meinongyihe/travel-rpc/ent/region"
+	"gitee.com/meinongyihe/travel-rpc/ent/regiontranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/schema"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
@@ -37,12 +39,16 @@ func init() {
 	attractionDescName := attractionFields[2].Descriptor()
 	// attraction.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	attraction.NameValidator = attractionDescName.Validators[0].(func(string) error)
+	// attractionDescCityID is the schema descriptor for city_id field.
+	attractionDescCityID := attractionFields[7].Descriptor()
+	// attraction.DefaultCityID holds the default value on creation for the city_id field.
+	attraction.DefaultCityID = attractionDescCityID.Default.(int64)
 	// attractionDescSort is the schema descriptor for sort field.
-	attractionDescSort := attractionFields[19].Descriptor()
+	attractionDescSort := attractionFields[20].Descriptor()
 	// attraction.DefaultSort holds the default value on creation for the sort field.
 	attraction.DefaultSort = attractionDescSort.Default.(int)
 	// attractionDescStatus is the schema descriptor for status field.
-	attractionDescStatus := attractionFields[20].Descriptor()
+	attractionDescStatus := attractionFields[21].Descriptor()
 	// attraction.DefaultStatus holds the default value on creation for the status field.
 	attraction.DefaultStatus = attractionDescStatus.Default.(string)
 	currencyFields := schema.Currency{}.Fields()
@@ -363,6 +369,46 @@ func init() {
 	producttranslationDescUpdatedAt := producttranslationFields[9].Descriptor()
 	// producttranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	producttranslation.DefaultUpdatedAt = producttranslationDescUpdatedAt.Default.(int64)
+	regionFields := schema.Region{}.Fields()
+	_ = regionFields
+	// regionDescParentID is the schema descriptor for parent_id field.
+	regionDescParentID := regionFields[0].Descriptor()
+	// region.DefaultParentID holds the default value on creation for the parent_id field.
+	region.DefaultParentID = regionDescParentID.Default.(int64)
+	// regionDescLevel is the schema descriptor for level field.
+	regionDescLevel := regionFields[1].Descriptor()
+	// region.LevelValidator is a validator for the "level" field. It is called by the builders before save.
+	region.LevelValidator = regionDescLevel.Validators[0].(func(string) error)
+	// regionDescName is the schema descriptor for name field.
+	regionDescName := regionFields[3].Descriptor()
+	// region.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	region.NameValidator = regionDescName.Validators[0].(func(string) error)
+	// regionDescSort is the schema descriptor for sort field.
+	regionDescSort := regionFields[8].Descriptor()
+	// region.DefaultSort holds the default value on creation for the sort field.
+	region.DefaultSort = regionDescSort.Default.(int)
+	// regionDescStatus is the schema descriptor for status field.
+	regionDescStatus := regionFields[9].Descriptor()
+	// region.DefaultStatus holds the default value on creation for the status field.
+	region.DefaultStatus = regionDescStatus.Default.(string)
+	regiontranslationFields := schema.RegionTranslation{}.Fields()
+	_ = regiontranslationFields
+	// regiontranslationDescLocale is the schema descriptor for locale field.
+	regiontranslationDescLocale := regiontranslationFields[1].Descriptor()
+	// regiontranslation.LocaleValidator is a validator for the "locale" field. It is called by the builders before save.
+	regiontranslation.LocaleValidator = regiontranslationDescLocale.Validators[0].(func(string) error)
+	// regiontranslationDescSource is the schema descriptor for source field.
+	regiontranslationDescSource := regiontranslationFields[3].Descriptor()
+	// regiontranslation.DefaultSource holds the default value on creation for the source field.
+	regiontranslation.DefaultSource = regiontranslationDescSource.Default.(string)
+	// regiontranslationDescStatus is the schema descriptor for status field.
+	regiontranslationDescStatus := regiontranslationFields[4].Descriptor()
+	// regiontranslation.DefaultStatus holds the default value on creation for the status field.
+	regiontranslation.DefaultStatus = regiontranslationDescStatus.Default.(string)
+	// regiontranslationDescUpdatedAt is the schema descriptor for updated_at field.
+	regiontranslationDescUpdatedAt := regiontranslationFields[5].Descriptor()
+	// regiontranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	regiontranslation.DefaultUpdatedAt = regiontranslationDescUpdatedAt.Default.(int64)
 	reviewFields := schema.Review{}.Fields()
 	_ = reviewFields
 	// reviewDescOrderNo is the schema descriptor for order_no field.

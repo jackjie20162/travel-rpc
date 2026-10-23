@@ -87,6 +87,11 @@ func City(v string) predicate.Attraction {
 	return predicate.Attraction(sql.FieldEQ(FieldCity, v))
 }
 
+// CityID applies equality check predicate on the "city_id" field. It's identical to CityIDEQ.
+func CityID(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldEQ(FieldCityID, v))
+}
+
 // Address applies equality check predicate on the "address" field. It's identical to AddressEQ.
 func Address(v string) predicate.Attraction {
 	return predicate.Attraction(sql.FieldEQ(FieldAddress, v))
@@ -600,6 +605,46 @@ func CityEqualFold(v string) predicate.Attraction {
 // CityContainsFold applies the ContainsFold predicate on the "city" field.
 func CityContainsFold(v string) predicate.Attraction {
 	return predicate.Attraction(sql.FieldContainsFold(FieldCity, v))
+}
+
+// CityIDEQ applies the EQ predicate on the "city_id" field.
+func CityIDEQ(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldEQ(FieldCityID, v))
+}
+
+// CityIDNEQ applies the NEQ predicate on the "city_id" field.
+func CityIDNEQ(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldNEQ(FieldCityID, v))
+}
+
+// CityIDIn applies the In predicate on the "city_id" field.
+func CityIDIn(vs ...int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldIn(FieldCityID, vs...))
+}
+
+// CityIDNotIn applies the NotIn predicate on the "city_id" field.
+func CityIDNotIn(vs ...int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldNotIn(FieldCityID, vs...))
+}
+
+// CityIDGT applies the GT predicate on the "city_id" field.
+func CityIDGT(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldGT(FieldCityID, v))
+}
+
+// CityIDGTE applies the GTE predicate on the "city_id" field.
+func CityIDGTE(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldGTE(FieldCityID, v))
+}
+
+// CityIDLT applies the LT predicate on the "city_id" field.
+func CityIDLT(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldLT(FieldCityID, v))
+}
+
+// CityIDLTE applies the LTE predicate on the "city_id" field.
+func CityIDLTE(v int64) predicate.Attraction {
+	return predicate.Attraction(sql.FieldLTE(FieldCityID, v))
 }
 
 // AddressEQ applies the EQ predicate on the "address" field.

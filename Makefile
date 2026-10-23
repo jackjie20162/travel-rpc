@@ -21,7 +21,7 @@ PROJECT_I18N=true
 
 # The suffix after build or compile | 构建后缀
 PROJECT_BUILD_SUFFIX=rpc
-
+DOCKER_USERNAME=registry.cn-hangzhou.aliyuncs.com/zifeng6257
 # Windows development environment uses the protoc tool installed with the
 # project code-generation toolchain.
 PROTOC ?= C:/Users/zzhjz/go/bin/protoc.exe
@@ -66,7 +66,7 @@ docker: # Build the docker image | 构建 docker 镜像
 
 .PHONY: publish-docker
 publish-docker: # Publish docker image | 发布 docker 镜像
-	echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin https://${REPO}
+	#echo "${DOCKER_PASSWORD}" | docker login --username ${DOCKER_USERNAME} --password-stdin https://${REPO}
 	docker push ${DOCKER_USERNAME}/$(SERVICE_DASH)-$(PROJECT_BUILD_SUFFIX):${VERSION}
 	@echo "Publish docker successfully"
 

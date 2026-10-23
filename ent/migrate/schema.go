@@ -18,6 +18,7 @@ var (
 		{Name: "category", Type: field.TypeString, Nullable: true},
 		{Name: "tags", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "city", Type: field.TypeString, Nullable: true},
+		{Name: "city_id", Type: field.TypeInt64, Default: 0},
 		{Name: "address", Type: field.TypeString, Nullable: true},
 		{Name: "latitude", Type: field.TypeFloat64, Nullable: true},
 		{Name: "longitude", Type: field.TypeFloat64, Nullable: true},
@@ -29,7 +30,7 @@ var (
 		{Name: "rich_content", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "opening_hours", Type: field.TypeString, Nullable: true},
 		{Name: "suggested_duration", Type: field.TypeString, Nullable: true},
-		{Name: "ticket_info", Type: field.TypeString, Nullable: true},
+		{Name: "ticket_info", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "sort", Type: field.TypeInt, Default: 0},
 		{Name: "status", Type: field.TypeString, Default: "ACTIVE"},
 	}
@@ -42,7 +43,7 @@ var (
 			{
 				Name:    "attraction_tenant_id_merchant_id_status",
 				Unique:  false,
-				Columns: []*schema.Column{AttractionsColumns[1], AttractionsColumns[2], AttractionsColumns[21]},
+				Columns: []*schema.Column{AttractionsColumns[1], AttractionsColumns[2], AttractionsColumns[22]},
 			},
 			{
 				Name:    "attraction_merchant_id_category",
@@ -566,6 +567,66 @@ var (
 			},
 		},
 	}
+	// RegionsColumns holds the columns for the "regions" table.
+	RegionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "parent_id", Type: field.TypeInt64, Default: 0},
+		{Name: "level", Type: field.TypeString},
+		{Name: "code", Type: field.TypeString, Nullable: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "poi_id", Type: field.TypeString, Nullable: true},
+		{Name: "poi_name", Type: field.TypeString, Nullable: true},
+		{Name: "latitude", Type: field.TypeFloat64, Nullable: true},
+		{Name: "longitude", Type: field.TypeFloat64, Nullable: true},
+		{Name: "sort", Type: field.TypeInt, Default: 0},
+		{Name: "status", Type: field.TypeString, Default: "ACTIVE"},
+	}
+	// RegionsTable holds the schema information for the "regions" table.
+	RegionsTable = &schema.Table{
+		Name:       "regions",
+		Columns:    RegionsColumns,
+		PrimaryKey: []*schema.Column{RegionsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "region_parent_id_name",
+				Unique:  true,
+				Columns: []*schema.Column{RegionsColumns[1], RegionsColumns[4]},
+			},
+			{
+				Name:    "region_level_status",
+				Unique:  false,
+				Columns: []*schema.Column{RegionsColumns[2], RegionsColumns[10]},
+			},
+		},
+	}
+	// RegionTranslationsColumns holds the columns for the "region_translations" table.
+	RegionTranslationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "region_id", Type: field.TypeInt64},
+		{Name: "locale", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "source", Type: field.TypeString, Default: "MANUAL"},
+		{Name: "status", Type: field.TypeString, Default: "DONE"},
+		{Name: "updated_at", Type: field.TypeInt64, Default: 0},
+	}
+	// RegionTranslationsTable holds the schema information for the "region_translations" table.
+	RegionTranslationsTable = &schema.Table{
+		Name:       "region_translations",
+		Columns:    RegionTranslationsColumns,
+		PrimaryKey: []*schema.Column{RegionTranslationsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "regiontranslation_region_id_locale",
+				Unique:  true,
+				Columns: []*schema.Column{RegionTranslationsColumns[1], RegionTranslationsColumns[2]},
+			},
+			{
+				Name:    "regiontranslation_locale_status",
+				Unique:  false,
+				Columns: []*schema.Column{RegionTranslationsColumns[2], RegionTranslationsColumns[5]},
+			},
+		},
+	}
 	// ReviewsColumns holds the columns for the "reviews" table.
 	ReviewsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -775,6 +836,8 @@ var (
 		ProductsTable,
 		ProductPackagesTable,
 		ProductTranslationsTable,
+		RegionsTable,
+		RegionTranslationsTable,
 		ReviewsTable,
 		TenantsTable,
 		TravelersTable,

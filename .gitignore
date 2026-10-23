@@ -1,0 +1,7 @@
+# 编译产物
+travel_rpc
+travel_rpc.exe
+*.exe
+
+# 运行日志
+*.log

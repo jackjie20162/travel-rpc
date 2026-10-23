@@ -29,6 +29,8 @@ import (
 	"gitee.com/meinongyihe/travel-rpc/ent/product"
 	"gitee.com/meinongyihe/travel-rpc/ent/productpackage"
 	"gitee.com/meinongyihe/travel-rpc/ent/producttranslation"
+	"gitee.com/meinongyihe/travel-rpc/ent/region"
+	"gitee.com/meinongyihe/travel-rpc/ent/regiontranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/review"
 	"gitee.com/meinongyihe/travel-rpc/ent/tenant"
 	"gitee.com/meinongyihe/travel-rpc/ent/traveler"
@@ -73,6 +75,10 @@ type Client struct {
 	ProductPackage *ProductPackageClient
 	// ProductTranslation is the client for interacting with the ProductTranslation builders.
 	ProductTranslation *ProductTranslationClient
+	// Region is the client for interacting with the Region builders.
+	Region *RegionClient
+	// RegionTranslation is the client for interacting with the RegionTranslation builders.
+	RegionTranslation *RegionTranslationClient
 	// Review is the client for interacting with the Review builders.
 	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
@@ -109,6 +115,8 @@ func (c *Client) init() {
 	c.Product = NewProductClient(c.config)
 	c.ProductPackage = NewProductPackageClient(c.config)
 	c.ProductTranslation = NewProductTranslationClient(c.config)
+	c.Region = NewRegionClient(c.config)
+	c.RegionTranslation = NewRegionTranslationClient(c.config)
 	c.Review = NewReviewClient(c.config)
 	c.Tenant = NewTenantClient(c.config)
 	c.Traveler = NewTravelerClient(c.config)
@@ -221,6 +229,8 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
 		ProductTranslation:   NewProductTranslationClient(cfg),
+		Region:               NewRegionClient(cfg),
+		RegionTranslation:    NewRegionTranslationClient(cfg),
 		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
@@ -260,6 +270,8 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Product:              NewProductClient(cfg),
 		ProductPackage:       NewProductPackageClient(cfg),
 		ProductTranslation:   NewProductTranslationClient(cfg),
+		Region:               NewRegionClient(cfg),
+		RegionTranslation:    NewRegionTranslationClient(cfg),
 		Review:               NewReviewClient(cfg),
 		Tenant:               NewTenantClient(cfg),
 		Traveler:             NewTravelerClient(cfg),
@@ -297,7 +309,8 @@ func (c *Client) Use(hooks ...Hook) {
 		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
 		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
 		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
-		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.ProductTranslation, c.Region, c.RegionTranslation, c.Review, c.Tenant,
+		c.Traveler, c.User, c.Voucher,
 	} {
 		n.Use(hooks...)
 	}
@@ -310,7 +323,8 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
 		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
 		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
-		c.ProductTranslation, c.Review, c.Tenant, c.Traveler, c.User, c.Voucher,
+		c.ProductTranslation, c.Region, c.RegionTranslation, c.Review, c.Tenant,
+		c.Traveler, c.User, c.Voucher,
 	} {
 		n.Intercept(interceptors...)
 	}
@@ -349,6 +363,10 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.ProductPackage.mutate(ctx, m)
 	case *ProductTranslationMutation:
 		return c.ProductTranslation.mutate(ctx, m)
+	case *RegionMutation:
+		return c.Region.mutate(ctx, m)
+	case *RegionTranslationMutation:
+		return c.RegionTranslation.mutate(ctx, m)
 	case *ReviewMutation:
 		return c.Review.mutate(ctx, m)
 	case *TenantMutation:
@@ -2359,6 +2377,272 @@ func (c *ProductTranslationClient) mutate(ctx context.Context, m *ProductTransla
 	}
 }
 
+// RegionClient is a client for the Region schema.
+type RegionClient struct {
+	config
+}
+
+// NewRegionClient returns a client for the Region from the given config.
+func NewRegionClient(c config) *RegionClient {
+	return &RegionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `region.Hooks(f(g(h())))`.
+func (c *RegionClient) Use(hooks ...Hook) {
+	c.hooks.Region = append(c.hooks.Region, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `region.Intercept(f(g(h())))`.
+func (c *RegionClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Region = append(c.inters.Region, interceptors...)
+}
+
+// Create returns a builder for creating a Region entity.
+func (c *RegionClient) Create() *RegionCreate {
+	mutation := newRegionMutation(c.config, OpCreate)
+	return &RegionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Region entities.
+func (c *RegionClient) CreateBulk(builders ...*RegionCreate) *RegionCreateBulk {
+	return &RegionCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *RegionClient) MapCreateBulk(slice any, setFunc func(*RegionCreate, int)) *RegionCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &RegionCreateBulk{err: fmt.Errorf("calling to RegionClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*RegionCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &RegionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Region.
+func (c *RegionClient) Update() *RegionUpdate {
+	mutation := newRegionMutation(c.config, OpUpdate)
+	return &RegionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RegionClient) UpdateOne(_m *Region) *RegionUpdateOne {
+	mutation := newRegionMutation(c.config, OpUpdateOne, withRegion(_m))
+	return &RegionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RegionClient) UpdateOneID(id int) *RegionUpdateOne {
+	mutation := newRegionMutation(c.config, OpUpdateOne, withRegionID(id))
+	return &RegionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Region.
+func (c *RegionClient) Delete() *RegionDelete {
+	mutation := newRegionMutation(c.config, OpDelete)
+	return &RegionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *RegionClient) DeleteOne(_m *Region) *RegionDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *RegionClient) DeleteOneID(id int) *RegionDeleteOne {
+	builder := c.Delete().Where(region.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RegionDeleteOne{builder}
+}
+
+// Query returns a query builder for Region.
+func (c *RegionClient) Query() *RegionQuery {
+	return &RegionQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeRegion},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a Region entity by its id.
+func (c *RegionClient) Get(ctx context.Context, id int) (*Region, error) {
+	return c.Query().Where(region.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RegionClient) GetX(ctx context.Context, id int) *Region {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *RegionClient) Hooks() []Hook {
+	return c.hooks.Region
+}
+
+// Interceptors returns the client interceptors.
+func (c *RegionClient) Interceptors() []Interceptor {
+	return c.inters.Region
+}
+
+func (c *RegionClient) mutate(ctx context.Context, m *RegionMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&RegionCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&RegionUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&RegionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&RegionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Region mutation op: %q", m.Op())
+	}
+}
+
+// RegionTranslationClient is a client for the RegionTranslation schema.
+type RegionTranslationClient struct {
+	config
+}
+
+// NewRegionTranslationClient returns a client for the RegionTranslation from the given config.
+func NewRegionTranslationClient(c config) *RegionTranslationClient {
+	return &RegionTranslationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `regiontranslation.Hooks(f(g(h())))`.
+func (c *RegionTranslationClient) Use(hooks ...Hook) {
+	c.hooks.RegionTranslation = append(c.hooks.RegionTranslation, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `regiontranslation.Intercept(f(g(h())))`.
+func (c *RegionTranslationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.RegionTranslation = append(c.inters.RegionTranslation, interceptors...)
+}
+
+// Create returns a builder for creating a RegionTranslation entity.
+func (c *RegionTranslationClient) Create() *RegionTranslationCreate {
+	mutation := newRegionTranslationMutation(c.config, OpCreate)
+	return &RegionTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of RegionTranslation entities.
+func (c *RegionTranslationClient) CreateBulk(builders ...*RegionTranslationCreate) *RegionTranslationCreateBulk {
+	return &RegionTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *RegionTranslationClient) MapCreateBulk(slice any, setFunc func(*RegionTranslationCreate, int)) *RegionTranslationCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &RegionTranslationCreateBulk{err: fmt.Errorf("calling to RegionTranslationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*RegionTranslationCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &RegionTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for RegionTranslation.
+func (c *RegionTranslationClient) Update() *RegionTranslationUpdate {
+	mutation := newRegionTranslationMutation(c.config, OpUpdate)
+	return &RegionTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *RegionTranslationClient) UpdateOne(_m *RegionTranslation) *RegionTranslationUpdateOne {
+	mutation := newRegionTranslationMutation(c.config, OpUpdateOne, withRegionTranslation(_m))
+	return &RegionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *RegionTranslationClient) UpdateOneID(id int) *RegionTranslationUpdateOne {
+	mutation := newRegionTranslationMutation(c.config, OpUpdateOne, withRegionTranslationID(id))
+	return &RegionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for RegionTranslation.
+func (c *RegionTranslationClient) Delete() *RegionTranslationDelete {
+	mutation := newRegionTranslationMutation(c.config, OpDelete)
+	return &RegionTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *RegionTranslationClient) DeleteOne(_m *RegionTranslation) *RegionTranslationDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *RegionTranslationClient) DeleteOneID(id int) *RegionTranslationDeleteOne {
+	builder := c.Delete().Where(regiontranslation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &RegionTranslationDeleteOne{builder}
+}
+
+// Query returns a query builder for RegionTranslation.
+func (c *RegionTranslationClient) Query() *RegionTranslationQuery {
+	return &RegionTranslationQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeRegionTranslation},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a RegionTranslation entity by its id.
+func (c *RegionTranslationClient) Get(ctx context.Context, id int) (*RegionTranslation, error) {
+	return c.Query().Where(regiontranslation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *RegionTranslationClient) GetX(ctx context.Context, id int) *RegionTranslation {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *RegionTranslationClient) Hooks() []Hook {
+	return c.hooks.RegionTranslation
+}
+
+// Interceptors returns the client interceptors.
+func (c *RegionTranslationClient) Interceptors() []Interceptor {
+	return c.inters.RegionTranslation
+}
+
+func (c *RegionTranslationClient) mutate(ctx context.Context, m *RegionTranslationMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&RegionTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&RegionTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&RegionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&RegionTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown RegionTranslation mutation op: %q", m.Op())
+	}
+}
+
 // ReviewClient is a client for the Review schema.
 type ReviewClient struct {
 	config
@@ -3029,14 +3313,14 @@ type (
 	hooks struct {
 		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
 		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
-		Payment, Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler,
-		User, Voucher []ent.Hook
+		Payment, Product, ProductPackage, ProductTranslation, Region,
+		RegionTranslation, Review, Tenant, Traveler, User, Voucher []ent.Hook
 	}
 	inters struct {
 		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
 		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
-		Payment, Product, ProductPackage, ProductTranslation, Review, Tenant, Traveler,
-		User, Voucher []ent.Interceptor
+		Payment, Product, ProductPackage, ProductTranslation, Region,
+		RegionTranslation, Review, Tenant, Traveler, User, Voucher []ent.Interceptor
 	}
 )
 

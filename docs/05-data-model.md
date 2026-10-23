@@ -138,3 +138,57 @@ The `User` schema stores end-user (customer) accounts. It mirrors the legacy PHP
 | jointime | int64? | Registration timestamp |
 | logintime | int64 | Last login timestamp |
 | loginip | string | Last login IP |
+
+## Region model（国家 → 城市 字典）
+
+`Region` 是一张单表自关联的区域字典，用于「国家 → 城市」两级结构，供景点（`attractions.city_id`）绑定城市并统一多语言展示。区域为全局字典，不带 `tenant_id`/`merchant_id`。
+
+### 层级与自关联
+
+- `level=COUNTRY`：国家，`parent_id=0`
+- `level=CITY`：城市，`parent_id` 指向所属国家行
+
+### 多语言
+
+基础名称（默认 `zh-CN`）存放在 `regions.name`；其余语言存放在 `region_translation`（按 `locale` 区分，`(region_id, locale)` 唯一）。C 端按请求 `locale` 解析名称，命中译文则覆盖，否则回退基础名。三语口径与 `product_translation`/`package_translation` 一致：`zh-CN` / `en-US` / `ar`。
+
+### Region 字段
+
+| Field | Type | Description |
+|-------|------|-------------|
+| parent_id | int64 | 父级 ID：0=国家，城市指向所属国家 |
+| level | string | COUNTRY / CITY |
+| code | string? | ISO 代码（如国家 AE/CN），城市可空 |
+| name | string | 基础名称（默认 zh-CN） |
+| poi_id | string? | 代表 POI ID（高德/Google） |
+| poi_name | string? | 代表 POI 名称 |
+| latitude | float? | 中心纬度 WGS84 |
+| longitude | float? | 中心经度 WGS84 |
+| sort | int | 排序，越小越靠前 |
+| status | string | ACTIVE / INACTIVE |
+
+### RegionTranslation 字段
+
+| Field | Type | Description |
+|-------|------|-------------|
+| region_id | int64 | 关联区域 ID |
+| locale | string | zh-CN / en-US / ar |
+| name | string? | 区域名称译文 |
+| source | string | MACHINE / MANUAL |
+| status | string | PENDING / DONE / FAILED |
+| updated_at | int64 | 最近翻译时间戳(unix秒) |
+
+### 唯一性与索引
+
+- Region：`(parent_id, name)` 唯一（避免同国家内重复城市名）；`(level, status)` 辅助查询
+- RegionTranslation：`(region_id, locale)` 唯一
+
+### 景点绑定
+
+`attractions` 新增 `city_id`（int64，默认 0）指向 `regions.id`（level=CITY）。保留原有 `city` 字符串作为冗余展示名与历史数据兜底。删除城市前会校验是否仍被景点绑定，删除国家前会校验其下是否仍有城市。
+
+### 接口（travel-api，直用 Ent client，不经 gRPC）
+
+- `GET /api/travel/regions`：公开字典，支持 `level`/`parentId`/`locale`/`keyword`/`status`，名称按 locale 解析
+- `GET /api/travel/merchant/regions`：管理端列表，返回基础名 + 全部译文
+- `POST/PUT/DELETE /api/travel/merchant/regions[/:id]`：区域增删改，写入时覆盖式重建译文

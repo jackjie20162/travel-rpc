@@ -25,6 +25,8 @@ const (
 	FieldTags = "tags"
 	// FieldCity holds the string denoting the city field in the database.
 	FieldCity = "city"
+	// FieldCityID holds the string denoting the city_id field in the database.
+	FieldCityID = "city_id"
 	// FieldAddress holds the string denoting the address field in the database.
 	FieldAddress = "address"
 	// FieldLatitude holds the string denoting the latitude field in the database.
@@ -67,6 +69,7 @@ var Columns = []string{
 	FieldCategory,
 	FieldTags,
 	FieldCity,
+	FieldCityID,
 	FieldAddress,
 	FieldLatitude,
 	FieldLongitude,
@@ -96,6 +99,8 @@ func ValidColumn(column string) bool {
 var (
 	// NameValidator is a validator for the "name" field. It is called by the builders before save.
 	NameValidator func(string) error
+	// DefaultCityID holds the default value on creation for the "city_id" field.
+	DefaultCityID int64
 	// DefaultSort holds the default value on creation for the "sort" field.
 	DefaultSort int
 	// DefaultStatus holds the default value on creation for the "status" field.
@@ -143,6 +148,11 @@ func ByTags(opts ...sql.OrderTermOption) OrderOption {
 // ByCity orders the results by the city field.
 func ByCity(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCity, opts...).ToFunc()
+}
+
+// ByCityID orders the results by the city_id field.
+func ByCityID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCityID, opts...).ToFunc()
 }
 
 // ByAddress orders the results by the address field.

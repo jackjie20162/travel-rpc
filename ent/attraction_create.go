@@ -93,6 +93,20 @@ func (_c *AttractionCreate) SetNillableCity(v *string) *AttractionCreate {
 	return _c
 }
 
+// SetCityID sets the "city_id" field.
+func (_c *AttractionCreate) SetCityID(v int64) *AttractionCreate {
+	_c.mutation.SetCityID(v)
+	return _c
+}
+
+// SetNillableCityID sets the "city_id" field if the given value is not nil.
+func (_c *AttractionCreate) SetNillableCityID(v *int64) *AttractionCreate {
+	if v != nil {
+		_c.SetCityID(*v)
+	}
+	return _c
+}
+
 // SetAddress sets the "address" field.
 func (_c *AttractionCreate) SetAddress(v string) *AttractionCreate {
 	_c.mutation.SetAddress(v)
@@ -324,6 +338,10 @@ func (_c *AttractionCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *AttractionCreate) defaults() {
+	if _, ok := _c.mutation.CityID(); !ok {
+		v := attraction.DefaultCityID
+		_c.mutation.SetCityID(v)
+	}
 	if _, ok := _c.mutation.Sort(); !ok {
 		v := attraction.DefaultSort
 		_c.mutation.SetSort(v)
@@ -349,6 +367,9 @@ func (_c *AttractionCreate) check() error {
 		if err := attraction.NameValidator(v); err != nil {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "Attraction.name": %w`, err)}
 		}
+	}
+	if _, ok := _c.mutation.CityID(); !ok {
+		return &ValidationError{Name: "city_id", err: errors.New(`ent: missing required field "Attraction.city_id"`)}
 	}
 	if _, ok := _c.mutation.Sort(); !ok {
 		return &ValidationError{Name: "sort", err: errors.New(`ent: missing required field "Attraction.sort"`)}
@@ -409,6 +430,10 @@ func (_c *AttractionCreate) createSpec() (*Attraction, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.City(); ok {
 		_spec.SetField(attraction.FieldCity, field.TypeString, value)
 		_node.City = value
+	}
+	if value, ok := _c.mutation.CityID(); ok {
+		_spec.SetField(attraction.FieldCityID, field.TypeInt64, value)
+		_node.CityID = value
 	}
 	if value, ok := _c.mutation.Address(); ok {
 		_spec.SetField(attraction.FieldAddress, field.TypeString, value)

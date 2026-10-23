@@ -44,6 +44,10 @@ type Tx struct {
 	ProductPackage *ProductPackageClient
 	// ProductTranslation is the client for interacting with the ProductTranslation builders.
 	ProductTranslation *ProductTranslationClient
+	// Region is the client for interacting with the Region builders.
+	Region *RegionClient
+	// RegionTranslation is the client for interacting with the RegionTranslation builders.
+	RegionTranslation *RegionTranslationClient
 	// Review is the client for interacting with the Review builders.
 	Review *ReviewClient
 	// Tenant is the client for interacting with the Tenant builders.
@@ -200,6 +204,8 @@ func (tx *Tx) init() {
 	tx.Product = NewProductClient(tx.config)
 	tx.ProductPackage = NewProductPackageClient(tx.config)
 	tx.ProductTranslation = NewProductTranslationClient(tx.config)
+	tx.Region = NewRegionClient(tx.config)
+	tx.RegionTranslation = NewRegionTranslationClient(tx.config)
 	tx.Review = NewReviewClient(tx.config)
 	tx.Tenant = NewTenantClient(tx.config)
 	tx.Traveler = NewTravelerClient(tx.config)
