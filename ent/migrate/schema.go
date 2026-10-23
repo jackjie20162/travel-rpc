@@ -62,6 +62,9 @@ var (
 		{Name: "tags", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "address", Type: field.TypeString, Nullable: true},
 		{Name: "description", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "opening_hours", Type: field.TypeString, Nullable: true},
+		{Name: "suggested_duration", Type: field.TypeString, Nullable: true},
+		{Name: "ticket_info", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "source", Type: field.TypeString, Default: "MANUAL"},
 		{Name: "status", Type: field.TypeString, Default: "DONE"},
 		{Name: "updated_at", Type: field.TypeInt64, Default: 0},
@@ -80,7 +83,7 @@ var (
 			{
 				Name:    "attractiontranslation_locale_status",
 				Unique:  false,
-				Columns: []*schema.Column{AttractionTranslationsColumns[2], AttractionTranslationsColumns[9]},
+				Columns: []*schema.Column{AttractionTranslationsColumns[2], AttractionTranslationsColumns[12]},
 			},
 		},
 	}

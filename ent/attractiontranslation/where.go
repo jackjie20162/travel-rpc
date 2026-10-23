@@ -87,6 +87,21 @@ func Description(v string) predicate.AttractionTranslation {
 	return predicate.AttractionTranslation(sql.FieldEQ(FieldDescription, v))
 }
 
+// OpeningHours applies equality check predicate on the "opening_hours" field. It's identical to OpeningHoursEQ.
+func OpeningHours(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldOpeningHours, v))
+}
+
+// SuggestedDuration applies equality check predicate on the "suggested_duration" field. It's identical to SuggestedDurationEQ.
+func SuggestedDuration(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldSuggestedDuration, v))
+}
+
+// TicketInfo applies equality check predicate on the "ticket_info" field. It's identical to TicketInfoEQ.
+func TicketInfo(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldTicketInfo, v))
+}
+
 // Source applies equality check predicate on the "source" field. It's identical to SourceEQ.
 func Source(v string) predicate.AttractionTranslation {
 	return predicate.AttractionTranslation(sql.FieldEQ(FieldSource, v))
@@ -580,6 +595,231 @@ func DescriptionEqualFold(v string) predicate.AttractionTranslation {
 // DescriptionContainsFold applies the ContainsFold predicate on the "description" field.
 func DescriptionContainsFold(v string) predicate.AttractionTranslation {
 	return predicate.AttractionTranslation(sql.FieldContainsFold(FieldDescription, v))
+}
+
+// OpeningHoursEQ applies the EQ predicate on the "opening_hours" field.
+func OpeningHoursEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldOpeningHours, v))
+}
+
+// OpeningHoursNEQ applies the NEQ predicate on the "opening_hours" field.
+func OpeningHoursNEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNEQ(FieldOpeningHours, v))
+}
+
+// OpeningHoursIn applies the In predicate on the "opening_hours" field.
+func OpeningHoursIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIn(FieldOpeningHours, vs...))
+}
+
+// OpeningHoursNotIn applies the NotIn predicate on the "opening_hours" field.
+func OpeningHoursNotIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotIn(FieldOpeningHours, vs...))
+}
+
+// OpeningHoursGT applies the GT predicate on the "opening_hours" field.
+func OpeningHoursGT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGT(FieldOpeningHours, v))
+}
+
+// OpeningHoursGTE applies the GTE predicate on the "opening_hours" field.
+func OpeningHoursGTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGTE(FieldOpeningHours, v))
+}
+
+// OpeningHoursLT applies the LT predicate on the "opening_hours" field.
+func OpeningHoursLT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLT(FieldOpeningHours, v))
+}
+
+// OpeningHoursLTE applies the LTE predicate on the "opening_hours" field.
+func OpeningHoursLTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLTE(FieldOpeningHours, v))
+}
+
+// OpeningHoursContains applies the Contains predicate on the "opening_hours" field.
+func OpeningHoursContains(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContains(FieldOpeningHours, v))
+}
+
+// OpeningHoursHasPrefix applies the HasPrefix predicate on the "opening_hours" field.
+func OpeningHoursHasPrefix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasPrefix(FieldOpeningHours, v))
+}
+
+// OpeningHoursHasSuffix applies the HasSuffix predicate on the "opening_hours" field.
+func OpeningHoursHasSuffix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasSuffix(FieldOpeningHours, v))
+}
+
+// OpeningHoursIsNil applies the IsNil predicate on the "opening_hours" field.
+func OpeningHoursIsNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIsNull(FieldOpeningHours))
+}
+
+// OpeningHoursNotNil applies the NotNil predicate on the "opening_hours" field.
+func OpeningHoursNotNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotNull(FieldOpeningHours))
+}
+
+// OpeningHoursEqualFold applies the EqualFold predicate on the "opening_hours" field.
+func OpeningHoursEqualFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEqualFold(FieldOpeningHours, v))
+}
+
+// OpeningHoursContainsFold applies the ContainsFold predicate on the "opening_hours" field.
+func OpeningHoursContainsFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContainsFold(FieldOpeningHours, v))
+}
+
+// SuggestedDurationEQ applies the EQ predicate on the "suggested_duration" field.
+func SuggestedDurationEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationNEQ applies the NEQ predicate on the "suggested_duration" field.
+func SuggestedDurationNEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNEQ(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationIn applies the In predicate on the "suggested_duration" field.
+func SuggestedDurationIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIn(FieldSuggestedDuration, vs...))
+}
+
+// SuggestedDurationNotIn applies the NotIn predicate on the "suggested_duration" field.
+func SuggestedDurationNotIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotIn(FieldSuggestedDuration, vs...))
+}
+
+// SuggestedDurationGT applies the GT predicate on the "suggested_duration" field.
+func SuggestedDurationGT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGT(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationGTE applies the GTE predicate on the "suggested_duration" field.
+func SuggestedDurationGTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGTE(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationLT applies the LT predicate on the "suggested_duration" field.
+func SuggestedDurationLT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLT(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationLTE applies the LTE predicate on the "suggested_duration" field.
+func SuggestedDurationLTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLTE(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationContains applies the Contains predicate on the "suggested_duration" field.
+func SuggestedDurationContains(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContains(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationHasPrefix applies the HasPrefix predicate on the "suggested_duration" field.
+func SuggestedDurationHasPrefix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasPrefix(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationHasSuffix applies the HasSuffix predicate on the "suggested_duration" field.
+func SuggestedDurationHasSuffix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasSuffix(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationIsNil applies the IsNil predicate on the "suggested_duration" field.
+func SuggestedDurationIsNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIsNull(FieldSuggestedDuration))
+}
+
+// SuggestedDurationNotNil applies the NotNil predicate on the "suggested_duration" field.
+func SuggestedDurationNotNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotNull(FieldSuggestedDuration))
+}
+
+// SuggestedDurationEqualFold applies the EqualFold predicate on the "suggested_duration" field.
+func SuggestedDurationEqualFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEqualFold(FieldSuggestedDuration, v))
+}
+
+// SuggestedDurationContainsFold applies the ContainsFold predicate on the "suggested_duration" field.
+func SuggestedDurationContainsFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContainsFold(FieldSuggestedDuration, v))
+}
+
+// TicketInfoEQ applies the EQ predicate on the "ticket_info" field.
+func TicketInfoEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEQ(FieldTicketInfo, v))
+}
+
+// TicketInfoNEQ applies the NEQ predicate on the "ticket_info" field.
+func TicketInfoNEQ(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNEQ(FieldTicketInfo, v))
+}
+
+// TicketInfoIn applies the In predicate on the "ticket_info" field.
+func TicketInfoIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIn(FieldTicketInfo, vs...))
+}
+
+// TicketInfoNotIn applies the NotIn predicate on the "ticket_info" field.
+func TicketInfoNotIn(vs ...string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotIn(FieldTicketInfo, vs...))
+}
+
+// TicketInfoGT applies the GT predicate on the "ticket_info" field.
+func TicketInfoGT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGT(FieldTicketInfo, v))
+}
+
+// TicketInfoGTE applies the GTE predicate on the "ticket_info" field.
+func TicketInfoGTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldGTE(FieldTicketInfo, v))
+}
+
+// TicketInfoLT applies the LT predicate on the "ticket_info" field.
+func TicketInfoLT(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLT(FieldTicketInfo, v))
+}
+
+// TicketInfoLTE applies the LTE predicate on the "ticket_info" field.
+func TicketInfoLTE(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldLTE(FieldTicketInfo, v))
+}
+
+// TicketInfoContains applies the Contains predicate on the "ticket_info" field.
+func TicketInfoContains(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContains(FieldTicketInfo, v))
+}
+
+// TicketInfoHasPrefix applies the HasPrefix predicate on the "ticket_info" field.
+func TicketInfoHasPrefix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasPrefix(FieldTicketInfo, v))
+}
+
+// TicketInfoHasSuffix applies the HasSuffix predicate on the "ticket_info" field.
+func TicketInfoHasSuffix(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldHasSuffix(FieldTicketInfo, v))
+}
+
+// TicketInfoIsNil applies the IsNil predicate on the "ticket_info" field.
+func TicketInfoIsNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldIsNull(FieldTicketInfo))
+}
+
+// TicketInfoNotNil applies the NotNil predicate on the "ticket_info" field.
+func TicketInfoNotNil() predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldNotNull(FieldTicketInfo))
+}
+
+// TicketInfoEqualFold applies the EqualFold predicate on the "ticket_info" field.
+func TicketInfoEqualFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldEqualFold(FieldTicketInfo, v))
+}
+
+// TicketInfoContainsFold applies the ContainsFold predicate on the "ticket_info" field.
+func TicketInfoContainsFold(v string) predicate.AttractionTranslation {
+	return predicate.AttractionTranslation(sql.FieldContainsFold(FieldTicketInfo, v))
 }
 
 // SourceEQ applies the EQ predicate on the "source" field.

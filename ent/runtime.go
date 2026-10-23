@@ -59,15 +59,15 @@ func init() {
 	// attractiontranslation.LocaleValidator is a validator for the "locale" field. It is called by the builders before save.
 	attractiontranslation.LocaleValidator = attractiontranslationDescLocale.Validators[0].(func(string) error)
 	// attractiontranslationDescSource is the schema descriptor for source field.
-	attractiontranslationDescSource := attractiontranslationFields[7].Descriptor()
+	attractiontranslationDescSource := attractiontranslationFields[10].Descriptor()
 	// attractiontranslation.DefaultSource holds the default value on creation for the source field.
 	attractiontranslation.DefaultSource = attractiontranslationDescSource.Default.(string)
 	// attractiontranslationDescStatus is the schema descriptor for status field.
-	attractiontranslationDescStatus := attractiontranslationFields[8].Descriptor()
+	attractiontranslationDescStatus := attractiontranslationFields[11].Descriptor()
 	// attractiontranslation.DefaultStatus holds the default value on creation for the status field.
 	attractiontranslation.DefaultStatus = attractiontranslationDescStatus.Default.(string)
 	// attractiontranslationDescUpdatedAt is the schema descriptor for updated_at field.
-	attractiontranslationDescUpdatedAt := attractiontranslationFields[9].Descriptor()
+	attractiontranslationDescUpdatedAt := attractiontranslationFields[12].Descriptor()
 	// attractiontranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	attractiontranslation.DefaultUpdatedAt = attractiontranslationDescUpdatedAt.Default.(int64)
 	currencyFields := schema.Currency{}.Fields()

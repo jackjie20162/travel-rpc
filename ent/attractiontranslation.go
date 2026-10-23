@@ -30,6 +30,12 @@ type AttractionTranslation struct {
 	Address string `json:"address,omitempty"`
 	// 简介译文
 	Description string `json:"description,omitempty"`
+	// 开放时间译文
+	OpeningHours string `json:"opening_hours,omitempty"`
+	// 建议游玩时长译文
+	SuggestedDuration string `json:"suggested_duration,omitempty"`
+	// 门票信息译文
+	TicketInfo string `json:"ticket_info,omitempty"`
 	// 来源：MACHINE/MANUAL
 	Source string `json:"source,omitempty"`
 	// 状态：PENDING/DONE/FAILED
@@ -46,7 +52,7 @@ func (*AttractionTranslation) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case attractiontranslation.FieldID, attractiontranslation.FieldAttractionID, attractiontranslation.FieldUpdatedAt:
 			values[i] = new(sql.NullInt64)
-		case attractiontranslation.FieldLocale, attractiontranslation.FieldName, attractiontranslation.FieldCategory, attractiontranslation.FieldTags, attractiontranslation.FieldAddress, attractiontranslation.FieldDescription, attractiontranslation.FieldSource, attractiontranslation.FieldStatus:
+		case attractiontranslation.FieldLocale, attractiontranslation.FieldName, attractiontranslation.FieldCategory, attractiontranslation.FieldTags, attractiontranslation.FieldAddress, attractiontranslation.FieldDescription, attractiontranslation.FieldOpeningHours, attractiontranslation.FieldSuggestedDuration, attractiontranslation.FieldTicketInfo, attractiontranslation.FieldSource, attractiontranslation.FieldStatus:
 			values[i] = new(sql.NullString)
 		default:
 			values[i] = new(sql.UnknownType)
@@ -110,6 +116,24 @@ func (_m *AttractionTranslation) assignValues(columns []string, values []any) er
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				_m.Description = value.String
+			}
+		case attractiontranslation.FieldOpeningHours:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field opening_hours", values[i])
+			} else if value.Valid {
+				_m.OpeningHours = value.String
+			}
+		case attractiontranslation.FieldSuggestedDuration:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field suggested_duration", values[i])
+			} else if value.Valid {
+				_m.SuggestedDuration = value.String
+			}
+		case attractiontranslation.FieldTicketInfo:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field ticket_info", values[i])
+			} else if value.Valid {
+				_m.TicketInfo = value.String
 			}
 		case attractiontranslation.FieldSource:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -185,6 +209,15 @@ func (_m *AttractionTranslation) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("description=")
 	builder.WriteString(_m.Description)
+	builder.WriteString(", ")
+	builder.WriteString("opening_hours=")
+	builder.WriteString(_m.OpeningHours)
+	builder.WriteString(", ")
+	builder.WriteString("suggested_duration=")
+	builder.WriteString(_m.SuggestedDuration)
+	builder.WriteString(", ")
+	builder.WriteString("ticket_info=")
+	builder.WriteString(_m.TicketInfo)
 	builder.WriteString(", ")
 	builder.WriteString("source=")
 	builder.WriteString(_m.Source)

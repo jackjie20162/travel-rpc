@@ -1,5 +1,22 @@
 # Development Log
 
+## 2026-10-23 — 景点译文扩展：开放时间/建议时长/门票信息三语 + 城市名随语言解析
+
+### 背景
+C 端景点列表/详情页切英/阿后仍残留中文：开放时间、建议游玩时长、门票参考不在译文表覆盖范围，城市名（「迪拜」）也未本地化。需求：详情页涉及的全部文本三语化。
+
+### 实现内容
+- **travel-rpc (Ent)**：`attraction_translation` 新增 `opening_hours`/`suggested_duration`/`ticket_info` 三列，`goctls`/ent 重新生成。城市名不入译文表，由地区字典 `region_translations` 按 `city_id` 解析。
+- **译文种子**：新增附加种子 `attraction_i18n_extra_seed.json`（68 景点 × 开放时间/建议时长/门票信息的 en/ar 译文，由主表中文原文翻译）；seeder 改为「新行创建、已存在行仅回填空字段」语义，不覆盖运营编辑，幂等可重跑。
+- **travel-api**：`AttractionTranslationItem` 增 3 字段（.api 与 types.go 同步）；`attachAttractionTranslations`/`saveAttractionTranslations`/`resolveAttractionLocale` 透传新字段；新增 `resolveAttractionCityNames` 按 locale 用地区字典译文覆盖景点 `city` 展示名（在 resolveAttractionLocale 尾部统一调用，公开接口全部生效）。
+- **merchant-frontend**：景点编辑表单多语言 Tab 补「开放时间/建议游玩/门票参考」录入项，openEdit 回填、save 随 translations 提交。
+- **travel-pc**：`utils/attraction.js` 的 `attractionTitle` 改为信任后端按 locale 解析的 `name`（CJK 检测兑底回退 nameEn），修正阿语环境错显英文。
+
+### 验证
+- ✅ travel-rpc / travel-api `go build ./...`、travel-pc `vite build` 通过
+- ✅ 临时工具已执行建表迁移 + 种子回填：136 行译文的 opening_hours/ticket_info 全部填充（68×en/ar）
+- ⏳ 需用户重启 travel-rpc(9205) 与 travel-api(9206)：新列已在库中，但 travel-api 需新二进制才能返回/解析新字段与城市名
+
 ## 2026-10-23 — C 端行程节点景点名随语言切换
 
 ### 背景

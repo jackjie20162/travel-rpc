@@ -2044,25 +2044,28 @@ func (m *AttractionMutation) ResetEdge(name string) error {
 // AttractionTranslationMutation represents an operation that mutates the AttractionTranslation nodes in the graph.
 type AttractionTranslationMutation struct {
 	config
-	op               Op
-	typ              string
-	id               *int
-	attraction_id    *int64
-	addattraction_id *int64
-	locale           *string
-	name             *string
-	category         *string
-	tags             *string
-	address          *string
-	description      *string
-	source           *string
-	status           *string
-	updated_at       *int64
-	addupdated_at    *int64
-	clearedFields    map[string]struct{}
-	done             bool
-	oldValue         func(context.Context) (*AttractionTranslation, error)
-	predicates       []predicate.AttractionTranslation
+	op                 Op
+	typ                string
+	id                 *int
+	attraction_id      *int64
+	addattraction_id   *int64
+	locale             *string
+	name               *string
+	category           *string
+	tags               *string
+	address            *string
+	description        *string
+	opening_hours      *string
+	suggested_duration *string
+	ticket_info        *string
+	source             *string
+	status             *string
+	updated_at         *int64
+	addupdated_at      *int64
+	clearedFields      map[string]struct{}
+	done               bool
+	oldValue           func(context.Context) (*AttractionTranslation, error)
+	predicates         []predicate.AttractionTranslation
 }
 
 var _ ent.Mutation = (*AttractionTranslationMutation)(nil)
@@ -2500,6 +2503,153 @@ func (m *AttractionTranslationMutation) ResetDescription() {
 	delete(m.clearedFields, attractiontranslation.FieldDescription)
 }
 
+// SetOpeningHours sets the "opening_hours" field.
+func (m *AttractionTranslationMutation) SetOpeningHours(s string) {
+	m.opening_hours = &s
+}
+
+// OpeningHours returns the value of the "opening_hours" field in the mutation.
+func (m *AttractionTranslationMutation) OpeningHours() (r string, exists bool) {
+	v := m.opening_hours
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOpeningHours returns the old "opening_hours" field's value of the AttractionTranslation entity.
+// If the AttractionTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionTranslationMutation) OldOpeningHours(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOpeningHours is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOpeningHours requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOpeningHours: %w", err)
+	}
+	return oldValue.OpeningHours, nil
+}
+
+// ClearOpeningHours clears the value of the "opening_hours" field.
+func (m *AttractionTranslationMutation) ClearOpeningHours() {
+	m.opening_hours = nil
+	m.clearedFields[attractiontranslation.FieldOpeningHours] = struct{}{}
+}
+
+// OpeningHoursCleared returns if the "opening_hours" field was cleared in this mutation.
+func (m *AttractionTranslationMutation) OpeningHoursCleared() bool {
+	_, ok := m.clearedFields[attractiontranslation.FieldOpeningHours]
+	return ok
+}
+
+// ResetOpeningHours resets all changes to the "opening_hours" field.
+func (m *AttractionTranslationMutation) ResetOpeningHours() {
+	m.opening_hours = nil
+	delete(m.clearedFields, attractiontranslation.FieldOpeningHours)
+}
+
+// SetSuggestedDuration sets the "suggested_duration" field.
+func (m *AttractionTranslationMutation) SetSuggestedDuration(s string) {
+	m.suggested_duration = &s
+}
+
+// SuggestedDuration returns the value of the "suggested_duration" field in the mutation.
+func (m *AttractionTranslationMutation) SuggestedDuration() (r string, exists bool) {
+	v := m.suggested_duration
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSuggestedDuration returns the old "suggested_duration" field's value of the AttractionTranslation entity.
+// If the AttractionTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionTranslationMutation) OldSuggestedDuration(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSuggestedDuration is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSuggestedDuration requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSuggestedDuration: %w", err)
+	}
+	return oldValue.SuggestedDuration, nil
+}
+
+// ClearSuggestedDuration clears the value of the "suggested_duration" field.
+func (m *AttractionTranslationMutation) ClearSuggestedDuration() {
+	m.suggested_duration = nil
+	m.clearedFields[attractiontranslation.FieldSuggestedDuration] = struct{}{}
+}
+
+// SuggestedDurationCleared returns if the "suggested_duration" field was cleared in this mutation.
+func (m *AttractionTranslationMutation) SuggestedDurationCleared() bool {
+	_, ok := m.clearedFields[attractiontranslation.FieldSuggestedDuration]
+	return ok
+}
+
+// ResetSuggestedDuration resets all changes to the "suggested_duration" field.
+func (m *AttractionTranslationMutation) ResetSuggestedDuration() {
+	m.suggested_duration = nil
+	delete(m.clearedFields, attractiontranslation.FieldSuggestedDuration)
+}
+
+// SetTicketInfo sets the "ticket_info" field.
+func (m *AttractionTranslationMutation) SetTicketInfo(s string) {
+	m.ticket_info = &s
+}
+
+// TicketInfo returns the value of the "ticket_info" field in the mutation.
+func (m *AttractionTranslationMutation) TicketInfo() (r string, exists bool) {
+	v := m.ticket_info
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTicketInfo returns the old "ticket_info" field's value of the AttractionTranslation entity.
+// If the AttractionTranslation object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AttractionTranslationMutation) OldTicketInfo(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTicketInfo is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTicketInfo requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTicketInfo: %w", err)
+	}
+	return oldValue.TicketInfo, nil
+}
+
+// ClearTicketInfo clears the value of the "ticket_info" field.
+func (m *AttractionTranslationMutation) ClearTicketInfo() {
+	m.ticket_info = nil
+	m.clearedFields[attractiontranslation.FieldTicketInfo] = struct{}{}
+}
+
+// TicketInfoCleared returns if the "ticket_info" field was cleared in this mutation.
+func (m *AttractionTranslationMutation) TicketInfoCleared() bool {
+	_, ok := m.clearedFields[attractiontranslation.FieldTicketInfo]
+	return ok
+}
+
+// ResetTicketInfo resets all changes to the "ticket_info" field.
+func (m *AttractionTranslationMutation) ResetTicketInfo() {
+	m.ticket_info = nil
+	delete(m.clearedFields, attractiontranslation.FieldTicketInfo)
+}
+
 // SetSource sets the "source" field.
 func (m *AttractionTranslationMutation) SetSource(s string) {
 	m.source = &s
@@ -2662,7 +2812,7 @@ func (m *AttractionTranslationMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AttractionTranslationMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 13)
 	if m.attraction_id != nil {
 		fields = append(fields, attractiontranslation.FieldAttractionID)
 	}
@@ -2683,6 +2833,15 @@ func (m *AttractionTranslationMutation) Fields() []string {
 	}
 	if m.description != nil {
 		fields = append(fields, attractiontranslation.FieldDescription)
+	}
+	if m.opening_hours != nil {
+		fields = append(fields, attractiontranslation.FieldOpeningHours)
+	}
+	if m.suggested_duration != nil {
+		fields = append(fields, attractiontranslation.FieldSuggestedDuration)
+	}
+	if m.ticket_info != nil {
+		fields = append(fields, attractiontranslation.FieldTicketInfo)
 	}
 	if m.source != nil {
 		fields = append(fields, attractiontranslation.FieldSource)
@@ -2715,6 +2874,12 @@ func (m *AttractionTranslationMutation) Field(name string) (ent.Value, bool) {
 		return m.Address()
 	case attractiontranslation.FieldDescription:
 		return m.Description()
+	case attractiontranslation.FieldOpeningHours:
+		return m.OpeningHours()
+	case attractiontranslation.FieldSuggestedDuration:
+		return m.SuggestedDuration()
+	case attractiontranslation.FieldTicketInfo:
+		return m.TicketInfo()
 	case attractiontranslation.FieldSource:
 		return m.Source()
 	case attractiontranslation.FieldStatus:
@@ -2744,6 +2909,12 @@ func (m *AttractionTranslationMutation) OldField(ctx context.Context, name strin
 		return m.OldAddress(ctx)
 	case attractiontranslation.FieldDescription:
 		return m.OldDescription(ctx)
+	case attractiontranslation.FieldOpeningHours:
+		return m.OldOpeningHours(ctx)
+	case attractiontranslation.FieldSuggestedDuration:
+		return m.OldSuggestedDuration(ctx)
+	case attractiontranslation.FieldTicketInfo:
+		return m.OldTicketInfo(ctx)
 	case attractiontranslation.FieldSource:
 		return m.OldSource(ctx)
 	case attractiontranslation.FieldStatus:
@@ -2807,6 +2978,27 @@ func (m *AttractionTranslationMutation) SetField(name string, value ent.Value) e
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
+		return nil
+	case attractiontranslation.FieldOpeningHours:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOpeningHours(v)
+		return nil
+	case attractiontranslation.FieldSuggestedDuration:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSuggestedDuration(v)
+		return nil
+	case attractiontranslation.FieldTicketInfo:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTicketInfo(v)
 		return nil
 	case attractiontranslation.FieldSource:
 		v, ok := value.(string)
@@ -2901,6 +3093,15 @@ func (m *AttractionTranslationMutation) ClearedFields() []string {
 	if m.FieldCleared(attractiontranslation.FieldDescription) {
 		fields = append(fields, attractiontranslation.FieldDescription)
 	}
+	if m.FieldCleared(attractiontranslation.FieldOpeningHours) {
+		fields = append(fields, attractiontranslation.FieldOpeningHours)
+	}
+	if m.FieldCleared(attractiontranslation.FieldSuggestedDuration) {
+		fields = append(fields, attractiontranslation.FieldSuggestedDuration)
+	}
+	if m.FieldCleared(attractiontranslation.FieldTicketInfo) {
+		fields = append(fields, attractiontranslation.FieldTicketInfo)
+	}
 	return fields
 }
 
@@ -2930,6 +3131,15 @@ func (m *AttractionTranslationMutation) ClearField(name string) error {
 	case attractiontranslation.FieldDescription:
 		m.ClearDescription()
 		return nil
+	case attractiontranslation.FieldOpeningHours:
+		m.ClearOpeningHours()
+		return nil
+	case attractiontranslation.FieldSuggestedDuration:
+		m.ClearSuggestedDuration()
+		return nil
+	case attractiontranslation.FieldTicketInfo:
+		m.ClearTicketInfo()
+		return nil
 	}
 	return fmt.Errorf("unknown AttractionTranslation nullable field %s", name)
 }
@@ -2958,6 +3168,15 @@ func (m *AttractionTranslationMutation) ResetField(name string) error {
 		return nil
 	case attractiontranslation.FieldDescription:
 		m.ResetDescription()
+		return nil
+	case attractiontranslation.FieldOpeningHours:
+		m.ResetOpeningHours()
+		return nil
+	case attractiontranslation.FieldSuggestedDuration:
+		m.ResetSuggestedDuration()
+		return nil
+	case attractiontranslation.FieldTicketInfo:
+		m.ResetTicketInfo()
 		return nil
 	case attractiontranslation.FieldSource:
 		m.ResetSource()

@@ -25,6 +25,12 @@ const (
 	FieldAddress = "address"
 	// FieldDescription holds the string denoting the description field in the database.
 	FieldDescription = "description"
+	// FieldOpeningHours holds the string denoting the opening_hours field in the database.
+	FieldOpeningHours = "opening_hours"
+	// FieldSuggestedDuration holds the string denoting the suggested_duration field in the database.
+	FieldSuggestedDuration = "suggested_duration"
+	// FieldTicketInfo holds the string denoting the ticket_info field in the database.
+	FieldTicketInfo = "ticket_info"
 	// FieldSource holds the string denoting the source field in the database.
 	FieldSource = "source"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -45,6 +51,9 @@ var Columns = []string{
 	FieldTags,
 	FieldAddress,
 	FieldDescription,
+	FieldOpeningHours,
+	FieldSuggestedDuration,
+	FieldTicketInfo,
 	FieldSource,
 	FieldStatus,
 	FieldUpdatedAt,
@@ -112,6 +121,21 @@ func ByAddress(opts ...sql.OrderTermOption) OrderOption {
 // ByDescription orders the results by the description field.
 func ByDescription(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByOpeningHours orders the results by the opening_hours field.
+func ByOpeningHours(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOpeningHours, opts...).ToFunc()
+}
+
+// BySuggestedDuration orders the results by the suggested_duration field.
+func BySuggestedDuration(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldSuggestedDuration, opts...).ToFunc()
+}
+
+// ByTicketInfo orders the results by the ticket_info field.
+func ByTicketInfo(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTicketInfo, opts...).ToFunc()
 }
 
 // BySource orders the results by the source field.

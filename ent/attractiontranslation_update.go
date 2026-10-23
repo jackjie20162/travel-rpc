@@ -162,6 +162,66 @@ func (_u *AttractionTranslationUpdate) ClearDescription() *AttractionTranslation
 	return _u
 }
 
+// SetOpeningHours sets the "opening_hours" field.
+func (_u *AttractionTranslationUpdate) SetOpeningHours(v string) *AttractionTranslationUpdate {
+	_u.mutation.SetOpeningHours(v)
+	return _u
+}
+
+// SetNillableOpeningHours sets the "opening_hours" field if the given value is not nil.
+func (_u *AttractionTranslationUpdate) SetNillableOpeningHours(v *string) *AttractionTranslationUpdate {
+	if v != nil {
+		_u.SetOpeningHours(*v)
+	}
+	return _u
+}
+
+// ClearOpeningHours clears the value of the "opening_hours" field.
+func (_u *AttractionTranslationUpdate) ClearOpeningHours() *AttractionTranslationUpdate {
+	_u.mutation.ClearOpeningHours()
+	return _u
+}
+
+// SetSuggestedDuration sets the "suggested_duration" field.
+func (_u *AttractionTranslationUpdate) SetSuggestedDuration(v string) *AttractionTranslationUpdate {
+	_u.mutation.SetSuggestedDuration(v)
+	return _u
+}
+
+// SetNillableSuggestedDuration sets the "suggested_duration" field if the given value is not nil.
+func (_u *AttractionTranslationUpdate) SetNillableSuggestedDuration(v *string) *AttractionTranslationUpdate {
+	if v != nil {
+		_u.SetSuggestedDuration(*v)
+	}
+	return _u
+}
+
+// ClearSuggestedDuration clears the value of the "suggested_duration" field.
+func (_u *AttractionTranslationUpdate) ClearSuggestedDuration() *AttractionTranslationUpdate {
+	_u.mutation.ClearSuggestedDuration()
+	return _u
+}
+
+// SetTicketInfo sets the "ticket_info" field.
+func (_u *AttractionTranslationUpdate) SetTicketInfo(v string) *AttractionTranslationUpdate {
+	_u.mutation.SetTicketInfo(v)
+	return _u
+}
+
+// SetNillableTicketInfo sets the "ticket_info" field if the given value is not nil.
+func (_u *AttractionTranslationUpdate) SetNillableTicketInfo(v *string) *AttractionTranslationUpdate {
+	if v != nil {
+		_u.SetTicketInfo(*v)
+	}
+	return _u
+}
+
+// ClearTicketInfo clears the value of the "ticket_info" field.
+func (_u *AttractionTranslationUpdate) ClearTicketInfo() *AttractionTranslationUpdate {
+	_u.mutation.ClearTicketInfo()
+	return _u
+}
+
 // SetSource sets the "source" field.
 func (_u *AttractionTranslationUpdate) SetSource(v string) *AttractionTranslationUpdate {
 	_u.mutation.SetSource(v)
@@ -303,6 +363,24 @@ func (_u *AttractionTranslationUpdate) sqlSave(ctx context.Context) (_node int, 
 	}
 	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(attractiontranslation.FieldDescription, field.TypeString)
+	}
+	if value, ok := _u.mutation.OpeningHours(); ok {
+		_spec.SetField(attractiontranslation.FieldOpeningHours, field.TypeString, value)
+	}
+	if _u.mutation.OpeningHoursCleared() {
+		_spec.ClearField(attractiontranslation.FieldOpeningHours, field.TypeString)
+	}
+	if value, ok := _u.mutation.SuggestedDuration(); ok {
+		_spec.SetField(attractiontranslation.FieldSuggestedDuration, field.TypeString, value)
+	}
+	if _u.mutation.SuggestedDurationCleared() {
+		_spec.ClearField(attractiontranslation.FieldSuggestedDuration, field.TypeString)
+	}
+	if value, ok := _u.mutation.TicketInfo(); ok {
+		_spec.SetField(attractiontranslation.FieldTicketInfo, field.TypeString, value)
+	}
+	if _u.mutation.TicketInfoCleared() {
+		_spec.ClearField(attractiontranslation.FieldTicketInfo, field.TypeString)
 	}
 	if value, ok := _u.mutation.Source(); ok {
 		_spec.SetField(attractiontranslation.FieldSource, field.TypeString, value)
@@ -468,6 +546,66 @@ func (_u *AttractionTranslationUpdateOne) SetNillableDescription(v *string) *Att
 // ClearDescription clears the value of the "description" field.
 func (_u *AttractionTranslationUpdateOne) ClearDescription() *AttractionTranslationUpdateOne {
 	_u.mutation.ClearDescription()
+	return _u
+}
+
+// SetOpeningHours sets the "opening_hours" field.
+func (_u *AttractionTranslationUpdateOne) SetOpeningHours(v string) *AttractionTranslationUpdateOne {
+	_u.mutation.SetOpeningHours(v)
+	return _u
+}
+
+// SetNillableOpeningHours sets the "opening_hours" field if the given value is not nil.
+func (_u *AttractionTranslationUpdateOne) SetNillableOpeningHours(v *string) *AttractionTranslationUpdateOne {
+	if v != nil {
+		_u.SetOpeningHours(*v)
+	}
+	return _u
+}
+
+// ClearOpeningHours clears the value of the "opening_hours" field.
+func (_u *AttractionTranslationUpdateOne) ClearOpeningHours() *AttractionTranslationUpdateOne {
+	_u.mutation.ClearOpeningHours()
+	return _u
+}
+
+// SetSuggestedDuration sets the "suggested_duration" field.
+func (_u *AttractionTranslationUpdateOne) SetSuggestedDuration(v string) *AttractionTranslationUpdateOne {
+	_u.mutation.SetSuggestedDuration(v)
+	return _u
+}
+
+// SetNillableSuggestedDuration sets the "suggested_duration" field if the given value is not nil.
+func (_u *AttractionTranslationUpdateOne) SetNillableSuggestedDuration(v *string) *AttractionTranslationUpdateOne {
+	if v != nil {
+		_u.SetSuggestedDuration(*v)
+	}
+	return _u
+}
+
+// ClearSuggestedDuration clears the value of the "suggested_duration" field.
+func (_u *AttractionTranslationUpdateOne) ClearSuggestedDuration() *AttractionTranslationUpdateOne {
+	_u.mutation.ClearSuggestedDuration()
+	return _u
+}
+
+// SetTicketInfo sets the "ticket_info" field.
+func (_u *AttractionTranslationUpdateOne) SetTicketInfo(v string) *AttractionTranslationUpdateOne {
+	_u.mutation.SetTicketInfo(v)
+	return _u
+}
+
+// SetNillableTicketInfo sets the "ticket_info" field if the given value is not nil.
+func (_u *AttractionTranslationUpdateOne) SetNillableTicketInfo(v *string) *AttractionTranslationUpdateOne {
+	if v != nil {
+		_u.SetTicketInfo(*v)
+	}
+	return _u
+}
+
+// ClearTicketInfo clears the value of the "ticket_info" field.
+func (_u *AttractionTranslationUpdateOne) ClearTicketInfo() *AttractionTranslationUpdateOne {
+	_u.mutation.ClearTicketInfo()
 	return _u
 }
 
@@ -642,6 +780,24 @@ func (_u *AttractionTranslationUpdateOne) sqlSave(ctx context.Context) (_node *A
 	}
 	if _u.mutation.DescriptionCleared() {
 		_spec.ClearField(attractiontranslation.FieldDescription, field.TypeString)
+	}
+	if value, ok := _u.mutation.OpeningHours(); ok {
+		_spec.SetField(attractiontranslation.FieldOpeningHours, field.TypeString, value)
+	}
+	if _u.mutation.OpeningHoursCleared() {
+		_spec.ClearField(attractiontranslation.FieldOpeningHours, field.TypeString)
+	}
+	if value, ok := _u.mutation.SuggestedDuration(); ok {
+		_spec.SetField(attractiontranslation.FieldSuggestedDuration, field.TypeString, value)
+	}
+	if _u.mutation.SuggestedDurationCleared() {
+		_spec.ClearField(attractiontranslation.FieldSuggestedDuration, field.TypeString)
+	}
+	if value, ok := _u.mutation.TicketInfo(); ok {
+		_spec.SetField(attractiontranslation.FieldTicketInfo, field.TypeString, value)
+	}
+	if _u.mutation.TicketInfoCleared() {
+		_spec.ClearField(attractiontranslation.FieldTicketInfo, field.TypeString)
 	}
 	if value, ok := _u.mutation.Source(); ok {
 		_spec.SetField(attractiontranslation.FieldSource, field.TypeString, value)

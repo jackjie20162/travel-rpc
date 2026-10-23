@@ -101,6 +101,48 @@ func (_c *AttractionTranslationCreate) SetNillableDescription(v *string) *Attrac
 	return _c
 }
 
+// SetOpeningHours sets the "opening_hours" field.
+func (_c *AttractionTranslationCreate) SetOpeningHours(v string) *AttractionTranslationCreate {
+	_c.mutation.SetOpeningHours(v)
+	return _c
+}
+
+// SetNillableOpeningHours sets the "opening_hours" field if the given value is not nil.
+func (_c *AttractionTranslationCreate) SetNillableOpeningHours(v *string) *AttractionTranslationCreate {
+	if v != nil {
+		_c.SetOpeningHours(*v)
+	}
+	return _c
+}
+
+// SetSuggestedDuration sets the "suggested_duration" field.
+func (_c *AttractionTranslationCreate) SetSuggestedDuration(v string) *AttractionTranslationCreate {
+	_c.mutation.SetSuggestedDuration(v)
+	return _c
+}
+
+// SetNillableSuggestedDuration sets the "suggested_duration" field if the given value is not nil.
+func (_c *AttractionTranslationCreate) SetNillableSuggestedDuration(v *string) *AttractionTranslationCreate {
+	if v != nil {
+		_c.SetSuggestedDuration(*v)
+	}
+	return _c
+}
+
+// SetTicketInfo sets the "ticket_info" field.
+func (_c *AttractionTranslationCreate) SetTicketInfo(v string) *AttractionTranslationCreate {
+	_c.mutation.SetTicketInfo(v)
+	return _c
+}
+
+// SetNillableTicketInfo sets the "ticket_info" field if the given value is not nil.
+func (_c *AttractionTranslationCreate) SetNillableTicketInfo(v *string) *AttractionTranslationCreate {
+	if v != nil {
+		_c.SetTicketInfo(*v)
+	}
+	return _c
+}
+
 // SetSource sets the "source" field.
 func (_c *AttractionTranslationCreate) SetSource(v string) *AttractionTranslationCreate {
 	_c.mutation.SetSource(v)
@@ -267,6 +309,18 @@ func (_c *AttractionTranslationCreate) createSpec() (*AttractionTranslation, *sq
 	if value, ok := _c.mutation.Description(); ok {
 		_spec.SetField(attractiontranslation.FieldDescription, field.TypeString, value)
 		_node.Description = value
+	}
+	if value, ok := _c.mutation.OpeningHours(); ok {
+		_spec.SetField(attractiontranslation.FieldOpeningHours, field.TypeString, value)
+		_node.OpeningHours = value
+	}
+	if value, ok := _c.mutation.SuggestedDuration(); ok {
+		_spec.SetField(attractiontranslation.FieldSuggestedDuration, field.TypeString, value)
+		_node.SuggestedDuration = value
+	}
+	if value, ok := _c.mutation.TicketInfo(); ok {
+		_spec.SetField(attractiontranslation.FieldTicketInfo, field.TypeString, value)
+		_node.TicketInfo = value
 	}
 	if value, ok := _c.mutation.Source(); ok {
 		_spec.SetField(attractiontranslation.FieldSource, field.TypeString, value)
