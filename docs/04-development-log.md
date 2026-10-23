@@ -1,5 +1,19 @@
 # Development Log
 
+## 2026-10-23 — C 端行程节点景点名随语言切换
+
+### 背景
+产品详情页切换到英/阿后，底部 Attractions 区块能本地化，但 Itinerary 行程时间线里的景点名（哈利法塔/迪拜喷泉…）仍显中文。原因：行程节点存的是商户录入的中文自由文本 `title/poiName`，`ListProductItineraryStops` 未做 locale 解析。
+
+### 实现内容（travel-api + travel-pc，无表结构变更）
+- **travel-api**：行程节点已透过 `type_params.attractionId` 关联景点库（底部 Attractions 区块就靠它）。`attraction_helper.go` 新增 `resolveItineraryStopAttractionNames`：按请求 locale 查 `attraction_translations`，命中则用景点名称译文覆盖节点 `title/poiName/locationName`，未命中（无关联/无译文）保留原文；`ListProductItineraryStops` 接入（`i18n.LocaleFrom(ctx)`）。后端统一解析，travel-pc / travel-app 均受益。
+- **travel-pc**：`ProductDetailView.vue` 修正 `attractionName`——后端已按 locale 解析 `a.name`，前端直接信任（原逻辑非中文一律取 `nameEn`，导致阿语环境错显英文）；未翻译回退中文名时非中文环境兼底回退 `nameEn`。
+
+### 验证
+- ✅ travel-api `go build ./...` 通过
+- ✅ travel-pc `vite build` 通过
+- ⏳ 需用户重启 travel-api(9206)：本次行程解析 + 上一轮商户译文挂载均需重启才生效（当前运行仍为旧二进制，接口无 `translations` 字段）
+
 ## 2026-10-23 — 景点存量数据三语译文种子（en-US/ar 全量补齐）
 
 ### 背景
