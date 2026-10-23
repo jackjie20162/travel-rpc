@@ -48,6 +48,14 @@ func Register(grpcServer *grpc.Server, client *ent.Client, c config.Config) {
         logx.Infof("backfilled city_id for %d attractions", n)
     }
 
+    // 启动时幂等为存量景点补齐 en-US/ar 两语译文(名称/分类/标签/地址/简介)；
+    // 已存在的译文跳过不覆盖运营编辑，失败不阻断服务启动。
+    if n, err := repository.SeedAttractionI18n(context.Background(), client); err != nil {
+        logx.Errorf("failed to seed attraction i18n: %v", err)
+    } else if n > 0 {
+        logx.Infof("seeded %d attraction translation rows", n)
+    }
+
     travel.RegisterCatalogServiceServer(grpcServer, service.NewCatalogService(products, client, translations))
     travel.RegisterInventoryServiceServer(grpcServer, service.NewInventoryService(inventory))
     travel.RegisterOrderServiceServer(grpcServer, service.NewOrderService(orders, inventory, booking, currencies))

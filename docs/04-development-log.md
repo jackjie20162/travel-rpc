@@ -1,5 +1,20 @@
 # Development Log
 
+## 2026-10-23 — 景点存量数据三语译文种子（en-US/ar 全量补齐）
+
+### 背景
+景点多语言模型与接口上线后，`attraction_translations` 表为空，库中 68 个存量景点仍只有中文。需求：把这批存量景点的名称、分类、标签、地址、简介的英/阿两语一次性维护好。
+
+### 实现内容
+- **数据导出核对**：临时只读工具导出全部 68 个景点的 name/name_en/category/tags/city/address/description，确认地址为拉丁文、英文名主表已有、分类为枚举 code。
+- **译文种子 `internal/repository/attraction_i18n_seed.json`**：`categories`（8 个枚举 code → en/ar 本地化显示名）+ `items`（68 条，按中文基础名匹配，含阿语名 `nar`、英/阿标签 `ten`/`tar`、英/阿简介 `den`/`dar`、可选英/阿地址 `aen`/`aar`）。
+- **幂等 seeder `attraction_i18n_seed.go`**：`//go:embed` 载入 JSON，`SeedAttractionI18n` 按中文名匹配主表，为每个景点写 en-US/ar 两行译文——英文名取 `name_en`、分类取 code 映射、标签序列化 JSON、地址缺省沿用主表拉丁文（有 `aen/aar` 则覆盖）、简介取种子；`(attraction_id, locale)` 已存在则跳过，不覆盖运营编辑。接入 `server.Register`（迁移建表之后执行），失败仅记日志不阻断启动。
+
+### 验证
+- ✅ travel-rpc `go build ./...` 通过
+- ✅ 临时校验工具比对：种子 68 条 ↔ 库 68 条，双向零遗漏（未匹配/未覆盖均为 0），校验后临时工具与产物已删除
+- ⏳ 需用户重启 travel-rpc(9205)：先触发 `attraction_translations` 建表迁移，再自动执行 seeder 补齐全部存量译文
+
 ## 2026-10-23 — 景点多语言（名称/分类/标签/地址/简介，中/英/阿）
 
 ### 背景
