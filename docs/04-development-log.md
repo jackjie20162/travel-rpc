@@ -1,5 +1,28 @@
 # Development Log
 
+## 2026-10-23 — 景点多语言（名称/分类/标签/地址/简介，中/英/阿）
+
+### 背景
+景点的名称、分类、标签、地址、简介仅中文，C 端英/阿环境无法本地化展示。需求：这 5 个字段支持中/英/阿三语。
+
+### 实现内容
+- **travel-rpc (Ent)**：新增 `attraction_translation.go`（`attraction_id`/`locale`/`name`/`category`/`tags`/`address`/`description`/`source`/`status`/`updated_at`，唯一 `(attraction_id,locale)`），沿用 product/package translation 的字段级译文模式；`make gen-ent` 生成，`ent/migrate/schema.go` 自动纳入 `attraction_translations` 表。
+- **travel-api**：`desc/travel.api` 新增 `AttractionTranslationItem`，`Attraction`/`AttractionReq` 加 `Translations`，`AttractionListReq` 加 `Locale`；`goctls api go` 重生 types。新增 `attraction_helper.go`（`attachAttractionTranslations` 管理端挂载全部译文、`saveAttractionTranslations` 覆盖式重建 en-US/ar、`resolveAttractionLocale` 公开端按 locale 覆盖回退基准）。接入 create/update（写译文）、get_merchant/list_merchant（挂载）、get_attraction/list_attractions/list_product_attractions（按 `i18n.LocaleFrom(ctx)` 或 `req.Locale` 解析）。均直用 `svcCtx.DB`，不经 gRPC。
+- **merchant-frontend**：`plugin/travel/attractions/Index.vue` 编辑表单简介下方新增「多语言内容」区（el-tabs English/العربية），分别录入名称、分类显示名、标签（各自 allow-create 多选）、地址、简介；openEdit 从 `row.translations` 回填，save 组装 `translations` 随请求提交。
+
+### 决策
+- 分类主表保留枚举 code（供筛选），译文存本地化显示名文本（供 C 端展示）。
+- 基础语言 zh-CN 存主表字段，译文表只存 en-US/ar；公开读未命中则回退中文。
+- 覆盖式重写译文（先删后建），空内容不写行，与区域一致。
+
+### 验证
+- ✅ travel-rpc / travel-api `go build ./...` 通过
+- ✅ merchant-frontend `vite build` 通过
+- ⏳ 需用户重启 travel-rpc(9205) 触发 `attraction_translations` 建表迁移
+
+### 文档
+- 更新 `05-data-model.md`：新增 Attraction 多语言与 AttractionTranslation 模型、唯一索引、接口说明
+
 ## 2026-10-23 — 区域字典（国家→城市，三语）与景点城市绑定
 
 ### 背景

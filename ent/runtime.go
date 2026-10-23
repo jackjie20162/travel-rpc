@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
+	"gitee.com/meinongyihe/travel-rpc/ent/attractiontranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -51,6 +52,24 @@ func init() {
 	attractionDescStatus := attractionFields[21].Descriptor()
 	// attraction.DefaultStatus holds the default value on creation for the status field.
 	attraction.DefaultStatus = attractionDescStatus.Default.(string)
+	attractiontranslationFields := schema.AttractionTranslation{}.Fields()
+	_ = attractiontranslationFields
+	// attractiontranslationDescLocale is the schema descriptor for locale field.
+	attractiontranslationDescLocale := attractiontranslationFields[1].Descriptor()
+	// attractiontranslation.LocaleValidator is a validator for the "locale" field. It is called by the builders before save.
+	attractiontranslation.LocaleValidator = attractiontranslationDescLocale.Validators[0].(func(string) error)
+	// attractiontranslationDescSource is the schema descriptor for source field.
+	attractiontranslationDescSource := attractiontranslationFields[7].Descriptor()
+	// attractiontranslation.DefaultSource holds the default value on creation for the source field.
+	attractiontranslation.DefaultSource = attractiontranslationDescSource.Default.(string)
+	// attractiontranslationDescStatus is the schema descriptor for status field.
+	attractiontranslationDescStatus := attractiontranslationFields[8].Descriptor()
+	// attractiontranslation.DefaultStatus holds the default value on creation for the status field.
+	attractiontranslation.DefaultStatus = attractiontranslationDescStatus.Default.(string)
+	// attractiontranslationDescUpdatedAt is the schema descriptor for updated_at field.
+	attractiontranslationDescUpdatedAt := attractiontranslationFields[9].Descriptor()
+	// attractiontranslation.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	attractiontranslation.DefaultUpdatedAt = attractiontranslationDescUpdatedAt.Default.(int64)
 	currencyFields := schema.Currency{}.Fields()
 	_ = currencyFields
 	// currencyDescCode is the schema descriptor for code field.

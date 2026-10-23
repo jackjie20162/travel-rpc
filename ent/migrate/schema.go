@@ -52,6 +52,38 @@ var (
 			},
 		},
 	}
+	// AttractionTranslationsColumns holds the columns for the "attraction_translations" table.
+	AttractionTranslationsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "attraction_id", Type: field.TypeInt64},
+		{Name: "locale", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "category", Type: field.TypeString, Nullable: true},
+		{Name: "tags", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "address", Type: field.TypeString, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "source", Type: field.TypeString, Default: "MANUAL"},
+		{Name: "status", Type: field.TypeString, Default: "DONE"},
+		{Name: "updated_at", Type: field.TypeInt64, Default: 0},
+	}
+	// AttractionTranslationsTable holds the schema information for the "attraction_translations" table.
+	AttractionTranslationsTable = &schema.Table{
+		Name:       "attraction_translations",
+		Columns:    AttractionTranslationsColumns,
+		PrimaryKey: []*schema.Column{AttractionTranslationsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "attractiontranslation_attraction_id_locale",
+				Unique:  true,
+				Columns: []*schema.Column{AttractionTranslationsColumns[1], AttractionTranslationsColumns[2]},
+			},
+			{
+				Name:    "attractiontranslation_locale_status",
+				Unique:  false,
+				Columns: []*schema.Column{AttractionTranslationsColumns[2], AttractionTranslationsColumns[9]},
+			},
+		},
+	}
 	// CurrenciesColumns holds the columns for the "currencies" table.
 	CurrenciesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -822,6 +854,7 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AttractionsTable,
+		AttractionTranslationsTable,
 		CurrenciesTable,
 		ExchangeRatesTable,
 		InventoriesTable,

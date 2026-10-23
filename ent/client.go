@@ -15,6 +15,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
+	"gitee.com/meinongyihe/travel-rpc/ent/attractiontranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -47,6 +48,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// Attraction is the client for interacting with the Attraction builders.
 	Attraction *AttractionClient
+	// AttractionTranslation is the client for interacting with the AttractionTranslation builders.
+	AttractionTranslation *AttractionTranslationClient
 	// Currency is the client for interacting with the Currency builders.
 	Currency *CurrencyClient
 	// ExchangeRate is the client for interacting with the ExchangeRate builders.
@@ -101,6 +104,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.Attraction = NewAttractionClient(c.config)
+	c.AttractionTranslation = NewAttractionTranslationClient(c.config)
 	c.Currency = NewCurrencyClient(c.config)
 	c.ExchangeRate = NewExchangeRateClient(c.config)
 	c.Inventory = NewInventoryClient(c.config)
@@ -212,30 +216,31 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:                  ctx,
-		config:               cfg,
-		Attraction:           NewAttractionClient(cfg),
-		Currency:             NewCurrencyClient(cfg),
-		ExchangeRate:         NewExchangeRateClient(cfg),
-		Inventory:            NewInventoryClient(cfg),
-		InventoryReservation: NewInventoryReservationClient(cfg),
-		ItineraryStop:        NewItineraryStopClient(cfg),
-		Merchant:             NewMerchantClient(cfg),
-		MerchantConfig:       NewMerchantConfigClient(cfg),
-		Order:                NewOrderClient(cfg),
-		OrderItem:            NewOrderItemClient(cfg),
-		PackageTranslation:   NewPackageTranslationClient(cfg),
-		Payment:              NewPaymentClient(cfg),
-		Product:              NewProductClient(cfg),
-		ProductPackage:       NewProductPackageClient(cfg),
-		ProductTranslation:   NewProductTranslationClient(cfg),
-		Region:               NewRegionClient(cfg),
-		RegionTranslation:    NewRegionTranslationClient(cfg),
-		Review:               NewReviewClient(cfg),
-		Tenant:               NewTenantClient(cfg),
-		Traveler:             NewTravelerClient(cfg),
-		User:                 NewUserClient(cfg),
-		Voucher:              NewVoucherClient(cfg),
+		ctx:                   ctx,
+		config:                cfg,
+		Attraction:            NewAttractionClient(cfg),
+		AttractionTranslation: NewAttractionTranslationClient(cfg),
+		Currency:              NewCurrencyClient(cfg),
+		ExchangeRate:          NewExchangeRateClient(cfg),
+		Inventory:             NewInventoryClient(cfg),
+		InventoryReservation:  NewInventoryReservationClient(cfg),
+		ItineraryStop:         NewItineraryStopClient(cfg),
+		Merchant:              NewMerchantClient(cfg),
+		MerchantConfig:        NewMerchantConfigClient(cfg),
+		Order:                 NewOrderClient(cfg),
+		OrderItem:             NewOrderItemClient(cfg),
+		PackageTranslation:    NewPackageTranslationClient(cfg),
+		Payment:               NewPaymentClient(cfg),
+		Product:               NewProductClient(cfg),
+		ProductPackage:        NewProductPackageClient(cfg),
+		ProductTranslation:    NewProductTranslationClient(cfg),
+		Region:                NewRegionClient(cfg),
+		RegionTranslation:     NewRegionTranslationClient(cfg),
+		Review:                NewReviewClient(cfg),
+		Tenant:                NewTenantClient(cfg),
+		Traveler:              NewTravelerClient(cfg),
+		User:                  NewUserClient(cfg),
+		Voucher:               NewVoucherClient(cfg),
 	}, nil
 }
 
@@ -253,30 +258,31 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:                  ctx,
-		config:               cfg,
-		Attraction:           NewAttractionClient(cfg),
-		Currency:             NewCurrencyClient(cfg),
-		ExchangeRate:         NewExchangeRateClient(cfg),
-		Inventory:            NewInventoryClient(cfg),
-		InventoryReservation: NewInventoryReservationClient(cfg),
-		ItineraryStop:        NewItineraryStopClient(cfg),
-		Merchant:             NewMerchantClient(cfg),
-		MerchantConfig:       NewMerchantConfigClient(cfg),
-		Order:                NewOrderClient(cfg),
-		OrderItem:            NewOrderItemClient(cfg),
-		PackageTranslation:   NewPackageTranslationClient(cfg),
-		Payment:              NewPaymentClient(cfg),
-		Product:              NewProductClient(cfg),
-		ProductPackage:       NewProductPackageClient(cfg),
-		ProductTranslation:   NewProductTranslationClient(cfg),
-		Region:               NewRegionClient(cfg),
-		RegionTranslation:    NewRegionTranslationClient(cfg),
-		Review:               NewReviewClient(cfg),
-		Tenant:               NewTenantClient(cfg),
-		Traveler:             NewTravelerClient(cfg),
-		User:                 NewUserClient(cfg),
-		Voucher:              NewVoucherClient(cfg),
+		ctx:                   ctx,
+		config:                cfg,
+		Attraction:            NewAttractionClient(cfg),
+		AttractionTranslation: NewAttractionTranslationClient(cfg),
+		Currency:              NewCurrencyClient(cfg),
+		ExchangeRate:          NewExchangeRateClient(cfg),
+		Inventory:             NewInventoryClient(cfg),
+		InventoryReservation:  NewInventoryReservationClient(cfg),
+		ItineraryStop:         NewItineraryStopClient(cfg),
+		Merchant:              NewMerchantClient(cfg),
+		MerchantConfig:        NewMerchantConfigClient(cfg),
+		Order:                 NewOrderClient(cfg),
+		OrderItem:             NewOrderItemClient(cfg),
+		PackageTranslation:    NewPackageTranslationClient(cfg),
+		Payment:               NewPaymentClient(cfg),
+		Product:               NewProductClient(cfg),
+		ProductPackage:        NewProductPackageClient(cfg),
+		ProductTranslation:    NewProductTranslationClient(cfg),
+		Region:                NewRegionClient(cfg),
+		RegionTranslation:     NewRegionTranslationClient(cfg),
+		Review:                NewReviewClient(cfg),
+		Tenant:                NewTenantClient(cfg),
+		Traveler:              NewTravelerClient(cfg),
+		User:                  NewUserClient(cfg),
+		Voucher:               NewVoucherClient(cfg),
 	}, nil
 }
 
@@ -306,9 +312,9 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	for _, n := range []interface{ Use(...Hook) }{
-		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
-		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
-		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
+		c.Attraction, c.AttractionTranslation, c.Currency, c.ExchangeRate, c.Inventory,
+		c.InventoryReservation, c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order,
+		c.OrderItem, c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
 		c.ProductTranslation, c.Region, c.RegionTranslation, c.Review, c.Tenant,
 		c.Traveler, c.User, c.Voucher,
 	} {
@@ -320,9 +326,9 @@ func (c *Client) Use(hooks ...Hook) {
 // In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
 func (c *Client) Intercept(interceptors ...Interceptor) {
 	for _, n := range []interface{ Intercept(...Interceptor) }{
-		c.Attraction, c.Currency, c.ExchangeRate, c.Inventory, c.InventoryReservation,
-		c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order, c.OrderItem,
-		c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
+		c.Attraction, c.AttractionTranslation, c.Currency, c.ExchangeRate, c.Inventory,
+		c.InventoryReservation, c.ItineraryStop, c.Merchant, c.MerchantConfig, c.Order,
+		c.OrderItem, c.PackageTranslation, c.Payment, c.Product, c.ProductPackage,
 		c.ProductTranslation, c.Region, c.RegionTranslation, c.Review, c.Tenant,
 		c.Traveler, c.User, c.Voucher,
 	} {
@@ -335,6 +341,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 	switch m := m.(type) {
 	case *AttractionMutation:
 		return c.Attraction.mutate(ctx, m)
+	case *AttractionTranslationMutation:
+		return c.AttractionTranslation.mutate(ctx, m)
 	case *CurrencyMutation:
 		return c.Currency.mutate(ctx, m)
 	case *ExchangeRateMutation:
@@ -512,6 +520,139 @@ func (c *AttractionClient) mutate(ctx context.Context, m *AttractionMutation) (V
 		return (&AttractionDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
 	default:
 		return nil, fmt.Errorf("ent: unknown Attraction mutation op: %q", m.Op())
+	}
+}
+
+// AttractionTranslationClient is a client for the AttractionTranslation schema.
+type AttractionTranslationClient struct {
+	config
+}
+
+// NewAttractionTranslationClient returns a client for the AttractionTranslation from the given config.
+func NewAttractionTranslationClient(c config) *AttractionTranslationClient {
+	return &AttractionTranslationClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `attractiontranslation.Hooks(f(g(h())))`.
+func (c *AttractionTranslationClient) Use(hooks ...Hook) {
+	c.hooks.AttractionTranslation = append(c.hooks.AttractionTranslation, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `attractiontranslation.Intercept(f(g(h())))`.
+func (c *AttractionTranslationClient) Intercept(interceptors ...Interceptor) {
+	c.inters.AttractionTranslation = append(c.inters.AttractionTranslation, interceptors...)
+}
+
+// Create returns a builder for creating a AttractionTranslation entity.
+func (c *AttractionTranslationClient) Create() *AttractionTranslationCreate {
+	mutation := newAttractionTranslationMutation(c.config, OpCreate)
+	return &AttractionTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of AttractionTranslation entities.
+func (c *AttractionTranslationClient) CreateBulk(builders ...*AttractionTranslationCreate) *AttractionTranslationCreateBulk {
+	return &AttractionTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *AttractionTranslationClient) MapCreateBulk(slice any, setFunc func(*AttractionTranslationCreate, int)) *AttractionTranslationCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &AttractionTranslationCreateBulk{err: fmt.Errorf("calling to AttractionTranslationClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*AttractionTranslationCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &AttractionTranslationCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for AttractionTranslation.
+func (c *AttractionTranslationClient) Update() *AttractionTranslationUpdate {
+	mutation := newAttractionTranslationMutation(c.config, OpUpdate)
+	return &AttractionTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *AttractionTranslationClient) UpdateOne(_m *AttractionTranslation) *AttractionTranslationUpdateOne {
+	mutation := newAttractionTranslationMutation(c.config, OpUpdateOne, withAttractionTranslation(_m))
+	return &AttractionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *AttractionTranslationClient) UpdateOneID(id int) *AttractionTranslationUpdateOne {
+	mutation := newAttractionTranslationMutation(c.config, OpUpdateOne, withAttractionTranslationID(id))
+	return &AttractionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for AttractionTranslation.
+func (c *AttractionTranslationClient) Delete() *AttractionTranslationDelete {
+	mutation := newAttractionTranslationMutation(c.config, OpDelete)
+	return &AttractionTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *AttractionTranslationClient) DeleteOne(_m *AttractionTranslation) *AttractionTranslationDeleteOne {
+	return c.DeleteOneID(_m.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *AttractionTranslationClient) DeleteOneID(id int) *AttractionTranslationDeleteOne {
+	builder := c.Delete().Where(attractiontranslation.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &AttractionTranslationDeleteOne{builder}
+}
+
+// Query returns a query builder for AttractionTranslation.
+func (c *AttractionTranslationClient) Query() *AttractionTranslationQuery {
+	return &AttractionTranslationQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeAttractionTranslation},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a AttractionTranslation entity by its id.
+func (c *AttractionTranslationClient) Get(ctx context.Context, id int) (*AttractionTranslation, error) {
+	return c.Query().Where(attractiontranslation.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *AttractionTranslationClient) GetX(ctx context.Context, id int) *AttractionTranslation {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *AttractionTranslationClient) Hooks() []Hook {
+	return c.hooks.AttractionTranslation
+}
+
+// Interceptors returns the client interceptors.
+func (c *AttractionTranslationClient) Interceptors() []Interceptor {
+	return c.inters.AttractionTranslation
+}
+
+func (c *AttractionTranslationClient) mutate(ctx context.Context, m *AttractionTranslationMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&AttractionTranslationCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&AttractionTranslationUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&AttractionTranslationUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&AttractionTranslationDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown AttractionTranslation mutation op: %q", m.Op())
 	}
 }
 
@@ -3311,16 +3452,18 @@ func (c *VoucherClient) mutate(ctx context.Context, m *VoucherMutation) (Value, 
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
-		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
-		Payment, Product, ProductPackage, ProductTranslation, Region,
-		RegionTranslation, Review, Tenant, Traveler, User, Voucher []ent.Hook
+		Attraction, AttractionTranslation, Currency, ExchangeRate, Inventory,
+		InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
+		OrderItem, PackageTranslation, Payment, Product, ProductPackage,
+		ProductTranslation, Region, RegionTranslation, Review, Tenant, Traveler, User,
+		Voucher []ent.Hook
 	}
 	inters struct {
-		Attraction, Currency, ExchangeRate, Inventory, InventoryReservation,
-		ItineraryStop, Merchant, MerchantConfig, Order, OrderItem, PackageTranslation,
-		Payment, Product, ProductPackage, ProductTranslation, Region,
-		RegionTranslation, Review, Tenant, Traveler, User, Voucher []ent.Interceptor
+		Attraction, AttractionTranslation, Currency, ExchangeRate, Inventory,
+		InventoryReservation, ItineraryStop, Merchant, MerchantConfig, Order,
+		OrderItem, PackageTranslation, Payment, Product, ProductPackage,
+		ProductTranslation, Region, RegionTranslation, Review, Tenant, Traveler, User,
+		Voucher []ent.Interceptor
 	}
 )
 

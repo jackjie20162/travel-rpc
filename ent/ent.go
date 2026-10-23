@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"gitee.com/meinongyihe/travel-rpc/ent/attraction"
+	"gitee.com/meinongyihe/travel-rpc/ent/attractiontranslation"
 	"gitee.com/meinongyihe/travel-rpc/ent/currency"
 	"gitee.com/meinongyihe/travel-rpc/ent/exchangerate"
 	"gitee.com/meinongyihe/travel-rpc/ent/inventory"
@@ -94,28 +95,29 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			attraction.Table:           attraction.ValidColumn,
-			currency.Table:             currency.ValidColumn,
-			exchangerate.Table:         exchangerate.ValidColumn,
-			inventory.Table:            inventory.ValidColumn,
-			inventoryreservation.Table: inventoryreservation.ValidColumn,
-			itinerarystop.Table:        itinerarystop.ValidColumn,
-			merchant.Table:             merchant.ValidColumn,
-			merchantconfig.Table:       merchantconfig.ValidColumn,
-			order.Table:                order.ValidColumn,
-			orderitem.Table:            orderitem.ValidColumn,
-			packagetranslation.Table:   packagetranslation.ValidColumn,
-			payment.Table:              payment.ValidColumn,
-			product.Table:              product.ValidColumn,
-			productpackage.Table:       productpackage.ValidColumn,
-			producttranslation.Table:   producttranslation.ValidColumn,
-			region.Table:               region.ValidColumn,
-			regiontranslation.Table:    regiontranslation.ValidColumn,
-			review.Table:               review.ValidColumn,
-			tenant.Table:               tenant.ValidColumn,
-			traveler.Table:             traveler.ValidColumn,
-			user.Table:                 user.ValidColumn,
-			voucher.Table:              voucher.ValidColumn,
+			attraction.Table:            attraction.ValidColumn,
+			attractiontranslation.Table: attractiontranslation.ValidColumn,
+			currency.Table:              currency.ValidColumn,
+			exchangerate.Table:          exchangerate.ValidColumn,
+			inventory.Table:             inventory.ValidColumn,
+			inventoryreservation.Table:  inventoryreservation.ValidColumn,
+			itinerarystop.Table:         itinerarystop.ValidColumn,
+			merchant.Table:              merchant.ValidColumn,
+			merchantconfig.Table:        merchantconfig.ValidColumn,
+			order.Table:                 order.ValidColumn,
+			orderitem.Table:             orderitem.ValidColumn,
+			packagetranslation.Table:    packagetranslation.ValidColumn,
+			payment.Table:               payment.ValidColumn,
+			product.Table:               product.ValidColumn,
+			productpackage.Table:        productpackage.ValidColumn,
+			producttranslation.Table:    producttranslation.ValidColumn,
+			region.Table:                region.ValidColumn,
+			regiontranslation.Table:     regiontranslation.ValidColumn,
+			review.Table:                review.ValidColumn,
+			tenant.Table:                tenant.ValidColumn,
+			traveler.Table:              traveler.ValidColumn,
+			user.Table:                  user.ValidColumn,
+			voucher.Table:               voucher.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

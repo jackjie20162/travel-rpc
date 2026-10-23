@@ -192,3 +192,39 @@ The `User` schema stores end-user (customer) accounts. It mirrors the legacy PHP
 - `GET /api/travel/regions`：公开字典，支持 `level`/`parentId`/`locale`/`keyword`/`status`，名称按 locale 解析
 - `GET /api/travel/merchant/regions`：管理端列表，返回基础名 + 全部译文
 - `POST/PUT/DELETE /api/travel/merchant/regions[/:id]`：区域增删改，写入时覆盖式重建译文
+
+## Attraction 多语言（名称/分类/标签/地址/简介）
+
+景点的可翻译文本采用与区域一致的「基础表存中文 + 译文表按 locale 存各语言」模式。
+
+### 多语言
+
+- `attractions` 主表的 `name`/`category`/`tags`/`address`/`description` 为基准语言（zh-CN）。
+- `attraction_translation` 表按 `locale`（en-US/ar）存放上述 5 个字段的对应译文。
+- 分类 `category` 主表存枚举 code（如 `THEME_PARK`），译文里存该语言的本地化显示名文本；C 端按 locale 解析后直接展示。
+- 标签 `tags` 为 JSON 数组字符串，各语言各自维护一份。
+
+### AttractionTranslation 字段
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| attraction_id | int64 | 关联景点 ID |
+| locale | string | 目标语言：zh-CN/en-US/ar |
+| name | string | 名称译文 |
+| category | string | 分类本地化显示名译文 |
+| tags | text | 标签译文（JSON 数组） |
+| address | string | 地址译文 |
+| description | text | 简介译文 |
+| source | string | MACHINE/MANUAL，默认 MANUAL |
+| status | string | PENDING/DONE/FAILED，默认 DONE |
+| updated_at | int64 | 最近翻译时间戳 |
+
+### 唯一性与索引
+
+- `(attraction_id, locale)` 唯一；`(locale, status)` 辅助查询。
+
+### 接口（travel-api，直用 Ent client，不经 gRPC）
+
+- 管理端 `GET /api/travel/merchant/attractions[/:id]`：返回基础字段 + 全部语种译文明细（供编辑）。
+- `POST/PUT /api/travel/merchant/attractions[/:id]`：随请求体 `translations` 覆盖式重建该景点的 en-US/ar 译文。
+- 公开端 `GET /api/travel/attractions`、`GET /api/travel/products/:id/attractions`：按 `locale`（或请求头语言）解析，命中译文覆盖对应字段，否则回退中文基准。

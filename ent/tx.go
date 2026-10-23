@@ -16,6 +16,8 @@ type Tx struct {
 	config
 	// Attraction is the client for interacting with the Attraction builders.
 	Attraction *AttractionClient
+	// AttractionTranslation is the client for interacting with the AttractionTranslation builders.
+	AttractionTranslation *AttractionTranslationClient
 	// Currency is the client for interacting with the Currency builders.
 	Currency *CurrencyClient
 	// ExchangeRate is the client for interacting with the ExchangeRate builders.
@@ -190,6 +192,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Attraction = NewAttractionClient(tx.config)
+	tx.AttractionTranslation = NewAttractionTranslationClient(tx.config)
 	tx.Currency = NewCurrencyClient(tx.config)
 	tx.ExchangeRate = NewExchangeRateClient(tx.config)
 	tx.Inventory = NewInventoryClient(tx.config)
